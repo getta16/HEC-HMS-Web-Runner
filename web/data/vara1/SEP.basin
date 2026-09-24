@@ -1,0 +1,76 @@
+Basin: SEP
+     Last Modified Date: 8 September 2026
+     Last Modified Time: 07:19:03
+     Version: 4.13
+     Filepath Separator: \
+     Unit System: Metric
+     Missing Flow To Zero: No
+     Enable Flow Ratio: No
+     Compute Local Flow At Junctions: No
+     Unregulated Output Required: No
+
+     Enable Sediment Routing: No
+End:
+
+Subbasin: Subbasin-1
+     Last Modified Date: 24 September 2026
+     Last Modified Time: 06:05:22
+     Canvas X: -8498.971974133961
+     Canvas Y: 5383.703357785431
+     From Canvas X: 394.89489489489483
+     From Canvas Y: 1495.4954954954956
+     Area: 48.2454
+
+     Discretization: None
+     File: SEP.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: None
+
+     Transform: User-Specified UH
+     Unit Hydrograph Name: Table 1
+     Tabular Passes: 0
+
+     Baseflow: None
+End:
+
+Basin Layer Properties:
+     Element Layer:
+          Name: Icons
+          Layer shown: Yes
+     End Layer:
+End:
+
+Basin Spatial Properties:
+End:
+
+Basin Schematic Properties:
+     Last View N: 1445.4204204204198
+     Last View S: 1395.4204204204198
+     Last View W: 482.5075075075074
+     Last View E: 532.5075075075074
+     Maximum View N: 1445.4204204204198
+     Maximum View S: 1395.4204204204198
+     Maximum View W: 482.5075075075074
+     Maximum View E: 532.5075075075074
+     Extent Method: Manual
+     Buffer: 0
+     Draw Icons: Yes
+     Draw Icon Labels: Name
+     Draw Map Objects: No
+     Draw Gridlines: No
+     Draw Flow Direction: No
+     Draw HillShade Layer: Yes
+     Draw Elevation Layer: Yes
+     Elevation Layer Color Palette: Gray Scale
+     Ignore Elevation Color Ramp Scale: No
+     Use Interpolated Color Ramp for Elevation Layer: Yes
+     Color Ramp Opacity Level for Elevation Layer: 33.0
+     Fix Element Locations: No
+     Fix Hydrologic Order: No
+End:

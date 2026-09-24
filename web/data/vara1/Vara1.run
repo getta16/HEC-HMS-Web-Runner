@@ -1,0 +1,34 @@
+Run: Run 1
+     Default Description: Yes
+     Log File: Run_1.log
+     DSS File: Run_1.dss
+     Is Save Spatial Results: No
+     Last Modified Date: 8 September 2026
+     Last Modified Time: 07:37:43
+     Last Execution Date: 24 September 2026
+     Last Execution Time: 06:11:10
+     Basin: SEP
+     Precip: Met 1
+     Control: Control 1
+     Time-Series Output: Save All
+     Time Series Results Manager Start:
+     Time Series Results Manager End:
+End:
+
+Run: Run 30
+     Default Description: Yes
+     Log File: Run_30.log
+     DSS File: Run_30.dss
+     Is Save Spatial Results: No
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 02:16:53
+     Last Execution Date: 23 September 2026
+     Last Execution Time: 06:50:54
+     Basin: SEP
+     Precip: Met 1
+     Control: Control 30
+     Time-Series Output: Save All
+     Time Series Results Manager Start:
+     Time Series Results Manager End:
+End:
+

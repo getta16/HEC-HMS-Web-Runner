@@ -1,0 +1,16 @@
+Paired Data Manager: Vara1
+     Version: 4.13
+     Filepath Separator: \
+End:
+
+Pattern: Table 1
+     Data Type: Unit Hydrograph
+     Last Modified Date: 8 September 2026
+     Last Modified Time: 07:25:33
+     Units: M3/S
+     Duration: 30
+     Use External DSS File: NO
+     DSS File: Vara1.dss
+     Pathname: //Table 1/FLOW-UNIT GRAPH/TS-PATTERN/30MIN/TABLE/
+End:
+

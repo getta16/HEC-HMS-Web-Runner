@@ -1,0 +1,29 @@
+Meteorology: Met 1
+     Last Modified Date: 8 September 2026
+     Last Modified Time: 07:32:14
+     Version: 4.13
+     Unit System: Metric
+     Set Missing Data to Default: Yes
+     Precipitation Method: Specified Average
+     Air Temperature Method: None
+     Atmospheric Pressure Method: None
+     Dew Point Method: None
+     Wind Speed Method: None
+     Shortwave Radiation Method: None
+     Longwave Radiation Method: None
+     Snowmelt Method: None
+     Evapotranspiration Method: No Evapotranspiration
+     Use Basin Model: SEP
+End:
+
+Precip Method Parameters: Specified Average
+     Last Modified Date: 8 September 2026
+     Last Modified Time: 07:15:12
+     Allow Depth Override: No
+End:
+
+Subbasin: Subbasin-1
+     Last Modified Date: 8 September 2026
+     Last Modified Time: 07:35:43
+     Gage: Gage 1
+End:
