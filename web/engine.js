@@ -6,6 +6,45 @@
 (function (root) {
   'use strict';
 
+  // ---------- messages (Thai / English) ----------
+  const MSG = {
+    th: {
+      badDate: (d) => 'อ่านวันที่ไม่ได้: ' + d,
+      notDss: () => 'ไม่ใช่ไฟล์ DSS',
+      dss7: () => 'รองรับเฉพาะ DSS เวอร์ชัน 7 (HEC-HMS 4.x)',
+      noMetSub: (s) => `ไม่พบข้อมูลฝนของ ${s} ในไฟล์ .met`,
+      noGage: (g) => `ไม่พบข้อมูลสถานีฝน "${g}"`,
+      unsupported: (what, m) => `ยังไม่รองรับ ${what}: ${m}`,
+      noUH: (n) => `ไม่พบ Unit Hydrograph "${n}" (ต้องมีไฟล์ .pdata และ .dss)`,
+      needFile: (f) => `ต้องใช้ไฟล์ ${f}`,
+      noPath: (p, f) => `ไม่พบ ${p} ใน ${f}`,
+      badDt: () => 'Time Interval ไม่ถูกต้อง',
+      endBeforeStart: () => 'เวลาสิ้นสุดต้องอยู่หลังเวลาเริ่มต้น',
+      tooMany: (n) => `ช่วงเวลามากเกินไป (${n.toLocaleString()} ช่วง) เพิ่ม Time Interval หรือย่นช่วงเวลา`,
+      loop: (n) => 'โครงข่ายวนซ้ำที่ ' + n,
+      noElement: (n) => 'ไม่พบ element ' + n,
+    },
+    en: {
+      badDate: (d) => 'Cannot read date: ' + d,
+      notDss: () => 'Not a DSS file',
+      dss7: () => 'Only DSS version 7 (HEC-HMS 4.x) is supported',
+      noMetSub: (s) => `No precipitation data for ${s} in the .met file`,
+      noGage: (g) => `Gage "${g}" not found`,
+      unsupported: (what, m) => `${what} not supported yet: ${m}`,
+      noUH: (n) => `Unit hydrograph "${n}" not found (needs the .pdata and .dss files)`,
+      needFile: (f) => `Requires file ${f}`,
+      noPath: (p, f) => `${p} not found in ${f}`,
+      badDt: () => 'Invalid Time Interval',
+      endBeforeStart: () => 'End time must be after start time',
+      tooMany: (n) => `Too many time steps (${n.toLocaleString()}). Increase the Time Interval or shorten the window`,
+      loop: (n) => 'Network loops back at ' + n,
+      noElement: (n) => 'Element not found: ' + n,
+    },
+  };
+  let LANG = 'th';
+  const msg = (k, ...a) => (MSG[LANG] || MSG.th)[k](...a);
+  function setLang(l) { if (MSG[l]) LANG = l; }
+
   // ---------- HMS text-file parser ----------
   // Blocks look like "Kind: Name\n     Key: Value\n ... End:". Nested sub-blocks
   // (Variant:, Element Layer:) are flattened into the parent's props.
@@ -43,7 +82,7 @@
   function parseDateTime(d, t) {
     let day, mon, yr;
     const m = /^(\d{1,2})\s*([A-Za-z]+)\s*(\d{4})$/.exec(d.trim().replace(/,$/, ''));
-    if (!m) throw new Error('อ่านวันที่ไม่ได้: ' + d);
+    if (!m) throw new Error(msg('badDate', d));
     day = +m[1]; mon = monthIndex(m[2]); yr = +m[3];
     const [hh, mm] = (t || '00:00').split(':').map(Number);
     return Date.UTC(yr, mon, day, hh, mm || 0);
@@ -69,8 +108,8 @@
   function readDss(buf) {
     const dv = new DataView(buf instanceof ArrayBuffer ? buf : buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength));
     const bytes = new Uint8Array(dv.buffer);
-    if (String.fromCharCode(...bytes.slice(0, 4)) !== 'ZDSS') throw new Error('ไม่ใช่ไฟล์ DSS');
-    if (bytes[16] !== 0x37) throw new Error('รองรับเฉพาะ DSS เวอร์ชัน 7 (HEC-HMS 4.x)');
+    if (String.fromCharCode(...bytes.slice(0, 4)) !== 'ZDSS') throw new Error(msg('notDss'));
+    if (bytes[16] !== 0x37) throw new Error(msg('dss7'));
     const nw = Math.floor(dv.byteLength / 8);
     const W = (i) => dv.getInt32(i * 8, true) + dv.getInt32(i * 8 + 4, true) * 4294967296;
     const records = [];
@@ -162,8 +201,8 @@
   }
   function subbasinHyetograph(met, gages, sub, times) {
     const sb = met.subbasins[sub];
-    if (!sb) throw new Error('ไม่พบข้อมูลฝนของ ' + sub + ' ในไฟล์ .met');
-    const need = (g) => { if (!gages[g]) throw new Error(`ไม่พบข้อมูลสถานีฝน "${g}"`); return prepGage(gages[g]); };
+    if (!sb) throw new Error(msg('noMetSub', sub));
+    const need = (g) => { if (!gages[g]) throw new Error(msg('noGage', g)); return prepGage(gages[g]); };
     const p = new Float64Array(times.length);
     if (met.method === 'Specified Average') {
       const g = need(sb.gage);
@@ -177,7 +216,7 @@
       for (let i = 1; i < times.length; i++) p[i] = total * (cumAt(times[i]) - cumAt(times[i - 1]));
       return p;
     }
-    throw new Error('ยังไม่รองรับวิธีฝน: ' + met.method);
+    throw new Error(msg('unsupported', 'Precipitation Method', met.method));
   }
 
   // ---------- loss ----------
@@ -210,7 +249,7 @@
       }
       return { excess, loss };
     }
-    throw new Error('ยังไม่รองรับ LossRate: ' + prm.method);
+    throw new Error(msg('unsupported', 'LossRate', prm.method));
   }
 
   // ---------- transform ----------
@@ -237,7 +276,7 @@
     const dtH = dtMin / 60;
     if (prm.method === 'None' || !prm.method) return Float64Array.from(excess, e => e * u.depthAreaToFlow(area, dtH));
     if (prm.method === 'User-Specified UH') {
-      if (!prm.uh) throw new Error('ไม่พบ Unit Hydrograph "' + prm.uhName + '" (ต้องมีไฟล์ .pdata และ .dss)');
+      if (!prm.uh) throw new Error(msg('noUH', prm.uhName));
       return convolve(excess, resampleUH(prm.uh.values, prm.uh.interval, dtMin));
     }
     if (prm.method === 'SCS') {
@@ -261,7 +300,7 @@
       for (let i = 0; i < n; i++) { o = ca * 0.5 * (prev + inflow[i]) + cb * o; prev = inflow[i]; q[i] = o; }
       return q;
     }
-    throw new Error('ยังไม่รองรับ Transform: ' + prm.method);
+    throw new Error(msg('unsupported', 'Transform', prm.method));
   }
 
   // ---------- baseflow ----------
@@ -300,7 +339,7 @@
       return out;
     }
     if (prm.method === 'None' || !prm.method) return Float64Array.from(inflow);
-    throw new Error('ยังไม่รองรับ Route: ' + prm.method);
+    throw new Error(msg('unsupported', 'Route', prm.method));
   }
 
   // ---------- model assembly ----------
@@ -308,7 +347,7 @@
   function units(system) {
     const metric = /metric|si/i.test(system || '');
     return metric
-      ? { metric, area: 'km²', depth: 'mm', flow: 'm³/s', vol: 'ล้าน m³', volFactor: 1e-6, depthAreaToFlow: (a, dtH) => a * 1e6 / 1000 / (dtH * 3600), rate: 'mm/hr', flowPerArea: 'm³/s/km²' }
+      ? { metric, area: 'km²', depth: 'mm', flow: 'm³/s', vol: '10⁶ m³', volFactor: 1e-6, depthAreaToFlow: (a, dtH) => a * 1e6 / 1000 / (dtH * 3600), rate: 'mm/hr', flowPerArea: 'm³/s/km²' }
       : { metric, area: 'mi²', depth: 'in', flow: 'cfs', vol: 'ac-ft', volFactor: 1 / 43560, depthAreaToFlow: (a, dtH) => a * 5280 * 5280 / 12 / (dtH * 3600), rate: 'in/hr', flowPerArea: 'cfs/mi²' };
   }
   function readBasin(text) {
@@ -365,10 +404,10 @@
         g.start = parseDateTime(p['Start Date'], p['Start Time']);
       } else if (g.pathname && getDss) {
         const dss = getDss(g.file);
-        if (!dss) g.error = `ต้องใช้ไฟล์ ${g.file}`;
+        if (!dss) g.error = msg('needFile', g.file);
         else {
           const s = dssSeries(dss, g.pathname);
-          if (!s) g.error = `ไม่พบ ${g.pathname} ใน ${g.file}`;
+          if (!s) g.error = msg('noPath', g.pathname, g.file);
           else { g.values = Array.from(s.values); g.interval = s.interval; g.start = s.start; g.units = s.units; }
         }
       }
@@ -388,7 +427,7 @@
         const s = dssSeries(dss, rec.pathname);
         if (s) { rec.values = Array.from(s.values); rec.interval = rec.duration || s.interval; }
       }
-      if (!rec.values) rec.error = `ต้องใช้ไฟล์ ${rec.file}`;
+      if (!rec.values) rec.error = msg('needFile', rec.file);
       out[b.name] = rec;
     }
     return out;
@@ -399,10 +438,10 @@
     const start = parseDateTime(p['Start Date'], p['Start Time']);
     const end = parseDateTime(p['End Date'], p['End Time']);
     const dt = num(p['Time Interval']);
-    if (!(dt > 0)) throw new Error('Time Interval ไม่ถูกต้อง');
-    if (end <= start) throw new Error('เวลาสิ้นสุดต้องอยู่หลังเวลาเริ่มต้น');
+    if (!(dt > 0)) throw new Error(msg('badDt'));
+    if (end <= start) throw new Error(msg('endBeforeStart'));
     const n = Math.floor((end - start) / (dt * 60000)) + 1;
-    if (n > 200000) throw new Error(`ช่วงเวลามากเกินไป (${n.toLocaleString()} ช่วง) เพิ่ม Time Interval หรือย่นช่วงเวลา`);
+    if (n > 200000) throw new Error(msg('tooMany', n));
     const times = [];
     for (let i = 0; i < n; i++) times.push(start + i * dt * 60000);
     return { name: b.name, block: b, start, end, dtMin: dt, times };
@@ -465,10 +504,10 @@
     const done = new Set(), visiting = new Set();
     const compute = (name) => {
       if (done.has(name)) return res[name];
-      if (visiting.has(name)) throw new Error('โครงข่ายวนซ้ำที่ ' + name);
+      if (visiting.has(name)) throw new Error(msg('loop', name));
       visiting.add(name);
       const e = byName[name];
-      if (!e) throw new Error('ไม่พบ element ' + name);
+      if (!e) throw new Error(msg('noElement', name));
       const ups = (upstream[name] || []).map(compute);
       const inflow = new Float64Array(n);
       let area = 0;
@@ -500,6 +539,6 @@
     return { times, dtH, results: res, order: basin.elements.map(e => e.name), outlet };
   }
 
-  const api = { parseHms, writeHms, parseDateTime, fmtTime, fmtDate, fmtDateTime, hmsDate, intervalMinutes, readDss, dssSeries, readBasin, readMet, readGages, readPairedData, readControl, setControl, readProject, readRuns, readResults, resampleUH, run };
+  const api = { setLang, parseHms, writeHms, parseDateTime, fmtTime, fmtDate, fmtDateTime, hmsDate, intervalMinutes, readDss, dssSeries, readBasin, readMet, readGages, readPairedData, readControl, setControl, readProject, readRuns, readResults, resampleUH, run };
   if (typeof module !== 'undefined') module.exports = api; else root.MiniHMS = api;
 })(this);

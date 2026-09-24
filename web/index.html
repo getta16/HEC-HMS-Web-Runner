@@ -4,11 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>HEC-HMS Web Runner</title>
+<script>
+// apply saved theme before first paint
+try { const t = localStorage.getItem('hms-theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t; } catch (_) {}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 :root {
+  color-scheme: light;
   --bg: #f3f6f5; --surface: #ffffff; --surface-2: #eaf0ee;
   --ink: #132020; --ink-2: #475755; --muted: #74837f;
   --line: #d5dedb; --grid: #e6ecea;
@@ -53,7 +58,18 @@ p { margin: 0; }
 .num { font-variant-numeric: tabular-nums; }
 .eyebrow { font: 500 11.5px/1 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
 
-header.top { padding-block: 28px 4px; display: grid; gap: 10px; }
+header.top { padding-block: 20px 0; display: grid; gap: 10px; }
+.toprow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.prefs { display: flex; gap: 8px; align-items: center; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button { font: 600 12.5px var(--font-body); border: 0; background: transparent; color: var(--ink-2); padding: 5px 11px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--ink); }
+.switch { display: inline-flex; align-items: center; gap: 8px; font: 500 12.5px var(--font-body); color: var(--ink-2); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px 4px 6px; cursor: pointer; }
+.switch .track { width: 32px; height: 18px; border-radius: 99px; background: var(--line); position: relative; transition: background .15s; flex: none; }
+.switch .track::after { content: ""; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--surface); box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: transform .15s; }
+.switch[aria-checked="true"] .track { background: var(--accent); }
+.switch[aria-checked="true"] .track::after { transform: translateX(14px); }
 .lede { color: var(--ink-2); max-width: 75ch; }
 .notice { display: flex; gap: 10px; align-items: flex-start; background: var(--warn-soft); color: var(--ink); border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent); border-radius: 8px; padding: 10px 14px; font-size: 13.5px; }
 .notice b { color: var(--warn); font-weight: 600; }
@@ -61,21 +77,23 @@ header.top { padding-block: 28px 4px; display: grid; gap: 10px; }
 .notice.err b { color: var(--bad); }
 
 .runbar { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); margin-inline: -16px; padding: 10px 16px; }
-.runbar-inner { max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.runbar-inner { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
 .btn { font: 600 13.5px var(--font-body); border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); padding: 7px 14px; border-radius: 8px; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
 .btn.ghost { background: transparent; color: var(--accent); }
 .btn:disabled { opacity: .5; cursor: default; }
-.btn:focus-visible, input:focus-visible, select:focus-visible, .tab:focus-visible, tr[tabindex]:focus-visible, .node:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn.attn { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent); }
+.btn:focus-visible, input:focus-visible, select:focus-visible, .tab:focus-visible, tr[tabindex]:focus-visible, .node:focus-visible, .seg button:focus-visible, .switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .runlog { font: 12.5px var(--font-mono); color: var(--muted); }
-.runlog .ok { color: var(--good); } .runlog .bad { color: var(--bad); }
+.runlog .ok { color: var(--good); } .runlog .bad { color: var(--bad); } .runlog .pend { color: var(--warn); }
 .proj { font: 600 13px var(--font-mono); padding: 4px 10px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--line); }
-.spacer { flex: 1; }
 
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
 .kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 4px; align-content: start; }
 .kpi .v { font: 600 26px/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
 .kpi .v small { font: 500 13px var(--font-body); color: var(--muted); margin-left: 4px; }
 .kpi .s { font-size: 13px; color: var(--ink-2); }
+.kpis.stale .kpi { opacity: .55; }
+.empty { background: var(--surface); border: 1.5px dashed var(--line); border-radius: 10px; padding: 18px; text-align: center; color: var(--ink-2); font-size: 14px; grid-column: 1 / -1; }
 .up { color: var(--bad); } .down { color: var(--good); }
 
 .main { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 20px; align-items: start; }
@@ -84,7 +102,6 @@ header.top { padding-block: 28px 4px; display: grid; gap: 10px; }
 .panel-head { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; justify-content: space-between; }
 .hint { font-size: 12.5px; color: var(--muted); }
 
-/* setup */
 .setup { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px 14px; align-items: end; }
 .field { display: grid; gap: 3px; min-width: 0; }
 .field label { font-size: 12.5px; color: var(--ink-2); }
@@ -95,17 +112,14 @@ header.top { padding-block: 28px 4px; display: grid; gap: 10px; }
 .field .note { font-size: 11.5px; color: var(--muted); }
 .row-actions { display: flex; flex-wrap: wrap; gap: 8px; grid-column: 1 / -1; align-items: center; }
 
-/* drop */
 .drop { border: 1.5px dashed var(--line); border-radius: 10px; padding: 14px; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; font-size: 13.5px; color: var(--ink-2); }
 .drop.over { border-color: var(--accent); background: var(--accent-soft); }
-.filelist { display: flex; flex-wrap: wrap; gap: 6px; }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.filelist, .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { font: 500 12px var(--font-body); padding: 2px 9px; border-radius: 99px; background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line); }
 .chip.mono { font-family: var(--font-mono); }
 .chip.warn { background: var(--warn-soft); color: var(--warn); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
 .chip.missing { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, transparent); }
 
-/* network */
 #net { width: 100%; height: auto; display: block; }
 #net .link { stroke: var(--line); stroke-width: 2.5; fill: none; }
 #net .node { cursor: pointer; }
@@ -115,7 +129,6 @@ header.top { padding-block: 28px 4px; display: grid; gap: 10px; }
 #net .lbl { font: 600 12px var(--font-body); fill: var(--ink); }
 #net .pk { font: 500 11px var(--font-mono); fill: var(--ink-2); }
 
-/* charts */
 .chart-box { position: relative; }
 .chart-box svg { display: block; width: 100%; height: auto; overflow: visible; }
 .axis text { font: 11px var(--font-mono); fill: var(--muted); }
@@ -132,13 +145,11 @@ header.top { padding-block: 28px 4px; display: grid; gap: 10px; }
 .tip .r { display: flex; justify-content: space-between; gap: 14px; color: var(--ink-2); }
 .tip .r b { font: 500 12px var(--font-mono); color: var(--ink); }
 
-/* params */
 .params { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px 14px; }
 .group-title { grid-column: 1 / -1; font: 500 11.5px var(--font-mono); letter-spacing: .07em; text-transform: uppercase; color: var(--muted); padding-top: 4px; border-top: 1px solid var(--grid); }
 .group-title:first-child { border-top: 0; padding-top: 0; }
 .uh { grid-column: 1 / -1; font: 12.5px var(--font-mono); color: var(--ink-2); overflow-x: auto; white-space: nowrap; }
 
-/* table */
 .tbl-wrap { overflow-x: auto; }
 table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 760px; }
 th, td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--grid); white-space: nowrap; }
@@ -153,7 +164,6 @@ tbody tr.sel { background: var(--accent-soft); }
 .sep { border-left: 1px solid var(--line); }
 .err-lo { color: var(--good); } .err-mid { color: var(--warn); } .err-hi { color: var(--bad); }
 
-/* files */
 .tabs { display: flex; flex-wrap: wrap; gap: 6px; }
 .tab { font: 500 12.5px var(--font-mono); border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); padding: 5px 10px; border-radius: 6px; cursor: pointer; }
 .tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
@@ -165,61 +175,71 @@ pre.file .b { color: var(--ink); font-weight: 600; }
 .methods { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px 20px; font-size: 13.5px; color: var(--ink-2); }
 .methods b { color: var(--ink); font-weight: 600; display: block; font-size: 13px; }
 [hidden] { display: none !important; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
 <body>
 
-<div class="runbar">
-  <div class="runbar-inner">
-    <span class="proj" id="proj-name">—</span>
-    <button class="btn ghost" id="up-files" title="เลือกไฟล์ .hms .basin .met .gage .control .run .pdata .dss .results">⭱ อัปโหลดไฟล์</button>
-    <button class="btn ghost" id="up-folder" title="เลือกโฟลเดอร์โปรเจกต์ HEC-HMS ทั้งโฟลเดอร์">⭱ อัปโหลดโฟลเดอร์</button>
-    <input type="file" id="in-files" multiple hidden>
-    <input type="file" id="in-folder" webkitdirectory multiple hidden>
-    <button class="btn" id="run">▶ รันแบบจำลอง</button>
-    <button class="btn ghost" id="reset">คืนค่าตามไฟล์</button>
-    <span class="runlog" id="runlog" aria-live="polite"></span>
-  </div>
-</div>
-
 <div class="wrap">
   <header class="top">
-    <span class="eyebrow" id="eyebrow">HEC-HMS 4.x · web runner</span>
+    <div class="toprow">
+      <span class="eyebrow" id="eyebrow">HEC-HMS 4.x · web runner</span>
+      <div class="prefs">
+        <div class="seg" role="group" aria-label="Language / ภาษา">
+          <button id="lang-th" aria-pressed="true" lang="th">ไทย</button>
+          <button id="lang-en" aria-pressed="false" lang="en">EN</button>
+        </div>
+        <button class="switch" id="theme" role="switch" aria-checked="false"><span class="track"></span><span data-i18n="darkMode"></span></button>
+      </div>
+    </div>
     <h1>HEC-HMS Web Runner</h1>
-    <p class="lede">อ่านไฟล์โปรเจกต์ HEC-HMS (.hms, .basin, .met, .gage, .control, .run, .pdata และ .dss) แล้วคำนวณน้ำท่าในเบราว์เซอร์ ไฟล์ทั้งหมดอ่านในเครื่องของคุณ ไม่มีการส่งขึ้นเซิร์ฟเวอร์ เริ่มต้นเปิดโปรเจกต์ <b>Vara1</b> ไว้ให้ ถ้าจะใช้โปรเจกต์อื่นให้อัปโหลดทั้งโฟลเดอร์หรือลากไฟล์มาวางในหน้านี้</p>
-    <div class="notice" role="note"><span>⚠</span><span><b>ผลเป็นค่าประมาณ ไม่ใช่ HEC-HMS ตัวจริง</b> ตัวคำนวณเขียนขึ้นใหม่ด้วย JavaScript ตามวิธีของ HEC-HMS เมื่อ time interval เท่ากับช่วงของ Unit Hydrograph ผลตรงกับ HEC-HMS แต่ถ้า interval ละเอียดกว่านั้น (เช่น 1 นาที) peak จะต่างราว 1% เพราะวิธีแปลง UH ต่างกัน ถ้ามีไฟล์ RUN_*.results หน้านี้จะเทียบผลกับ HEC-HMS ให้ดู</span></div>
+    <p class="lede" data-i18n-html="lede"></p>
+    <div class="notice" role="note"><span>⚠</span><span data-i18n-html="notice"></span></div>
     <div class="notice err" role="alert" id="err" hidden></div>
   </header>
 
+  <div class="runbar">
+    <div class="runbar-inner">
+      <span class="proj" id="proj-name">—</span>
+      <button class="btn ghost" id="up-files" data-i18n="upFiles" data-i18n-title="upFilesTip"></button>
+      <button class="btn ghost" id="up-folder" data-i18n="upFolder" data-i18n-title="upFolderTip"></button>
+      <input type="file" id="in-files" multiple hidden>
+      <input type="file" id="in-folder" webkitdirectory multiple hidden>
+      <button class="btn" id="run" data-i18n="run"></button>
+      <button class="btn ghost" id="reset" data-i18n="reset"></button>
+      <span class="runlog" id="runlog" aria-live="polite"></span>
+    </div>
+  </div>
+
   <section class="panel" aria-labelledby="s-title">
-    <div class="panel-head"><h2 id="s-title">ตั้งค่าการรัน</h2><span class="hint" id="s-hint"></span></div>
+    <div class="panel-head"><h2 id="s-title" data-i18n="setupTitle"></h2><span class="hint" id="s-hint"></span></div>
     <div class="setup">
       <div class="field"><label for="sel-run">Simulation Run</label><select id="sel-run"></select></div>
       <div class="field"><label for="sel-basin">Basin Model</label><select id="sel-basin"></select></div>
       <div class="field"><label for="sel-met">Meteorologic Model</label><select id="sel-met"></select></div>
       <div class="field"><label for="sel-control">Control Specifications</label><select id="sel-control"></select></div>
-      <div class="field"><label for="c-start">วันเวลาเริ่มต้น</label><input type="datetime-local" id="c-start" step="60"></div>
-      <div class="field"><label for="c-end">วันเวลาสิ้นสุด</label><input type="datetime-local" id="c-end" step="60"></div>
+      <div class="field"><label for="c-start" data-i18n="start"></label><input type="datetime-local" id="c-start" step="60"></div>
+      <div class="field"><label for="c-end" data-i18n="end"></label><input type="datetime-local" id="c-end" step="60"></div>
       <div class="field"><label for="c-dt">Time Interval</label><select id="c-dt"></select></div>
       <div class="field"><span class="note" id="c-info"></span></div>
       <div class="row-actions">
-        <button class="btn ghost" id="c-fit">ใช้ช่วงข้อมูลฝนทั้งหมด</button>
-        <button class="btn ghost" id="c-revert">คืนค่า control ตามไฟล์</button>
-        <span class="hint">แก้ค่าแล้วรันใหม่ให้ทันที ไฟล์ .control ด้านล่างจะเปลี่ยนตามค่าที่แก้</span>
+        <button class="btn ghost" id="c-fit" data-i18n="fitRain"></button>
+        <button class="btn ghost" id="c-revert" data-i18n="revertCtl"></button>
+        <span class="hint" data-i18n="ctlHint"></span>
       </div>
     </div>
     <div class="drop" id="drop">
-      <span>ลากไฟล์หรือโฟลเดอร์โปรเจกต์ HEC-HMS มาวางที่นี่</span>
+      <span data-i18n="dropHere"></span>
       <div class="filelist" id="filelist"></div>
     </div>
   </section>
 
-  <section class="kpis" id="kpis" aria-label="สรุปผลที่ทางออก"></section>
+  <section class="kpis" id="kpis" aria-label="Outlet summary"></section>
 
   <section class="main">
     <div class="panel">
-      <div class="panel-head"><h2>โครงข่ายลุ่มน้ำ</h2><span class="hint">คลิก element เพื่อดูกราฟและแก้ค่า</span></div>
-      <svg id="net" viewBox="0 0 400 300" role="img" aria-label="แผนผังโครงข่ายลุ่มน้ำ"></svg>
+      <div class="panel-head"><h2 data-i18n="netTitle"></h2><span class="hint" data-i18n="netHint"></span></div>
+      <svg id="net" viewBox="0 0 400 300" role="img" aria-label="Basin network"></svg>
       <div class="legend"><span><span class="swatch" style="background:var(--surface-2);border:1px solid var(--ink-2)"></span>Subbasin</span><span><span class="swatch" style="background:var(--surface-2);border:1px solid var(--ink-2);border-radius:99px"></span>Junction / Sink</span><span id="net-unit"></span></div>
     </div>
     <div class="panel">
@@ -229,39 +249,34 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       </div>
       <div class="legend" id="legend"></div>
       <div class="chart-box" id="chart-box">
-        <svg id="hyeto" aria-label="กราฟฝนรายช่วงเวลา"></svg>
-        <svg id="hydro" aria-label="กราฟน้ำท่า (hydrograph)"></svg>
+        <svg id="hyeto" aria-label="Hyetograph"></svg>
+        <svg id="hydro" aria-label="Hydrograph"></svg>
+        <div class="empty" id="chart-empty" hidden></div>
         <div class="tip" id="tip" hidden></div>
       </div>
     </div>
   </section>
 
   <section class="panel" aria-labelledby="p-title">
-    <div class="panel-head"><h2 id="p-title">พารามิเตอร์</h2><span class="hint" id="p-hint"></span></div>
+    <div class="panel-head"><h2 id="p-title"></h2><span class="hint" id="p-hint"></span></div>
     <div class="params" id="params"></div>
   </section>
 
   <section class="panel" aria-labelledby="t-title">
-    <div class="panel-head"><h2 id="t-title">ผลสรุปทุก element</h2><span class="hint" id="t-hint"></span></div>
+    <div class="panel-head"><h2 id="t-title" data-i18n="tblTitle"></h2><span class="hint" id="t-hint"></span></div>
     <div class="tbl-wrap"><table id="summary"></table></div>
   </section>
 
   <section class="panel" aria-labelledby="f-title">
-    <div class="panel-head"><h2 id="f-title">ไฟล์ของโปรเจกต์</h2><span class="hint">จุดสีบนแท็บ = มีค่าที่แก้ในหน้านี้ · ปุ่มดาวน์โหลดจะบันทึกไฟล์ที่แก้แล้ว</span></div>
+    <div class="panel-head"><h2 id="f-title" data-i18n="filesTitle"></h2><span class="hint" data-i18n="filesHint"></span></div>
     <div class="tabs" role="tablist" id="tabs"></div>
-    <div class="file-meta"><span class="hint" id="file-desc"></span><span style="display:flex;gap:8px"><button class="btn ghost" id="copy">คัดลอก</button><button class="btn ghost" id="download">ดาวน์โหลดไฟล์นี้</button></span></div>
+    <div class="file-meta"><span class="hint" id="file-desc"></span><span style="display:flex;gap:8px"><button class="btn ghost" id="copy" data-i18n="copy"></button><button class="btn ghost" id="download" data-i18n="download"></button></span></div>
     <pre class="file" id="file" tabindex="0"></pre>
   </section>
 
   <section class="panel" aria-labelledby="m-title">
-    <h2 id="m-title">วิธีคำนวณที่รองรับ</h2>
-    <div class="methods">
-      <p><b>ฝน · Specified Average / Gage Weights</b>อ่านฝนรายช่วงจากไฟล์ .dss ตาม Pathname ใน .gage แล้วกระจายลงแต่ละ time step แบบเส้นตรงบนกราฟฝนสะสม ค่าที่หายไป (missing) จะถูกตั้งเป็น 0 เหมือนใน HEC-HMS</p>
-      <p><b>Loss · None / Initial+Constant / SCS Curve Number</b>รวมการคิดพื้นที่ทึบน้ำ (% impervious) ด้วย</p>
-      <p><b>Transform · User-Specified UH / SCS / Clark</b>ถ้า UH มีช่วงเวลาไม่เท่ากับ time interval จะแปลงด้วยวิธี S-curve</p>
-      <p><b>Baseflow · None / Recession</b> · <b>Routing · None / Lag / Muskingum</b></p>
-      <p><b>ไฟล์ DSS</b>อ่าน DSS เวอร์ชัน 7 (HEC-HMS 4.x) ได้เฉพาะอนุกรมเวลาแบบช่วงคงที่และ pattern ยังอ่าน DSS 6 และข้อมูลกริดไม่ได้</p>
-    </div>
+    <h2 id="m-title" data-i18n="methodsTitle"></h2>
+    <div class="methods" data-i18n-html="methods"></div>
   </section>
 </div>
 
@@ -274,28 +289,197 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const base = (p) => p.split(/[\\/]/).pop();
   const lc = (s) => (s || '').toLowerCase();
-  const TEXT_EXT = /\.(hms|basin|met|gage|control|run|pdata|results|grid|sqlite_?|log)$/i;
+  const store = { get(k) { try { return localStorage.getItem(k); } catch (_) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (_) {} } };
+  const TEXT_EXT = /\.(hms|basin|met|gage|control|run|pdata|results)$/i;
   const VIEW_EXT = /\.(hms|basin|met|gage|control|run|pdata)$/i;
 
+  // ---------- language ----------
+  const I18N = {
+    th: {
+      darkMode: 'โหมดมืด',
+      lede: 'อ่านไฟล์โปรเจกต์ HEC-HMS (.hms, .basin, .met, .gage, .control, .run, .pdata และ .dss) แล้วคำนวณน้ำท่าในเบราว์เซอร์ ไฟล์ทั้งหมดอ่านในเครื่องของคุณ ไม่มีการส่งขึ้นเซิร์ฟเวอร์ เริ่มต้นเปิดโปรเจกต์ <b>Vara1</b> ไว้ให้ ถ้าจะใช้โปรเจกต์อื่นให้อัปโหลดทั้งโฟลเดอร์หรือลากไฟล์มาวางในหน้านี้',
+      notice: '<b>ผลเป็นค่าประมาณ ไม่ใช่ HEC-HMS ตัวจริง</b> ตัวคำนวณเขียนขึ้นใหม่ด้วย JavaScript ตามวิธีของ HEC-HMS เมื่อ time interval เท่ากับช่วงของ Unit Hydrograph ผลตรงกับ HEC-HMS แต่ถ้า interval ละเอียดกว่านั้น (เช่น 1 นาที) peak จะต่างราว 1% เพราะวิธีแปลง UH ต่างกัน ถ้ามีไฟล์ RUN_*.results หน้านี้จะเทียบผลกับ HEC-HMS ให้ดู',
+      upFiles: '⭱ อัปโหลดไฟล์', upFilesTip: 'เลือกไฟล์ .hms .basin .met .gage .control .run .pdata .dss .results',
+      upFolder: '⭱ อัปโหลดโฟลเดอร์', upFolderTip: 'เลือกโฟลเดอร์โปรเจกต์ HEC-HMS ทั้งโฟลเดอร์',
+      run: '▶ รันแบบจำลอง', reset: 'คืนค่าตามไฟล์',
+      setupTitle: 'ตั้งค่าการรัน', start: 'วันเวลาเริ่มต้น', end: 'วันเวลาสิ้นสุด',
+      fitRain: 'ใช้ช่วงข้อมูลฝนทั้งหมด', revertCtl: 'คืนค่า control ตามไฟล์',
+      ctlHint: 'ค่าที่แก้จะมีผลเมื่อกด “รันแบบจำลอง” ไฟล์ .control ด้านล่างจะเปลี่ยนตามค่าที่แก้',
+      dropHere: 'ลากไฟล์หรือโฟลเดอร์โปรเจกต์ HEC-HMS มาวางที่นี่',
+      netTitle: 'โครงข่ายลุ่มน้ำ', netHint: 'คลิก element เพื่อดูกราฟและแก้ค่า',
+      tblTitle: 'ผลสรุปทุก element', filesTitle: 'ไฟล์ของโปรเจกต์',
+      filesHint: 'จุดสีบนแท็บ = มีค่าที่แก้ในหน้านี้ · ปุ่มดาวน์โหลดจะบันทึกไฟล์ที่แก้แล้ว',
+      copy: 'คัดลอก', copied: 'คัดลอกแล้ว', pressCopy: 'กด Ctrl+C', download: 'ดาวน์โหลดไฟล์นี้',
+      methodsTitle: 'วิธีคำนวณที่รองรับ',
+      methods: '<p><b>ฝน · Specified Average / Gage Weights</b>อ่านฝนรายช่วงจากไฟล์ .dss ตาม Pathname ใน .gage แล้วกระจายลงแต่ละ time step แบบเส้นตรงบนกราฟฝนสะสม ค่าที่หายไป (missing) จะถูกตั้งเป็น 0 เหมือนใน HEC-HMS</p><p><b>Loss · None / Initial+Constant / SCS Curve Number</b>รวมการคิดพื้นที่ทึบน้ำ (% impervious) ด้วย</p><p><b>Transform · User-Specified UH / SCS / Clark</b>ถ้า UH มีช่วงเวลาไม่เท่ากับ time interval จะแปลงด้วยวิธี S-curve</p><p><b>Baseflow · None / Recession</b> · <b>Routing · None / Lag / Muskingum</b></p><p><b>ไฟล์ DSS</b>อ่าน DSS เวอร์ชัน 7 (HEC-HMS 4.x) ได้เฉพาะอนุกรมเวลาแบบช่วงคงที่และ pattern ยังอ่าน DSS 6 และข้อมูลกริดไม่ได้</p>',
+      errTitle: 'รันไม่ได้', noHms: 'ไม่มีไฟล์ .hms', files: (n) => `${n} ไฟล์`,
+      noRunFile: '(ไม่มีไฟล์ .run)', custom: '(กำหนดเอง)',
+      days: (d) => `${d} วัน`, hours: (h) => `${h} ชั่วโมง`, steps: (n) => `${n} ช่วงเวลา`,
+      rainRange: (a, b) => `ข้อมูลฝนมีตั้งแต่ ${a} ถึง ${b}`,
+      dt: (m) => m % 1440 === 0 ? `${m / 1440} วัน` : m % 60 === 0 ? `${m / 60} ชั่วโมง` : `${m} นาที`,
+      at: (s) => `${s} น.`,
+      missingFiles: (list) => `ไม่พบไฟล์ของ ${list} กรุณาอัปโหลดเพิ่ม`,
+      gageErr: (g, e) => `สถานีฝน "${g}": ${e}`,
+      ran: (n, e, ms) => `รันเสร็จ · ${n} ช่วงเวลา × ${e} element · ${ms} ms`,
+      runFail: 'รันไม่ได้', running: 'กำลังรัน…',
+      ready: 'พร้อมรัน กด “รันแบบจำลอง” เพื่อคำนวณ',
+      pending: 'มีการเปลี่ยนแปลง กด “รันแบบจำลอง” เพื่อคำนวณใหม่',
+      staleNote: 'ผลด้านล่างมาจากการรันครั้งก่อน',
+      emptyRun: 'ยังไม่มีผล กดปุ่ม “▶ รันแบบจำลอง” ด้านบนเพื่อคำนวณ',
+      endBeforeStart: 'เวลาสิ้นสุดต้องอยู่หลังเวลาเริ่มต้น',
+      tooMany: (n) => `ช่วงเวลามากเกินไป (${n} ช่วง)`,
+      reading: 'กำลังอ่านไฟล์…', readFail: 'อ่านไฟล์ไม่ได้',
+      noReadable: 'ไม่พบไฟล์ HEC-HMS ที่อ่านได้ (.hms .basin .met .gage .control .run .pdata .dss .results)',
+      noBasin: 'ไม่พบไฟล์ .basin', missingChip: (n) => `ขาด ${n}`, missingTip: 'ไฟล์นี้ถูกอ้างถึงแต่ยังไม่ได้อัปโหลด',
+      kPeak: (n) => `น้ำสูงสุด · ${n}`, kVol: (n) => `ปริมาตรน้ำท่า · ${n}`, kRain: 'ฝนเฉลี่ยทั้งลุ่มน้ำ',
+      kTime: (s) => `เวลา ${s} น.`, kDepth: (d, u, a, au) => `คิดเป็นความลึก ${d} ${u} บนพื้นที่ ${a} ${au}`,
+      kExcess: (e, l, u) => `ฝนส่วนเกิน ${e} ${u} · สูญเสีย ${l} ${u}`,
+      kRef: (r) => `เทียบ HEC-HMS · ${r}`,
+      kRefLine: (p, u, t) => `HEC-HMS ${p} ${u} เวลา ${t} น.`, edited: 'แก้พารามิเตอร์แล้ว',
+      oldRain: (p, u) => `ฝนใน .results (${p} ${u}) ต่างจากข้อมูลฝนปัจจุบัน ผลอาจมาจากการรันครั้งเก่า`,
+      noCompare: (r, a, b, i) => `ช่วงเวลาหรือ interval ไม่ตรงกับ RUN_${r}.results (${a} ถึง ${b}${i ? ', ' + i : ''}) จึงไม่เทียบ`,
+      netUnit: (u) => `ตัวเลข = น้ำสูงสุด (${u})`,
+      kind: { Subbasin: 'ลุ่มน้ำย่อย · Subbasin', Reach: 'ลำน้ำ · Reach', Junction: 'จุดบรรจบ · Junction', Sink: 'จุดออก · Sink', Source: 'แหล่งน้ำ · Source' },
+      cArea: (a, u) => `พื้นที่รับน้ำ ${a} ${u}`, cFrom: (l) => `รับน้ำจาก ${l}`, cTo: (n) => `ไหลไป ${n}`,
+      cRain: (v, u) => `ฝน ${v} ${u}`, cExcess: (v, u) => `ส่วนเกิน ${v} ${u}`,
+      c0neg: 'Δt < 2KX (C0 ติดลบ)', c2neg: 'Δt > 2K(1−x)',
+      outflow: 'น้ำไหลออก', inflow: 'น้ำไหลเข้า', baseflow: 'Baseflow', rain: 'ฝน', excess: 'ฝนส่วนเกิน',
+      rainPer: (d, u) => `ฝนราย ${d} (${u})`, rainExcess: 'ฝน / ส่วนเกิน',
+      params: 'พารามิเตอร์', paramsOf: (n) => `พารามิเตอร์ · ${n}`, paramsHint: (f) => `แก้ค่าในไฟล์ ${f} แล้วกด “รันแบบจำลอง”`,
+      area: 'พื้นที่', noEdit: 'วิธีนี้ยังไม่รองรับการแก้ค่าในหน้านี้',
+      noParams: (k) => `${k} ไม่มีพารามิเตอร์ ทำหน้าที่รวมน้ำจาก element ต้นน้ำ`,
+      uhInfo: (n, d, u) => `UH "${n}" · ช่วง ${d} · ${u}`, uhMissing: (n) => `ไม่พบ UH "${n}"`,
+      fileVal: (v) => `ค่าในไฟล์: ${v}`,
+      badRange: (k, a, b) => `ค่า ${k} ต้องอยู่ระหว่าง ${a} ถึง ${b}`,
+      tRef: (r, e) => `อ้างอิง = ค่าจาก RUN_${r}.results (HEC-HMS รันเมื่อ ${e})`,
+      tNoRef: 'ถ้ามี RUN_*.results ที่ช่วงเวลาตรงกัน จะแสดงคอลัมน์เทียบกับ HEC-HMS',
+      thEl: 'Element', thKind: 'ชนิด', thArea: (u) => `พื้นที่ ${u}`, thPeak: (u) => `peak ${u}`, thTime: 'เวลา peak',
+      thVol: (u) => `ปริมาตร ${u}`, thDepth: (u) => `ความลึก ${u}`, thRef: 'HEC-HMS peak', thRefTime: 'เวลา', thErr: 'คลาดเคลื่อน',
+      dssHead: (n) => `DSS 7 · ${n} records`, dssTs: 'time series', dssPat: 'pattern', dssVals: (n) => `${n} ค่า`, dssSkip: (t) => `ชนิดข้อมูล ${t} (ไม่ได้อ่าน)`,
+      unreadable: (e) => 'อ่านไม่ได้: ' + e,
+      fDss: 'ไฟล์ไบนารี แสดงรายการ record ที่อ่านได้', fEdited: 'มีค่าที่แก้ในหน้านี้', fAsLoaded: 'ตามไฟล์ที่โหลด',
+      resetDone: 'คืนค่าตามไฟล์แล้ว',
+      loadingDefault: 'กำลังโหลดโปรเจกต์ Vara1…',
+      defaultFail: (e) => `โหลดโปรเจกต์ตัวอย่างไม่ได้ (${e}) ถ้าเปิดไฟล์จากเครื่องโดยตรง ให้ใช้ปุ่มอัปโหลดโฟลเดอร์แทน`,
+      loadFail: (n, s) => `โหลด ${n} ไม่ได้ (${s})`,
+      project: 'โปรเจกต์',
+    },
+    en: {
+      darkMode: 'Dark mode',
+      lede: 'Reads HEC-HMS project files (.hms, .basin, .met, .gage, .control, .run, .pdata and .dss) and computes runoff in the browser. Files are read on your computer and never uploaded to a server. The <b>Vara1</b> project opens by default. To use another project, upload its whole folder or drag the files onto this page.',
+      notice: '<b>Results are approximate, not HEC-HMS itself.</b> The engine is a JavaScript re-implementation of HEC-HMS methods. When the time interval equals the unit hydrograph duration the results match HEC-HMS; at a finer interval (for example 1 minute) the peak differs by about 1% because the UH is resampled differently. When RUN_*.results files are present, this page compares against HEC-HMS.',
+      upFiles: '⭱ Upload files', upFilesTip: 'Choose .hms .basin .met .gage .control .run .pdata .dss .results files',
+      upFolder: '⭱ Upload folder', upFolderTip: 'Choose a whole HEC-HMS project folder',
+      run: '▶ Run model', reset: 'Reset to files',
+      setupTitle: 'Run setup', start: 'Start date/time', end: 'End date/time',
+      fitRain: 'Use full rainfall period', revertCtl: 'Reset control to file',
+      ctlHint: 'Changes take effect when you press “Run model”. The .control file below reflects your edits.',
+      dropHere: 'Drag HEC-HMS project files or a folder here',
+      netTitle: 'Basin network', netHint: 'Click an element to see its graph and edit it',
+      tblTitle: 'Summary of all elements', filesTitle: 'Project files',
+      filesHint: 'Dot on a tab = edited on this page · Download saves the edited file',
+      copy: 'Copy', copied: 'Copied', pressCopy: 'Press Ctrl+C', download: 'Download this file',
+      methodsTitle: 'Supported methods',
+      methods: '<p><b>Precipitation · Specified Average / Gage Weights</b>Reads incremental rainfall from the .dss file at the Pathname in the .gage file and distributes it over each time step linearly along the cumulative curve. Missing values are set to 0, as in HEC-HMS.</p><p><b>Loss · None / Initial+Constant / SCS Curve Number</b>Includes percent impervious area.</p><p><b>Transform · User-Specified UH / SCS / Clark</b>A UH whose duration differs from the time interval is converted with the S-curve method.</p><p><b>Baseflow · None / Recession</b> · <b>Routing · None / Lag / Muskingum</b></p><p><b>DSS files</b>Reads DSS version 7 (HEC-HMS 4.x) regular time series and patterns only. DSS 6 and gridded data are not supported yet.</p>',
+      errTitle: 'Cannot run', noHms: 'no .hms file', files: (n) => `${n} files`,
+      noRunFile: '(no .run file)', custom: '(custom)',
+      days: (d) => `${d} days`, hours: (h) => `${h} hours`, steps: (n) => `${n} time steps`,
+      rainRange: (a, b) => `Rainfall data from ${a} to ${b}`,
+      dt: (m) => m % 1440 === 0 ? `${m / 1440} day${m === 1440 ? '' : 's'}` : m % 60 === 0 ? `${m / 60} hour${m === 60 ? '' : 's'}` : `${m} min`,
+      at: (s) => s,
+      missingFiles: (list) => `Missing files for ${list}. Please upload them.`,
+      gageErr: (g, e) => `Gage "${g}": ${e}`,
+      ran: (n, e, ms) => `Done · ${n} time steps × ${e} element(s) · ${ms} ms`,
+      runFail: 'Run failed', running: 'Running…',
+      ready: 'Ready. Press “Run model” to compute.',
+      pending: 'Inputs changed. Press “Run model” to recompute.',
+      staleNote: 'Results below are from the previous run',
+      emptyRun: 'No results yet. Press “▶ Run model” above to compute.',
+      endBeforeStart: 'End time must be after start time',
+      tooMany: (n) => `Too many time steps (${n})`,
+      reading: 'Reading files…', readFail: 'Could not read files',
+      noReadable: 'No readable HEC-HMS files (.hms .basin .met .gage .control .run .pdata .dss .results)',
+      noBasin: 'No .basin file found', missingChip: (n) => `missing ${n}`, missingTip: 'Referenced by the project but not uploaded',
+      kPeak: (n) => `Peak flow · ${n}`, kVol: (n) => `Runoff volume · ${n}`, kRain: 'Basin-average rainfall',
+      kTime: (s) => `at ${s}`, kDepth: (d, u, a, au) => `Equals ${d} ${u} depth over ${a} ${au}`,
+      kExcess: (e, l, u) => `Excess ${e} ${u} · loss ${l} ${u}`,
+      kRef: (r) => `vs HEC-HMS · ${r}`,
+      kRefLine: (p, u, t) => `HEC-HMS ${p} ${u} at ${t}`, edited: 'parameters edited',
+      oldRain: (p, u) => `Rainfall in .results (${p} ${u}) differs from the current data; the results file may be from an older run`,
+      noCompare: (r, a, b, i) => `Time window or interval differs from RUN_${r}.results (${a} to ${b}${i ? ', ' + i : ''}), so no comparison`,
+      netUnit: (u) => `Numbers = peak flow (${u})`,
+      kind: { Subbasin: 'Subbasin', Reach: 'Reach', Junction: 'Junction', Sink: 'Sink', Source: 'Source' },
+      cArea: (a, u) => `Drainage area ${a} ${u}`, cFrom: (l) => `Inflow from ${l}`, cTo: (n) => `Flows to ${n}`,
+      cRain: (v, u) => `Rain ${v} ${u}`, cExcess: (v, u) => `Excess ${v} ${u}`,
+      c0neg: 'Δt < 2KX (negative C0)', c2neg: 'Δt > 2K(1−x)',
+      outflow: 'Outflow', inflow: 'Inflow', baseflow: 'Baseflow', rain: 'Rainfall', excess: 'Excess rainfall',
+      rainPer: (d, u) => `Rainfall per ${d} (${u})`, rainExcess: 'Rain / excess',
+      params: 'Parameters', paramsOf: (n) => `Parameters · ${n}`, paramsHint: (f) => `Edits ${f}; press “Run model” to apply`,
+      area: 'Area', noEdit: 'Editing this method is not supported on this page yet',
+      noParams: (k) => `${k} has no parameters; it sums flow from upstream elements`,
+      uhInfo: (n, d, u) => `UH "${n}" · ${d} duration · ${u}`, uhMissing: (n) => `UH "${n}" not found`,
+      fileVal: (v) => `value in file: ${v}`,
+      badRange: (k, a, b) => `${k} must be between ${a} and ${b}`,
+      tRef: (r, e) => `Reference = RUN_${r}.results (HEC-HMS run at ${e})`,
+      tNoRef: 'A RUN_*.results file with the same time window adds HEC-HMS comparison columns',
+      thEl: 'Element', thKind: 'Type', thArea: (u) => `Area ${u}`, thPeak: (u) => `Peak ${u}`, thTime: 'Peak time',
+      thVol: (u) => `Volume ${u}`, thDepth: (u) => `Depth ${u}`, thRef: 'HEC-HMS peak', thRefTime: 'Time', thErr: 'Difference',
+      dssHead: (n) => `DSS 7 · ${n} records`, dssTs: 'time series', dssPat: 'pattern', dssVals: (n) => `${n} values`, dssSkip: (t) => `data type ${t} (not read)`,
+      unreadable: (e) => 'Unreadable: ' + e,
+      fDss: 'Binary file; showing the records that can be read', fEdited: 'Edited on this page', fAsLoaded: 'As loaded',
+      resetDone: 'reset to files',
+      loadingDefault: 'Loading the Vara1 project…',
+      defaultFail: (e) => `Could not load the sample project (${e}). If you opened this page from disk, use Upload folder instead.`,
+      loadFail: (n, s) => `Could not load ${n} (${s})`,
+      project: 'Project',
+    },
+  };
+  let LANG = store.get('hms-lang') === 'en' ? 'en' : 'th';
+  const t = (k, ...a) => { const v = I18N[LANG][k]; return typeof v === 'function' ? v(...a) : v; };
+  function applyStatic() {
+    document.documentElement.lang = LANG;
+    H.setLang(LANG);
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
+    document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+    $('lang-th').setAttribute('aria-pressed', LANG === 'th');
+    $('lang-en').setAttribute('aria-pressed', LANG === 'en');
+  }
+  function setLang(l) {
+    LANG = l; store.set('hms-lang', l); applyStatic();
+    if (P && S) { if (OUT && OUT.error) OUT.error = null; renderSetup(); renderAll(); renderStatus(); }
+  }
+  $('lang-th').addEventListener('click', () => setLang('th'));
+  $('lang-en').addEventListener('click', () => setLang('en'));
+
+  // ---------- theme ----------
+  const isDark = () => { const d = document.documentElement.dataset.theme; return d ? d === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches; };
+  const syncTheme = () => $('theme').setAttribute('aria-checked', isDark());
+  $('theme').addEventListener('click', () => { const next = isDark() ? 'light' : 'dark'; document.documentElement.dataset.theme = next; store.set('hms-theme', next); syncTheme(); });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', syncTheme);
+  syncTheme();
+
   // ---------- project state ----------
-  let P = null;        // { name, texts: {name: text}, dss: {lcname: parsed}, dssNames, hms, runs, results }
-  let S = null;        // current scenario { run, basinName, metName, controlName, basinFile, controlFile, blocks, original, ctlBlock, ctlOriginal, ... }
-  let OUT = null, selected = null, curFile = null;
+  let P = null;        // loaded project
+  let S = null;        // current scenario (selected models + editable basin/control blocks)
+  let OUT = null;      // last run results
+  let status = 'idle'; // idle | pending | ok | fail
+  let runInfo = null, runError = null;
+  let selected = null, curFile = null;
 
-  function showError(msg) { const e = $('err'); if (!msg) { e.hidden = true; return; } e.innerHTML = `<span>✕</span><span><b>รันไม่ได้</b> ${esc(msg)}</span>`; e.hidden = false; }
+  function showError(msg) { const e = $('err'); if (!msg) { e.hidden = true; return; } e.innerHTML = `<span>✕</span><span><b>${esc(t('errTitle'))}</b> ${esc(msg)}</span>`; e.hidden = false; }
 
-  function buildProject(files) { // files: [{name, text?, buf?}]
+  function buildProject(files) {
     const texts = {}, dss = {}, dssNames = [];
     for (const f of files) {
-      if (f.buf) { try { dss[lc(f.name)] = H.readDss(f.buf); dssNames.push(f.name); } catch (e) { dss[lc(f.name)] = { error: e.message, records: [] }; dssNames.push(f.name); } }
+      if (f.buf) { try { dss[lc(f.name)] = H.readDss(f.buf); } catch (e) { dss[lc(f.name)] = { error: e.message, records: [] }; } dssNames.push(f.name); }
       else texts[f.name] = f.text;
     }
     const find = (re) => Object.keys(texts).filter(n => re.test(n));
     const byLc = Object.fromEntries(Object.keys(texts).map(n => [lc(n), n]));
     const hmsName = find(/\.hms$/i)[0];
     const pr = hmsName ? H.readProject(texts[hmsName]) : { name: '', basins: {}, mets: {}, controls: {} };
-    // models present on disk but not listed in .hms still count
-    const addAll = (re, kind, target) => { for (const n of find(re)) { const b = H.parseHms(texts[n]).find(x => x.kind === kind); if (b && !Object.values(target).some(v => lc(base(v)) === lc(n))) target[b.name] = n; } };
+    const addAll = (re, kind, target) => { for (const n of find(re)) { const b = H.parseHms(texts[n]).find(x => x.kind === kind); if (b && !Object.values(target).some(v => v && lc(base(v)) === lc(n))) target[b.name] = n; } };
     addAll(/\.basin$/i, 'Basin', pr.basins);
     addAll(/\.met$/i, 'Meteorology', pr.mets);
     addAll(/\.control$/i, 'Control', pr.controls);
@@ -304,7 +488,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     for (const n of find(/\.run$/i)) runs = runs.concat(H.readRuns(texts[n]));
     const results = {};
     for (const n of find(/\.results$/i)) { try { const r = H.readResults(texts[n]); if (r.run) results[r.run] = r; } catch (_) {} }
-    return { name: pr.name || (hmsName ? hmsName.replace(/\.hms$/i, '') : 'โปรเจกต์'), hmsName, texts, dss, dssNames, pr, fileOf, runs, results };
+    return { name: pr.name || (hmsName ? hmsName.replace(/\.hms$/i, '') : ''), hmsName, texts, dss, dssNames, pr, fileOf, runs, results };
   }
   const getDss = (f) => { if (!f || !P) return null; const d = P.dss[lc(base(f))]; return d && !d.error ? d : null; };
 
@@ -321,46 +505,57 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     if (!mf) missing.push(`met "${metName || '?'}"`);
     if (!cf) missing.push(`control "${controlName || '?'}"`);
     S = { runName, basinName, metName, controlName, basinFile: bf, metFile: mf, controlFile: cf, missing };
-    if (bf) { const blocks = H.parseHms(P.texts[bf]); S.blocks = blocks; S.original = JSON.stringify(blocks.map(b => b.props)); }
-    if (cf) { const cb = H.parseHms(P.texts[cf]); S.ctlBlocks = cb; S.ctlOriginal = JSON.stringify(cb.map(b => b.props)); }
-    selected = null;
+    if (bf) { S.blocks = H.parseHms(P.texts[bf]); S.original = JSON.stringify(S.blocks.map(b => b.props)); }
+    if (cf) { S.ctlBlocks = H.parseHms(P.texts[cf]); S.ctlOriginal = JSON.stringify(S.ctlBlocks.map(b => b.props)); }
+    OUT = null; runInfo = null; runError = null; selected = null;
     curFile = bf || P.hmsName || Object.keys(P.texts)[0];
-    renderSetup();
-    runAll();
+    const b = curBasin();
+    if (b) { const outs = b.elements.filter(e => !e.downstream); selected = (outs[outs.length - 1] || b.elements[0] || {}).name || null; }
+    status = 'idle';
+    showError(null);
+    renderSetup(); renderAll(); renderStatus();
   }
+  function curBasin() { try { return S && S.blocks ? H.readBasin(H.writeHms(S.blocks)) : null; } catch (_) { return null; } }
+  function markChanged() { if (status !== 'pending') { status = 'pending'; renderStatus(); } renderKpis(); renderFile(); }
 
   function gageFiles() { return Object.keys(P.texts).filter(n => /\.gage$/i.test(n)); }
   function loadInputs() {
     const met = H.readMet(P.texts[S.metFile]);
-    let gages = {};
+    const gages = {}, pdata = {};
     for (const g of gageFiles()) Object.assign(gages, H.readGages(P.texts[g], getDss));
-    let pdata = {};
     for (const n of Object.keys(P.texts).filter(n => /\.pdata$/i.test(n))) Object.assign(pdata, H.readPairedData(P.texts[n], getDss));
     return { met, gages, pdata };
   }
 
-  function runAll() {
+  function runModel() {
+    if (!S) return;
     const t0 = performance.now();
-    OUT = null;
     try {
-      if (S.missing.length) throw new Error('ไม่พบไฟล์ของ ' + S.missing.join(', ') + ' กรุณาอัปโหลดเพิ่ม');
+      if (S.missing.length) throw new Error(t('missingFiles', S.missing.join(', ')));
       const basin = H.readBasin(H.writeHms(S.blocks));
       const control = H.readControl(H.writeHms(S.ctlBlocks));
       const { met, gages, pdata } = loadInputs();
-      for (const sb of Object.values(met.subbasins)) { const g = gages[sb.gage]; if (g && g.error) throw new Error(`สถานีฝน "${sb.gage}": ${g.error}`); }
-      if (!selected || !basin.elements.find(e => e.name === selected)) selected = null;
+      for (const sb of Object.values(met.subbasins)) { const g = gages[sb.gage]; if (g && g.error) throw new Error(t('gageErr', sb.gage, g.error)); }
       const out = H.run(basin, met, gages, control, pdata);
-      OUT = { ...out, basin, control, met, gages, pdata, u: basin.units };
-      if (!selected) selected = out.outlet;
-      const ms = performance.now() - t0;
-      $('runlog').innerHTML = `<span class="ok">✓ รันเสร็จ</span> · ${control.times.length.toLocaleString()} ช่วงเวลา × ${basin.elements.length} element · ${ms.toFixed(0)} ms`;
+      OUT = { ...out, basin, control, met, gages, pdata, u: basin.units, basinSnap: JSON.stringify(S.blocks.map(b => b.props)) };
+      if (!selected || !basin.elements.find(e => e.name === selected)) selected = out.outlet;
+      runInfo = { n: control.times.length, e: basin.elements.length, ms: Math.round(performance.now() - t0) };
+      runError = null; status = 'ok';
       showError(null);
     } catch (e) {
       console.error(e);
-      $('runlog').innerHTML = `<span class="bad">✕ รันไม่ได้</span>`;
+      runError = e.message; status = 'fail';
       showError(e.message);
     }
-    renderAll();
+    renderAll(); renderStatus();
+  }
+  function renderStatus() {
+    const log = $('runlog'), btn = $('run');
+    btn.classList.toggle('attn', status === 'pending' || status === 'idle');
+    if (status === 'ok' && runInfo) log.innerHTML = `<span class="ok">✓ ${esc(t('ran', runInfo.n.toLocaleString(), runInfo.e, runInfo.ms))}</span>`;
+    else if (status === 'fail') log.innerHTML = `<span class="bad">✕ ${esc(t('runFail'))}</span>`;
+    else if (status === 'pending') log.innerHTML = `<span class="pend">● ${esc(t('pending'))}</span>`;
+    else log.textContent = S ? t('ready') : '';
   }
 
   // ---------- formatting ----------
@@ -368,92 +563,81 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   const fAuto = (v) => v == null || isNaN(v) ? '—' : Math.abs(v) >= 100 ? fN(v, 1) : Math.abs(v) >= 1 ? fN(v, 2) : fN(v, 3);
   const pct = (a, b) => (a - b) / b * 100;
   const sgn = (v) => isNaN(v) ? '—' : (v > 0 ? '+' : v < 0 ? '−' : '±') + Math.abs(v).toFixed(1) + '%';
-  const KIND_TH = { Subbasin: 'ลุ่มน้ำย่อย · Subbasin', Reach: 'ลำน้ำ · Reach', Junction: 'จุดบรรจบ · Junction', Sink: 'จุดออก · Sink', Source: 'แหล่งน้ำ · Source' };
-  const dtLabel = (m) => m % 1440 === 0 ? `${m / 1440} วัน` : m % 60 === 0 ? `${m / 60} ชั่วโมง` : `${m} นาที`;
   const toLocalInput = (ms) => new Date(ms).toISOString().slice(0, 16);
   const fromLocalInput = (s) => { const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(s); return m ? Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]) : NaN; };
 
-  function renderAll() {
-    renderFilesList(); renderKpis(); renderNet(); renderSelected(); renderParams(); renderTable(); renderFile();
-  }
+  function renderAll() { renderFilesList(); renderKpis(); renderNet(); renderSelected(); renderParams(); renderTable(); renderFile(); }
 
   // ---------- setup panel ----------
   const INTERVALS = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120, 180, 240, 360, 480, 720, 1440];
   function opts(sel, list, cur, labelFn) { sel.innerHTML = list.map(v => `<option value="${esc(v)}"${v === cur ? ' selected' : ''}>${esc(labelFn ? labelFn(v) : v)}</option>`).join(''); }
   function renderSetup() {
-    $('proj-name').textContent = P.name;
-    $('eyebrow').textContent = `HEC-HMS 4.x · ${P.hmsName || 'ไม่มีไฟล์ .hms'} · ${Object.keys(P.texts).length + P.dssNames.length} ไฟล์`;
+    $('proj-name').textContent = P.name || t('project');
+    $('eyebrow').textContent = `HEC-HMS 4.x · ${P.hmsName || t('noHms')} · ${t('files', Object.keys(P.texts).length + P.dssNames.length)}`;
     const runNames = P.runs.map(r => r.name);
-    $('sel-run').innerHTML = (runNames.length ? '' : '<option value="">(ไม่มีไฟล์ .run)</option>') + runNames.map(n => `<option${n === S.runName ? ' selected' : ''}>${esc(n)}</option>`).join('') + (runNames.length && !S.runName ? '<option selected value="">(กำหนดเอง)</option>' : '');
+    $('sel-run').innerHTML = (runNames.length ? '' : `<option value="">${esc(t('noRunFile'))}</option>`) + runNames.map(n => `<option${n === S.runName ? ' selected' : ''}>${esc(n)}</option>`).join('') + (runNames.length && !S.runName ? `<option selected value="">${esc(t('custom'))}</option>` : '');
     opts($('sel-basin'), Object.keys(P.pr.basins), S.basinName);
     opts($('sel-met'), Object.keys(P.pr.mets), S.metName);
     opts($('sel-control'), Object.keys(P.pr.controls), S.controlName);
     renderControlFields();
   }
-  function ctlProps() { return S.ctlBlocks ? S.ctlBlocks[0].props : null; }
   function renderControlFields() {
-    const p = ctlProps();
-    const dis = !p;
-    for (const id of ['c-start', 'c-end', 'c-dt', 'c-fit', 'c-revert']) $(id).disabled = dis;
-    if (!p) { $('c-info').textContent = ''; return; }
+    const p = S && S.ctlBlocks ? S.ctlBlocks[0].props : null;
+    for (const id of ['c-start', 'c-end', 'c-dt', 'c-fit', 'c-revert']) $(id).disabled = !p;
+    if (!p) { $('c-info').textContent = ''; $('s-hint').textContent = ''; return; }
     let c;
-    try { c = H.readControl(H.writeHms(S.ctlBlocks)); } catch (e) { return; }
+    try { c = H.readControl(H.writeHms(S.ctlBlocks)); } catch (e) { $('c-info').textContent = e.message; return; }
     const orig = JSON.parse(S.ctlOriginal)[0];
     $('c-start').value = toLocalInput(c.start);
     $('c-end').value = toLocalInput(c.end);
     const list = INTERVALS.includes(c.dtMin) ? INTERVALS : [...INTERVALS, c.dtMin].sort((a, b) => a - b);
-    opts($('c-dt'), list.map(String), String(c.dtMin), (v) => dtLabel(+v));
+    opts($('c-dt'), list.map(String), String(c.dtMin), (v) => t('dt', +v));
     $('c-start').classList.toggle('changed', p['Start Date'] !== orig['Start Date'] || p['Start Time'] !== orig['Start Time']);
     $('c-end').classList.toggle('changed', p['End Date'] !== orig['End Date'] || p['End Time'] !== orig['End Time']);
     $('c-dt').classList.toggle('changed', p['Time Interval'] !== orig['Time Interval']);
-    const n = Math.floor((c.end - c.start) / (c.dtMin * 60000)) + 1;
-    const hrs = (c.end - c.start) / 3600000;
-    $('c-info').textContent = `${hrs >= 48 ? (hrs / 24).toFixed(1) + ' วัน' : hrs.toFixed(1) + ' ชั่วโมง'} · ${n.toLocaleString()} ช่วงเวลา`;
+    const n = Math.floor((c.end - c.start) / (c.dtMin * 60000)) + 1, hrs = (c.end - c.start) / 3600000;
+    $('c-info').textContent = `${hrs >= 48 ? t('days', (hrs / 24).toFixed(1)) : t('hours', hrs.toFixed(1))} · ${t('steps', n.toLocaleString())}`;
     const rng = rainRange();
-    $('s-hint').textContent = rng ? `ข้อมูลฝนมีตั้งแต่ ${H.fmtDateTime(rng[0])} ถึง ${H.fmtDateTime(rng[1])}` : '';
+    $('s-hint').textContent = rng ? t('rainRange', H.fmtDateTime(rng[0]), H.fmtDateTime(rng[1])) : '';
   }
   function rainRange() {
     try {
       const { met, gages } = loadInputs();
       let a = Infinity, b = -Infinity;
       for (const sb of Object.values(met.subbasins)) {
-        const names = sb.gage ? [sb.gage] : Object.keys(sb.time);
-        for (const g of names) { const G = gages[g]; if (!G || !G.values) continue; a = Math.min(a, G.start); b = Math.max(b, G.start + G.values.length * G.interval * 60000); }
+        for (const g of (sb.gage ? [sb.gage] : Object.keys(sb.time))) { const G = gages[g]; if (!G || !G.values) continue; a = Math.min(a, G.start); b = Math.max(b, G.start + G.values.length * G.interval * 60000); }
       }
       return isFinite(a) ? [a, b] : null;
     } catch (_) { return null; }
   }
   function applyControl(start, end, dt) {
     if (isNaN(start) || isNaN(end)) return;
-    if (end <= start) { $('runlog').innerHTML = '<span class="bad">เวลาสิ้นสุดต้องอยู่หลังเวลาเริ่มต้น</span>'; $('c-end').setAttribute('aria-invalid', 'true'); return; }
+    if (end <= start) { $('c-end').setAttribute('aria-invalid', 'true'); $('runlog').innerHTML = `<span class="bad">${esc(t('endBeforeStart'))}</span>`; return; }
     const n = (end - start) / (dt * 60000);
-    if (n > 200000) { $('runlog').innerHTML = `<span class="bad">ช่วงเวลามากเกินไป (${Math.round(n).toLocaleString()} ช่วง)</span>`; return; }
+    if (n > 200000) { $('runlog').innerHTML = `<span class="bad">${esc(t('tooMany', Math.round(n).toLocaleString()))}</span>`; return; }
     $('c-end').setAttribute('aria-invalid', 'false');
     H.setControl(S.ctlBlocks[0], start, end, dt);
     renderControlFields();
-    runAll();
+    markChanged();
   }
   const readFields = () => [fromLocalInput($('c-start').value), fromLocalInput($('c-end').value), +$('c-dt').value];
-  $('c-start').addEventListener('change', () => applyControl(...readFields()));
-  $('c-end').addEventListener('change', () => applyControl(...readFields()));
-  $('c-dt').addEventListener('change', () => applyControl(...readFields()));
+  for (const id of ['c-start', 'c-end', 'c-dt']) $(id).addEventListener('change', () => applyControl(...readFields()));
   $('c-fit').addEventListener('click', () => { const r = rainRange(); if (r) { const dt = +$('c-dt').value; applyControl(r[0], Math.max(r[1], r[0] + dt * 60000), dt); } });
-  $('c-revert').addEventListener('click', () => { S.ctlBlocks = H.parseHms(P.texts[S.controlFile]); renderControlFields(); runAll(); });
+  $('c-revert').addEventListener('click', () => { S.ctlBlocks = H.parseHms(P.texts[S.controlFile]); renderControlFields(); markChanged(); });
   $('sel-run').addEventListener('change', (e) => { if (e.target.value) pickRun(e.target.value); });
   const custom = () => setScenario($('sel-basin').value, $('sel-met').value, $('sel-control').value, null);
-  $('sel-basin').addEventListener('change', custom);
-  $('sel-met').addEventListener('change', custom);
-  $('sel-control').addEventListener('change', custom);
+  for (const id of ['sel-basin', 'sel-met', 'sel-control']) $(id).addEventListener('change', custom);
 
   // ---------- file loading ----------
   function renderFilesList() {
+    if (!P) return;
     const need = new Set();
     for (const g of gageFiles()) for (const b of H.parseHms(P.texts[g])) if (b.props['Filename']) need.add(base(b.props['Filename']));
     for (const n of Object.keys(P.texts).filter(n => /\.pdata$/i.test(n))) for (const b of H.parseHms(P.texts[n])) if (b.props['DSS File']) need.add(base(b.props['DSS File']));
     const have = new Set(P.dssNames.map(lc));
-    const all = [...Object.keys(P.texts).filter(n => VIEW_EXT.test(n) || /\.results$/i.test(n)), ...P.dssNames];
+    const all = [...Object.keys(P.texts), ...P.dssNames];
     let h = all.map(n => `<span class="chip mono">${esc(n)}</span>`).join('');
-    for (const n of need) if (!have.has(lc(n))) h += `<span class="chip mono missing" title="ไฟล์นี้ถูกอ้างถึงแต่ยังไม่ได้อัปโหลด">ขาด ${esc(n)}</span>`;
+    for (const n of need) if (!have.has(lc(n))) h += `<span class="chip mono missing" title="${esc(t('missingTip'))}">${esc(t('missingChip', n))}</span>`;
     $('filelist').innerHTML = h;
   }
   async function readFileList(list) {
@@ -461,28 +645,28 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     for (const f of list) {
       const name = base(f.webkitRelativePath || f.name);
       if (/\.dss$/i.test(name)) { if (f.size < 200 * 1024 * 1024) files.push({ name, buf: await f.arrayBuffer() }); }
-      else if (TEXT_EXT.test(name) && !/\.(sqlite_?|log|grid)$/i.test(name)) files.push({ name, text: await f.text() });
+      else if (TEXT_EXT.test(name)) files.push({ name, text: await f.text() });
     }
     return files;
   }
   async function loadUploads(list) {
     if (!list || !list.length) return;
-    $('runlog').textContent = 'กำลังอ่านไฟล์…';
+    $('runlog').textContent = t('reading');
     try {
       const files = await readFileList(list);
-      if (!files.length) throw new Error('ไม่พบไฟล์ HEC-HMS ที่อ่านได้ (.hms .basin .met .gage .control .run .pdata .dss .results)');
-      // a new .hms/.basin starts a new project; otherwise add files to the current one
+      if (!files.length) throw new Error(t('noReadable'));
+      // a new .hms/.basin starts a new project; other files are added to the current one
       const fresh = files.some(f => /\.(hms|basin)$/i.test(f.name)) || !P;
       const merged = fresh ? files : [...Object.entries(P.texts).map(([name, text]) => ({ name, text })), ...P.dssNames.map(n => ({ name: n, buf: P.dssBufs[lc(n)] })), ...files];
       openProject(merged);
-    } catch (e) { showError(e.message); $('runlog').innerHTML = '<span class="bad">✕ อ่านไฟล์ไม่ได้</span>'; }
+    } catch (e) { showError(e.message); $('runlog').innerHTML = `<span class="bad">✕ ${esc(t('readFail'))}</span>`; }
   }
   function openProject(files) {
     const byName = new Map(); for (const f of files) byName.set(lc(f.name), f); // later files replace earlier ones
     const list = [...byName.values()];
     P = buildProject(list);
     P.dssBufs = Object.fromEntries(list.filter(f => f.buf).map(f => [lc(f.name), f.buf]));
-    if (!Object.keys(P.pr.basins).length) { showError('ไม่พบไฟล์ .basin'); renderSetup(); return; }
+    if (!Object.keys(P.pr.basins).length) { showError(t('noBasin')); return; }
     const complete = (r) => P.fileOf(P.pr.basins[r.basin]) && P.fileOf(P.pr.mets[r.met]) && P.fileOf(P.pr.controls[r.control]);
     const r = P.runs.find(complete) || P.runs[0];
     pickRun(r ? r.name : null);
@@ -518,70 +702,67 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     if (!OUT || !S.runName || !P.results[S.runName]) return null;
     const r = P.results[S.runName], c = OUT.control;
     const match = r.start === c.start && r.end === c.end && (!r.interval || r.interval === c.dtMin);
-    return { r, match, edited: JSON.stringify(S.blocks.map(b => b.props)) !== S.original };
+    return { r, match, edited: OUT.basinSnap !== S.original };
   }
 
   // ---------- KPIs ----------
   function renderKpis() {
-    if (!OUT) { $('kpis').innerHTML = ''; return; }
+    const box = $('kpis');
+    box.classList.toggle('stale', !!OUT && status === 'pending');
+    if (!OUT) { box.innerHTML = S ? `<div class="empty">${esc(t('emptyRun'))}</div>` : ''; return; }
     const u = OUT.u, o = OUT.results[OUT.outlet];
     const subs = Object.values(OUT.results).filter(r => r.kind === 'Subbasin');
     const areaSub = subs.reduce((a, r) => a + r.area, 0);
     const P_ = subs.reduce((a, r) => a + r.totals.precip * r.area, 0) / (areaSub || 1);
     const E_ = subs.reduce((a, r) => a + r.totals.excess * r.area, 0) / (areaSub || 1);
     let h = `
-      <div class="kpi"><span class="eyebrow">น้ำสูงสุด · ${esc(OUT.outlet)}</span><span class="v num">${fAuto(o.stats.peak)}<small>${u.flow}</small></span><span class="s">เวลา ${H.fmtDateTime(o.stats.peakTime)} น.</span></div>
-      <div class="kpi"><span class="eyebrow">ปริมาตรน้ำท่า · ${esc(OUT.outlet)}</span><span class="v num">${fAuto(o.stats.vol)}<small>${u.vol}</small></span><span class="s">คิดเป็นความลึก ${fAuto(o.stats.depth)} ${u.depth} บนพื้นที่ ${fAuto(o.area)} ${u.area}</span></div>
-      <div class="kpi"><span class="eyebrow">ฝนเฉลี่ยทั้งลุ่มน้ำ</span><span class="v num">${fAuto(P_)}<small>${u.depth}</small></span><span class="s">ฝนส่วนเกิน ${fAuto(E_)} ${u.depth} · สูญเสีย ${fAuto(P_ - E_)} ${u.depth}</span></div>`;
+      <div class="kpi"><span class="eyebrow">${esc(t('kPeak', OUT.outlet))}</span><span class="v num">${fAuto(o.stats.peak)}<small>${u.flow}</small></span><span class="s">${esc(t('kTime', H.fmtDateTime(o.stats.peakTime)))}</span></div>
+      <div class="kpi"><span class="eyebrow">${esc(t('kVol', OUT.outlet))}</span><span class="v num">${fAuto(o.stats.vol)}<small>${u.vol}</small></span><span class="s">${esc(t('kDepth', fAuto(o.stats.depth), u.depth, fAuto(o.area), u.area))}</span></div>
+      <div class="kpi"><span class="eyebrow">${esc(t('kRain'))}</span><span class="v num">${fAuto(P_)}<small>${u.depth}</small></span><span class="s">${esc(t('kExcess', fAuto(E_), fAuto(P_ - E_), u.depth))}</span></div>`;
     const ref = refFor();
     if (ref) {
       const rr = ref.r.elements[OUT.outlet];
       if (ref.match && rr) {
         const e = pct(o.stats.peak, rr.peak);
-        const rainDiff = Math.abs(rr.precip - (OUT.results[OUT.outlet].totals ? OUT.results[OUT.outlet].totals.precip : P_)) > 0.01 * (rr.precip || 1);
-        h += `<div class="kpi"><span class="eyebrow">เทียบ HEC-HMS · ${esc(S.runName)}</span><span class="v num">${sgn(e)}<small>peak</small></span><span class="s">HEC-HMS ${fAuto(rr.peak)} ${u.flow} เวลา ${rr.peakTime ? H.fmtTime(rr.peakTime) : '—'} น.${ref.edited ? ' · <b class="up">แก้พารามิเตอร์แล้ว</b>' : ''}${rainDiff ? ` · <b class="up">ฝนใน .results (${fAuto(rr.precip)} ${u.depth}) ต่างจากข้อมูลฝนปัจจุบัน ผลอาจมาจากการรันครั้งเก่า</b>` : ''}</span></div>`;
+        const rainDiff = Math.abs(rr.precip - (o.totals ? o.totals.precip : P_)) > 0.01 * (rr.precip || 1);
+        h += `<div class="kpi"><span class="eyebrow">${esc(t('kRef', S.runName))}</span><span class="v num">${sgn(e)}<small>peak</small></span><span class="s">${esc(t('kRefLine', fAuto(rr.peak), u.flow, rr.peakTime ? H.fmtTime(rr.peakTime) : '—'))}${ref.edited ? ` · <b class="up">${esc(t('edited'))}</b>` : ''}${rainDiff ? ` · <b class="up">${esc(t('oldRain', fAuto(rr.precip), u.depth))}</b>` : ''}</span></div>`;
       } else {
-        h += `<div class="kpi"><span class="eyebrow">เทียบ HEC-HMS · ${esc(S.runName)}</span><span class="v num">—</span><span class="s">ช่วงเวลาหรือ interval ไม่ตรงกับ RUN_${esc(S.runName)}.results (${ref.r.start ? H.fmtDateTime(ref.r.start) : '?'} ถึง ${ref.r.end ? H.fmtDateTime(ref.r.end) : '?'}${ref.r.interval ? ', ' + dtLabel(ref.r.interval) : ''}) จึงไม่เทียบ</span></div>`;
+        h += `<div class="kpi"><span class="eyebrow">${esc(t('kRef', S.runName))}</span><span class="v num">—</span><span class="s">${esc(t('noCompare', S.runName, ref.r.start ? H.fmtDateTime(ref.r.start) : '?', ref.r.end ? H.fmtDateTime(ref.r.end) : '?', ref.r.interval ? t('dt', ref.r.interval) : ''))}</span></div>`;
       }
     }
-    $('kpis').innerHTML = h;
+    if (status === 'pending') h += `<div class="empty" style="opacity:1">${esc(t('staleNote'))} · ${esc(t('pending'))}</div>`;
+    box.innerHTML = h;
   }
 
   // ---------- network ----------
   function renderNet() {
-    const svg = $('net');
-    if (!OUT) { svg.innerHTML = ''; return; }
-    const els = OUT.basin.elements, R = OUT.results;
-    const have = els.filter(e => !isNaN(e.x));
+    const svg = $('net'), b = curBasin();
+    if (!b) { svg.innerHTML = ''; return; }
+    const els = b.elements, R = OUT ? OUT.results : null;
     const W = 400, Hh = els.length <= 2 ? 180 : 300, pad = 60;
-    let pos = {};
-    if (have.length === els.length && els.length > 1) {
+    const pos = {};
+    if (els.every(e => !isNaN(e.x)) && els.length > 1) {
       const xs = els.map(e => e.x), ys = els.map(e => e.y);
       const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
-      const sx = (W - 2 * pad) / ((x1 - x0) || 1), sy = (Hh - 2 * pad) / ((y1 - y0) || 1), s = Math.min(sx, sy);
+      const s = Math.min((W - 2 * pad) / ((x1 - x0) || 1), (Hh - 2 * pad) / ((y1 - y0) || 1));
       const ox = (W - (x1 - x0) * s) / 2, oy = (Hh - (y1 - y0) * s) / 2;
       for (const e of els) pos[e.name] = [ox + (e.x - x0) * s, oy + (y1 - e.y) * s]; // HMS canvas Y points north
-    } else {
-      els.forEach((e, i) => { pos[e.name] = [W / 2, els.length === 1 ? Hh / 2 : pad + i * (Hh - 2 * pad) / (els.length - 1)]; });
-    }
+    } else els.forEach((e, i) => { pos[e.name] = [W / 2, els.length === 1 ? Hh / 2 : pad + i * (Hh - 2 * pad) / (els.length - 1)]; });
     let s = '';
-    for (const e of els) if (e.downstream && pos[e.downstream]) {
-      const [x1, y1] = pos[e.name], [x2, y2] = pos[e.downstream];
-      s += `<path class="link" d="M${x1},${y1} L${x2},${y2}"/>`;
-    }
+    for (const e of els) if (e.downstream && pos[e.downstream]) { const [x1, y1] = pos[e.name], [x2, y2] = pos[e.downstream]; s += `<path class="link" d="M${x1},${y1} L${x2},${y2}"/>`; }
     for (const e of els) {
       const [x, y] = pos[e.name];
       const sel = e.name === selected ? ' sel' : '';
-      const pk = fAuto(R[e.name].stats.peak);
+      const pk = R && R[e.name] ? fAuto(R[e.name].stats.peak) : '';
       let shape, text;
-      if (e.kind === 'Subbasin') { shape = `<rect class="shape" x="${x - 52}" y="${y - 22}" width="104" height="44" rx="6"/>`; text = `<text class="lbl" x="${x}" y="${y - 3}" text-anchor="middle">${esc(e.name)}</text><text class="pk" x="${x}" y="${y + 13}" text-anchor="middle">${pk}</text>`; }
+      if (e.kind === 'Subbasin') { shape = `<rect class="shape" x="${x - 52}" y="${y - 22}" width="104" height="44" rx="6"/>`; text = `<text class="lbl" x="${x}" y="${pk ? y - 3 : y + 4}" text-anchor="middle">${esc(e.name)}</text><text class="pk" x="${x}" y="${y + 13}" text-anchor="middle">${pk}</text>`; }
       else if (e.kind === 'Reach') { shape = `<rect class="shape" x="${x - 40}" y="${y - 13}" width="80" height="26" rx="13"/>`; text = `<text class="lbl" x="${x}" y="${y + 4}" text-anchor="middle">${esc(e.name)}</text><text class="pk" x="${x + 46}" y="${y + 4}">${pk}</text>`; }
       else { shape = `<circle class="shape" cx="${x}" cy="${y}" r="14"/>`; text = `<text class="lbl" x="${x}" y="${y + 32}" text-anchor="middle">${esc(e.name)}</text><text class="pk" x="${x}" y="${y + 46}" text-anchor="middle">${pk}</text>`; }
-      s += `<g class="node${sel}" data-name="${esc(e.name)}" tabindex="0" role="button" aria-label="${esc(e.name)} peak ${pk} ${OUT.u.flow}">${shape}${text}</g>`;
+      s += `<g class="node${sel}" data-name="${esc(e.name)}" tabindex="0" role="button" aria-label="${esc(e.name)}">${shape}${text}</g>`;
     }
     svg.setAttribute('viewBox', `0 0 ${W} ${Hh}`);
     svg.innerHTML = s;
-    $('net-unit').textContent = `ตัวเลข = น้ำสูงสุด (${OUT.u.flow})`;
+    $('net-unit').textContent = OUT ? t('netUnit', OUT.u.flow) : '';
   }
   $('net').addEventListener('click', (ev) => { const g = ev.target.closest('.node'); if (g) select(g.dataset.name); });
   $('net').addEventListener('keydown', (ev) => { const g = ev.target.closest('.node'); if (g && (ev.key === 'Enter' || ev.key === ' ')) { ev.preventDefault(); select(g.dataset.name); } });
@@ -595,52 +776,53 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   }
   let chart = null;
   function renderSelected() {
-    if (!OUT || !selected) { $('el-kind').textContent = ''; $('el-name').textContent = ''; $('el-chips').innerHTML = ''; $('legend').innerHTML = ''; $('hyeto').innerHTML = ''; $('hydro').innerHTML = ''; chart = null; return; }
-    const r = OUT.results[selected], u = OUT.u;
-    const el = OUT.basin.elements.find(e => e.name === selected);
-    $('el-kind').textContent = KIND_TH[el.kind] || el.kind;
-    $('el-name').textContent = selected;
-    const chips = [`พื้นที่รับน้ำ ${fAuto(r.area)} ${u.area}`];
-    if (r.upstream.length) chips.push('รับน้ำจาก ' + r.upstream.join(', '));
-    if (el.downstream) chips.push('ไหลไป ' + el.downstream);
-    if (el.kind === 'Subbasin') chips.push(`ฝน ${fAuto(r.totals.precip)} ${u.depth}`, `ส่วนเกิน ${fAuto(r.totals.excess)} ${u.depth}`);
+    const b = curBasin(), el = b && selected ? b.elements.find(e => e.name === selected) : null;
+    $('el-kind').textContent = el ? (t('kind')[el.kind] || el.kind) : '';
+    $('el-name').textContent = el ? el.name : '';
+    const r = OUT && el ? OUT.results[selected] : null;
+    const empty = $('chart-empty');
+    if (!r) {
+      $('el-chips').innerHTML = ''; $('legend').innerHTML = ''; $('hyeto').innerHTML = ''; $('hydro').innerHTML = ''; $('hyeto').hidden = true; $('hydro').hidden = true; chart = null;
+      empty.textContent = t('emptyRun'); empty.hidden = !S; return;
+    }
+    empty.hidden = true; $('hydro').hidden = false;
+    const u = OUT.u, oel = OUT.basin.elements.find(e => e.name === selected);
+    const chips = [t('cArea', fAuto(r.area), u.area)];
+    if (r.upstream.length) chips.push(t('cFrom', r.upstream.join(', ')));
+    if (oel.downstream) chips.push(t('cTo', oel.downstream));
+    if (oel.kind === 'Subbasin') chips.push(t('cRain', fAuto(r.totals.precip), u.depth), t('cExcess', fAuto(r.totals.excess), u.depth));
     let html = chips.map(c => `<span class="chip">${esc(c)}</span>`).join('');
-    if (el.kind === 'Reach' && el.route.method === 'Muskingum') {
-      const K = el.route.K / el.route.steps, X = el.route.X, dt = OUT.control.dtMin / 60;
-      if (dt < 2 * K * X) html += `<span class="chip warn">Δt &lt; 2KX (C0 ติดลบ)</span>`;
-      if (dt > 2 * K * (1 - X)) html += `<span class="chip warn">Δt &gt; 2K(1−x)</span>`;
+    if (oel.kind === 'Reach' && oel.route.method === 'Muskingum') {
+      const K = oel.route.K / oel.route.steps, X = oel.route.X, dt = OUT.control.dtMin / 60;
+      if (dt < 2 * K * X) html += `<span class="chip warn">${esc(t('c0neg'))}</span>`;
+      if (dt > 2 * K * (1 - X)) html += `<span class="chip warn">${esc(t('c2neg'))}</span>`;
     }
     $('el-chips').innerHTML = html;
-    const series = [{ key: 'out', label: 'น้ำไหลออก', color: 'var(--s-out)', data: r.outflow, stats: r.stats }];
-    if (r.inflow && el.kind === 'Reach') series.push({ key: 'in', label: 'น้ำไหลเข้า', color: 'var(--s-inflow)', data: r.inflow, dash: true });
-    if (el.kind === 'Subbasin' && r.base.some(v => v > 0)) series.push({ key: 'base', label: 'Baseflow', color: 'var(--s-base)', data: r.base, dash: true });
-    const isSub = el.kind === 'Subbasin';
-    $('legend').innerHTML = series.map(s => `<span><span class="lkey${s.dash ? ' dash' : ''}" style="border-color:${s.color}"></span>${s.label}</span>`).join('')
-      + (isSub ? `<span><span class="swatch" style="background:var(--precip)"></span>ฝน</span><span><span class="swatch" style="background:var(--excess)"></span>ฝนส่วนเกิน</span>` : '');
+    const series = [{ key: 'out', label: t('outflow'), color: 'var(--s-out)', data: r.outflow, stats: r.stats }];
+    if (r.inflow && oel.kind === 'Reach') series.push({ key: 'in', label: t('inflow'), color: 'var(--s-inflow)', data: r.inflow, dash: true });
+    if (oel.kind === 'Subbasin' && r.base.some(v => v > 0)) series.push({ key: 'base', label: t('baseflow'), color: 'var(--s-base)', data: r.base, dash: true });
+    const isSub = oel.kind === 'Subbasin';
+    $('legend').innerHTML = series.map(s => `<span><span class="lkey${s.dash ? ' dash' : ''}" style="border-color:${s.color}"></span>${esc(s.label)}</span>`).join('')
+      + (isSub ? `<span><span class="swatch" style="background:var(--precip)"></span>${esc(t('rain'))}</span><span><span class="swatch" style="background:var(--excess)"></span>${esc(t('excess'))}</span>` : '');
     const ref = refFor(); const rr = ref && ref.match && ref.r.elements[selected];
     chart = { series, isSub, r, rr };
     drawCharts();
   }
-
   function timeTicks(T) {
     const span = (T[T.length - 1] - T[0]) / 3600000;
     const steps = [0.25, 0.5, 1, 2, 3, 6, 12, 24, 48, 72, 168, 336, 720];
     const hstep = steps.find(s => span / s <= 8) || 720;
     const ms = hstep * 3600000, out = [];
-    let t = Math.ceil(T[0] / ms) * ms;
-    for (; t <= T[T.length - 1]; t += ms) out.push(t);
+    for (let x = Math.ceil(T[0] / ms) * ms; x <= T[T.length - 1]; x += ms) out.push(x);
     return { ticks: out, daily: hstep >= 24 };
   }
-
   function drawCharts() {
     if (!chart || !OUT) return;
     const { series, isSub, r, rr } = chart, u = OUT.u, T = OUT.times, N = T.length, t0 = T[0], t1 = T[N - 1];
     const W = Math.max(320, $('chart-box').clientWidth), ml = 58, mr = 16, pw = W - ml - mr;
-    const xt = (t) => ml + (t - t0) / ((t1 - t0) || 1) * pw;
+    const xt = (v) => ml + (v - t0) / ((t1 - t0) || 1) * pw;
     const x = (i) => xt(T[i]);
     const { ticks, daily } = timeTicks(T);
-
-    // hyetograph (aggregated into at most ~240 bars)
     const hy = $('hyeto');
     if (isSub) {
       const k = Math.max(1, Math.ceil((N - 1) / 240)), bars = [];
@@ -650,7 +832,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       const y = (v) => mt + (v / pmax) * (hh - mt - mb);
       let s = `<g class="axis"><line class="g" x1="${ml}" x2="${W - mr}" y1="${mt}" y2="${mt}"/><line class="g" x1="${ml}" x2="${W - mr}" y1="${y(pmax)}" y2="${y(pmax)}"/>`;
       s += `<text x="${ml - 6}" y="${y(pmax) + 4}" text-anchor="end">${fAuto(pmax)}</text><text x="${ml - 6}" y="${mt + 4}" text-anchor="end">0</text>`;
-      s += `<text class="ttl" x="${ml}" y="${hh + 8}">ฝนราย ${dtLabel(OUT.control.dtMin * k)} (${u.depth})</text></g>`;
+      s += `<text class="ttl" x="${ml}" y="${hh + 8}">${esc(t('rainPer', t('dt', OUT.control.dtMin * k), u.depth))}</text></g>`;
       for (const [a, b, p, e] of bars) {
         if (p <= 0) continue;
         const xa = xt(T[a - 1]), bw = Math.max(0.8, xt(T[b]) - xa - (k > 1 || N < 200 ? 0.6 : 0));
@@ -660,8 +842,6 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       s += `<line id="hx" x1="0" x2="0" y1="${mt}" y2="${hh - mb}" stroke="var(--ink-2)" stroke-width="1" visibility="hidden"/>`;
       hy.setAttribute('viewBox', `0 0 ${W} ${hh + 12}`); hy.innerHTML = s; hy.hidden = false;
     } else { hy.hidden = true; hy.innerHTML = ''; }
-
-    // hydrograph
     const hh = 300, mt = 12, mb = 40;
     const ymax = niceMax(Math.max(...series.map(s => Math.max(...s.data)), rr ? rr.peak : 0) * 1.08);
     const y = (v) => mt + (1 - v / ymax) * (hh - mt - mb);
@@ -672,12 +852,11 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     }
     const every = pw < 420 ? 2 : 1;
     let lastDay = null;
-    ticks.forEach((t, j) => {
+    ticks.forEach((tk, j) => {
       if (j % every) return;
-      const d = new Date(t), day = H.fmtDate(t).slice(0, 5);
-      const lbl = daily ? day : H.fmtTime(t);
-      s += `<line class="g" x1="${xt(t)}" x2="${xt(t)}" y1="${hh - mb}" y2="${hh - mb + 4}"/><text x="${xt(t)}" y="${hh - mb + 16}" text-anchor="middle">${lbl}</text>`;
-      if (!daily && day !== lastDay) { s += `<text x="${xt(t)}" y="${hh - mb + 29}" text-anchor="middle">${day}</text>`; lastDay = day; }
+      const day = H.fmtDate(tk).slice(0, 5);
+      s += `<line class="g" x1="${xt(tk)}" x2="${xt(tk)}" y1="${hh - mb}" y2="${hh - mb + 4}"/><text x="${xt(tk)}" y="${hh - mb + 16}" text-anchor="middle">${daily ? day : H.fmtTime(tk)}</text>`;
+      if (!daily && day !== lastDay) { s += `<text x="${xt(tk)}" y="${hh - mb + 29}" text-anchor="middle">${day}</text>`; lastDay = day; }
     });
     s += `<text class="ttl" x="${ml}" y="${hh - 1}">${u.flow}</text></g>`;
     const stride = Math.max(1, Math.floor(N / 1600)); // keep peaks when thinning long series
@@ -691,8 +870,8 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       s += `<path d="${d}" fill="none" stroke="${se.color}" stroke-width="2" stroke-linejoin="round" ${se.dash ? 'stroke-dasharray="5 4"' : ''}/>`;
     }
     const o = series[0], pi = o.stats.peakIndex, px = x(pi), py = y(o.data[pi]);
-    s += `<circle cx="${px}" cy="${py}" r="4.5" fill="${o.color}" stroke="var(--surface)" stroke-width="2"/>`;
     const anchor = px > W - 200 ? 'end' : 'start';
+    s += `<circle cx="${px}" cy="${py}" r="4.5" fill="${o.color}" stroke="var(--surface)" stroke-width="2"/>`;
     s += `<text x="${px + (anchor === 'start' ? 8 : -8)}" y="${py - 8}" text-anchor="${anchor}" style="font:500 11.5px var(--font-mono);fill:var(--ink)">${fAuto(o.data[pi])} @ ${H.fmtDateTime(o.stats.peakTime)}</text>`;
     if (rr && rr.peakTime >= t0 && rr.peakTime <= t1) {
       const rx = xt(rr.peakTime), ry = y(rr.peak);
@@ -707,15 +886,15 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   function hover(ev) {
     if (!chart || !chart.geom) return;
     const { x, y, ml, pw, W, N } = chart.geom, T = OUT.times, u = OUT.u;
-    const r = $('hydro').getBoundingClientRect();
-    const sx = (ev.clientX - r.left) * (W / r.width);
+    const rect = $('hydro').getBoundingClientRect();
+    const sx = (ev.clientX - rect.left) * (W / rect.width);
     const i = Math.max(0, Math.min(N - 1, Math.round((sx - ml) / pw * (N - 1))));
     const xx = x(i);
     for (const id of ['cx', 'hx']) { const l = $(id); if (l) { l.setAttribute('x1', xx); l.setAttribute('x2', xx); l.setAttribute('visibility', 'visible'); } }
     $('dots').innerHTML = chart.series.map(se => `<circle cx="${xx}" cy="${y(se.data[i])}" r="4" fill="${se.color}" stroke="var(--surface)" stroke-width="2"/>`).join('');
-    let h = `<span class="t">${H.fmtDateTime(T[i])} น.</span>`;
-    for (const se of chart.series) h += `<span class="r"><span><span class="lkey${se.dash ? ' dash' : ''}" style="border-color:${se.color};margin-right:6px"></span>${se.label}</span><b>${fAuto(se.data[i])} ${u.flow}</b></span>`;
-    if (chart.isSub) h += `<span class="r"><span>ฝน / ส่วนเกิน</span><b>${chart.r.precip[i].toFixed(3)} / ${chart.r.excess[i].toFixed(3)} ${u.depth}</b></span>`;
+    let h = `<span class="t">${esc(t('at', H.fmtDateTime(T[i])))}</span>`;
+    for (const se of chart.series) h += `<span class="r"><span><span class="lkey${se.dash ? ' dash' : ''}" style="border-color:${se.color};margin-right:6px"></span>${esc(se.label)}</span><b>${fAuto(se.data[i])} ${u.flow}</b></span>`;
+    if (chart.isSub) h += `<span class="r"><span>${esc(t('rainExcess'))}</span><b>${chart.r.precip[i].toFixed(3)} / ${chart.r.excess[i].toFixed(3)} ${u.depth}</b></span>`;
     const tip = $('tip'); tip.innerHTML = h; tip.hidden = false;
     const box = $('chart-box').getBoundingClientRect(), px = ev.clientX - box.left, tw = tip.offsetWidth;
     tip.style.left = (px + 14 + tw > box.width ? px - tw - 14 : px + 14) + 'px';
@@ -731,75 +910,74 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(drawCharts, 120); });
 
   // ---------- parameter editor ----------
-  // [key, Thai label, unit key, min, max]; unit keys are resolved per unit system
+  // [HMS key, {th, en} label, unit key, min, max]; unit keys resolve per unit system
+  const L = (th, en) => ({ th, en });
   const PARAM_DEFS = {
-    area: [['Area', 'พื้นที่', 'area', 0.0001, null]],
+    area: [['Area', L('พื้นที่', 'Area'), 'area', 0.0001, null]],
     loss: {
-      'Initial+Constant': [['Initial Loss', 'การสูญเสียช่วงแรก', 'depth', 0, null], ['Constant Loss Rate', 'อัตราสูญเสียคงที่', 'rate', 0, null], ['Percent Impervious Area', 'พื้นที่ทึบน้ำ', '%', 0, 100]],
-      'SCS': [['Curve Number', 'Curve Number', '', 1, 100], ['Initial Abstraction', 'Initial Abstraction', 'depth', 0, null], ['Percent Impervious Area', 'พื้นที่ทึบน้ำ', '%', 0, 100]],
+      'Initial+Constant': [['Initial Loss', L('การสูญเสียช่วงแรก', 'Initial loss'), 'depth', 0, null], ['Constant Loss Rate', L('อัตราสูญเสียคงที่', 'Constant loss rate'), 'rate', 0, null], ['Percent Impervious Area', L('พื้นที่ทึบน้ำ', 'Impervious area'), '%', 0, 100]],
+      'SCS': [['Curve Number', L('Curve Number', 'Curve number'), '', 1, 100], ['Initial Abstraction', L('Initial Abstraction', 'Initial abstraction'), 'depth', 0, null], ['Percent Impervious Area', L('พื้นที่ทึบน้ำ', 'Impervious area'), '%', 0, 100]],
     },
     transform: {
-      'Clark': [['Time of Concentration', 'เวลารวมตัว Tc', 'hr', 0.01, null], ['Storage Coefficient', 'สัมประสิทธิ์เก็บกัก R', 'hr', 0.01, null]],
-      'SCS': [['Lag', 'Lag time', 'min', 0.1, null]],
+      'Clark': [['Time of Concentration', L('เวลารวมตัว Tc', 'Time of concentration Tc'), 'hr', 0.01, null], ['Storage Coefficient', L('สัมประสิทธิ์เก็บกัก R', 'Storage coefficient R'), 'hr', 0.01, null]],
+      'SCS': [['Lag', L('Lag time', 'Lag time'), 'min', 0.1, null]],
     },
-    baseflow: { 'Recession': [['Initial Flow/Area Ratio', 'น้ำท่าเริ่มต้นต่อพื้นที่', 'fpa', 0, null], ['Recession Factor', 'ค่าคงที่การลดลง', '/วัน', 0.01, 1], ['Threshold Flow To Peak Ratio', 'threshold ต่อ peak', '', 0.01, 1]] },
+    baseflow: { 'Recession': [['Initial Flow/Area Ratio', L('น้ำท่าเริ่มต้นต่อพื้นที่', 'Initial flow per area'), 'fpa', 0, null], ['Recession Factor', L('ค่าคงที่การลดลง', 'Recession constant'), 'perday', 0.01, 1], ['Threshold Flow To Peak Ratio', L('threshold ต่อ peak', 'Threshold ratio to peak'), '', 0.01, 1]] },
     route: {
-      'Muskingum': [['Muskingum K', 'เวลาเดินทาง K', 'hr', 0.01, null], ['Muskingum x', 'ค่าถ่วง x', '', 0, 0.5], ['Muskingum Steps', 'จำนวน subreach', '', 1, 50]],
-      'Lag': [['Lag', 'Lag time', 'min', 0, null]],
+      'Muskingum': [['Muskingum K', L('เวลาเดินทาง K', 'Travel time K'), 'hr', 0.01, null], ['Muskingum x', L('ค่าถ่วง x', 'Weighting x'), '', 0, 0.5], ['Muskingum Steps', L('จำนวน subreach', 'Subreaches'), '', 1, 50]],
+      'Lag': [['Lag', L('Lag time', 'Lag time'), 'min', 0, null]],
     },
   };
   function renderParams() {
-    if (!S || !S.blocks || !selected) { $('params').innerHTML = ''; return; }
-    const u = OUT ? OUT.u : H.readBasin(H.writeHms(S.blocks)).units;
-    const unitOf = (k) => ({ area: u.area, depth: u.depth, rate: u.rate, fpa: u.flowPerArea }[k] ?? k);
-    const idx = S.blocks.findIndex(b => b.name === selected && b.kind !== 'Basin');
+    const b = curBasin();
+    $('p-title').textContent = selected ? t('paramsOf', selected) : t('params');
+    if (!b || !selected) { $('params').innerHTML = ''; $('p-hint').textContent = ''; return; }
+    const u = b.units;
+    const unitOf = (k) => ({ area: u.area, depth: u.depth, rate: u.rate, fpa: u.flowPerArea, perday: LANG === 'th' ? '/วัน' : '/day' }[k] ?? k);
+    const idx = S.blocks.findIndex(x => x.name === selected && x.kind !== 'Basin');
     if (idx < 0) { $('params').innerHTML = ''; return; }
     const blk = S.blocks[idx], orig = JSON.parse(S.original)[idx], p = blk.props;
-    $('p-title').textContent = `พารามิเตอร์ · ${selected}`;
-    $('p-hint').textContent = `แก้ค่าในไฟล์ ${S.basinFile} แล้วรันใหม่ทันที`;
+    $('p-hint').textContent = t('paramsHint', S.basinFile);
     const groups = [];
     if (blk.kind === 'Subbasin') {
-      groups.push(['พื้นที่', PARAM_DEFS.area]);
-      groups.push([`Loss · ${p['LossRate'] || 'None'}`, PARAM_DEFS.loss[p['LossRate']] || []]);
-      groups.push([`Transform · ${p['Transform'] || 'None'}`, PARAM_DEFS.transform[p['Transform']] || []]);
-      groups.push([`Baseflow · ${p['Baseflow'] || 'None'}`, PARAM_DEFS.baseflow[p['Baseflow']] || []]);
-    } else if (blk.kind === 'Reach') groups.push([`Routing · ${p['Route'] || 'None'}`, PARAM_DEFS.route[p['Route']] || []]);
-    if (!groups.length) { $('params').innerHTML = `<p class="hint" style="grid-column:1/-1">${esc(blk.kind)} ไม่มีพารามิเตอร์ ทำหน้าที่รวมน้ำจาก element ต้นน้ำ</p>`; return; }
+      groups.push([t('area'), PARAM_DEFS.area, 'area']);
+      groups.push([`Loss · ${p['LossRate'] || 'None'}`, PARAM_DEFS.loss[p['LossRate']] || [], p['LossRate']]);
+      groups.push([`Transform · ${p['Transform'] || 'None'}`, PARAM_DEFS.transform[p['Transform']] || [], p['Transform']]);
+      groups.push([`Baseflow · ${p['Baseflow'] || 'None'}`, PARAM_DEFS.baseflow[p['Baseflow']] || [], p['Baseflow']]);
+    } else if (blk.kind === 'Reach') groups.push([`Routing · ${p['Route'] || 'None'}`, PARAM_DEFS.route[p['Route']] || [], p['Route']]);
+    if (!groups.length) { $('params').innerHTML = `<p class="hint" style="grid-column:1/-1">${esc(t('noParams', blk.kind))}</p>`; return; }
+    let pdata = null;
+    try { pdata = loadInputs().pdata; } catch (_) {}
     let h = '';
-    for (const [title, defs] of groups) {
+    for (const [title, defs, method] of groups) {
       h += `<div class="group-title">${esc(title)}</div>`;
-      if (!defs.length && !/None|User-Specified UH/.test(title)) h += `<p class="hint" style="grid-column:1/-1">วิธีนี้ยังไม่รองรับการแก้ค่าในหน้านี้</p>`;
-      for (const [key, th, uk, min, max] of defs) {
+      if (!defs.length && method && method !== 'None' && method !== 'User-Specified UH') h += `<p class="hint" style="grid-column:1/-1">${esc(t('noEdit'))}</p>`;
+      for (const [key, lab, uk, min, max] of defs) {
         if (!(key in p) && key !== 'Initial Abstraction') continue;
         const id = 'p-' + key.replace(/\W+/g, '-').toLowerCase();
         const changed = p[key] !== orig[key];
-        h += `<div class="field"><label for="${id}">${th}<span class="u">${esc(unitOf(uk))}</span></label><input id="${id}" class="${changed ? 'changed' : ''}" data-key="${esc(key)}" data-min="${min}" data-max="${max ?? ''}" inputmode="decimal" value="${esc(p[key] ?? '')}" title="${esc(key)}${changed ? ' · ค่าในไฟล์: ' + esc(orig[key] ?? '') : ''}"></div>`;
+        h += `<div class="field"><label for="${id}">${esc(lab[LANG])}<span class="u">${esc(unitOf(uk))}</span></label><input id="${id}" class="${changed ? 'changed' : ''}" data-key="${esc(key)}" data-min="${min}" data-max="${max ?? ''}" inputmode="decimal" value="${esc(p[key] ?? '')}" title="${esc(key)}${changed ? ' · ' + esc(t('fileVal', orig[key] ?? '')) : ''}"></div>`;
       }
-      if (/User-Specified UH/.test(title) && OUT) {
-        const uh = OUT.pdata[p['Unit Hydrograph Name']];
+      if (method === 'User-Specified UH') {
+        const uh = pdata && pdata[p['Unit Hydrograph Name']];
         h += uh && uh.values
-          ? `<div class="uh">UH "${esc(uh.name)}" · ช่วง ${dtLabel(uh.interval)} · ${esc(uh.units || '')}<br>${uh.values.map(v => v.toFixed(3)).join('  ')}</div>`
-          : `<div class="uh">ไม่พบ UH "${esc(p['Unit Hydrograph Name'] || '')}"</div>`;
+          ? `<div class="uh">${esc(t('uhInfo', uh.name, t('dt', uh.interval), uh.units || ''))}<br>${uh.values.map(v => v.toFixed(3)).join('  ')}</div>`
+          : `<div class="uh">${esc(t('uhMissing', p['Unit Hydrograph Name'] || ''))}</div>`;
       }
     }
     $('params').innerHTML = h;
   }
-  let pt;
   $('params').addEventListener('input', (ev) => {
     const inp = ev.target; if (!inp.dataset.key) return;
     const v = parseFloat(inp.value), min = parseFloat(inp.dataset.min), max = inp.dataset.max === '' ? Infinity : parseFloat(inp.dataset.max);
     const ok = inp.value.trim() !== '' && !isNaN(v) && v >= min && v <= max && (inp.dataset.key !== 'Muskingum Steps' || Number.isInteger(v));
     inp.setAttribute('aria-invalid', ok ? 'false' : 'true');
-    if (!ok) { $('runlog').innerHTML = `<span class="bad">ค่า ${esc(inp.dataset.key)} ต้องอยู่ระหว่าง ${min} ถึง ${max === Infinity ? '∞' : max}</span>`; return; }
+    if (!ok) { $('runlog').innerHTML = `<span class="bad">${esc(t('badRange', inp.dataset.key, min, max === Infinity ? '∞' : max))}</span>`; return; }
     const blk = S.blocks.find(b => b.name === selected && b.kind !== 'Basin');
     if (!(inp.dataset.key in blk.props)) blk.order.push(inp.dataset.key);
     blk.props[inp.dataset.key] = inp.value.trim();
-    clearTimeout(pt);
-    pt = setTimeout(() => {
-      const active = document.activeElement && document.activeElement.id;
-      runAll();
-      if (active) { const el = $(active); if (el) { el.focus(); const n = el.value.length; try { el.setSelectionRange(n, n); } catch (_) {} } }
-    }, 250);
+    inp.classList.toggle('changed', blk.props[inp.dataset.key] !== JSON.parse(S.original)[S.blocks.indexOf(blk)][inp.dataset.key]);
+    markChanged();
   });
 
   // ---------- summary table ----------
@@ -807,9 +985,9 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   function renderTable() {
     if (!OUT) { $('summary').innerHTML = ''; $('t-hint').textContent = ''; return; }
     const u = OUT.u, ref = refFor(), withRef = ref && ref.match;
-    $('t-hint').textContent = withRef ? `อ้างอิง = ค่าจาก RUN_${S.runName}.results (HEC-HMS รันเมื่อ ${ref.r.executed || '?'})` : 'ถ้ามี RUN_*.results ที่ช่วงเวลาตรงกัน จะแสดงคอลัมน์เทียบกับ HEC-HMS';
-    let h = `<thead><tr><th>Element</th><th>ชนิด</th><th>พื้นที่ ${u.area}</th><th class="sep">peak ${u.flow}</th><th>เวลา peak</th><th>ปริมาตร ${u.vol}</th><th>ความลึก ${u.depth}</th>`
-      + (withRef ? `<th class="sep">HEC-HMS peak</th><th>เวลา</th><th>คลาดเคลื่อน</th>` : '') + `</tr></thead><tbody>`;
+    $('t-hint').textContent = withRef ? t('tRef', S.runName, ref.r.executed || '?') : t('tNoRef');
+    let h = `<thead><tr><th>${t('thEl')}</th><th>${t('thKind')}</th><th>${esc(t('thArea', u.area))}</th><th class="sep">${esc(t('thPeak', u.flow))}</th><th>${t('thTime')}</th><th>${esc(t('thVol', u.vol))}</th><th>${esc(t('thDepth', u.depth))}</th>`
+      + (withRef ? `<th class="sep">${t('thRef')}</th><th>${t('thRefTime')}</th><th>${t('thErr')}</th>` : '') + `</tr></thead><tbody>`;
     for (const name of OUT.order) {
       const r = OUT.results[name], rr = withRef ? ref.r.elements[name] : null;
       h += `<tr data-name="${esc(name)}" tabindex="0" class="${name === selected ? 'sel' : ''}"><td>${esc(name)}</td><td>${r.kind}</td><td>${fAuto(r.area)}</td>
@@ -827,10 +1005,10 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     if (!P) return '';
     if (S && name === S.basinFile && S.blocks) return H.writeHms(S.blocks);
     if (S && name === S.controlFile && S.ctlBlocks) return H.writeHms(S.ctlBlocks);
-    if (P.dss[lc(name)]) {
-      const d = P.dss[lc(name)];
-      if (d.error) return 'อ่านไม่ได้: ' + d.error;
-      return `DSS 7 · ${d.records.length} records\n\n` + d.records.map(r => `${r.path}\n     ${r.values ? `${r.pattern ? 'pattern' : 'time series'} · ${r.n} ค่า · ${r.units} ${r.dataType}` : 'ชนิดข้อมูล ' + r.type + ' (ไม่ได้อ่าน)'}`).join('\n');
+    const d = P.dss[lc(name)];
+    if (d) {
+      if (d.error) return t('unreadable', d.error);
+      return t('dssHead', d.records.length) + '\n\n' + d.records.map(r => `${r.path}\n     ${r.values ? `${r.pattern ? t('dssPat') : t('dssTs')} · ${t('dssVals', r.n)} · ${r.units} ${r.dataType}` : t('dssSkip', r.type)}`).join('\n');
     }
     return P.texts[name] || '';
   }
@@ -844,12 +1022,11 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     if (!P) return;
     const names = [...Object.keys(P.texts).filter(n => VIEW_EXT.test(n)), ...P.dssNames];
     if (!names.includes(curFile)) curFile = names[0];
-    $('tabs').innerHTML = names.map(n => `<button class="tab" role="tab" aria-selected="${n === curFile}" data-f="${esc(n)}">${esc(n)}${isEdited(n) ? '<span class="dot" aria-label="แก้ไขแล้ว"></span>' : ''}</button>`).join('');
+    $('tabs').innerHTML = names.map(n => `<button class="tab" role="tab" aria-selected="${n === curFile}" data-f="${esc(n)}">${esc(n)}${isEdited(n) ? '<span class="dot"></span>' : ''}</button>`).join('');
     const isDss = /\.dss$/i.test(curFile || '');
-    $('file-desc').textContent = isDss ? 'ไฟล์ไบนารี แสดงรายการ record ที่อ่านได้' : (isEdited(curFile) ? 'มีค่าที่แก้ในหน้านี้' : 'ตามไฟล์ที่โหลด');
+    $('file-desc').textContent = isDss ? t('fDss') : (isEdited(curFile) ? t('fEdited') : t('fAsLoaded'));
     $('download').disabled = isDss;
-    const t = fileText(curFile);
-    $('file').innerHTML = esc(t).split('\n').map(l => {
+    $('file').innerHTML = esc(fileText(curFile)).split('\n').map(l => {
       const m = /^(\s*)([^:]+):(.*)$/.exec(l);
       if (!m || isDss) return l;
       return m[1] ? `${m[1]}<span class="k">${m[2]}</span>:${m[3]}` : `<span class="b">${m[2]}:${m[3]}</span>`;
@@ -857,10 +1034,9 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   }
   $('tabs').addEventListener('click', (ev) => { const b = ev.target.closest('[data-f]'); if (b) { curFile = b.dataset.f; renderFile(); } });
   $('copy').addEventListener('click', () => {
-    const t = fileText(curFile);
-    const done = () => { $('copy').textContent = 'คัดลอกแล้ว'; setTimeout(() => { $('copy').textContent = 'คัดลอก'; }, 1500); };
-    const fallback = () => { const r = document.createRange(); r.selectNodeContents($('file')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); $('copy').textContent = 'กด Ctrl+C'; };
-    try { navigator.clipboard.writeText(t).then(done, fallback); } catch (_) { fallback(); }
+    const done = () => { $('copy').textContent = t('copied'); setTimeout(() => { $('copy').textContent = t('copy'); }, 1500); };
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents($('file')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); $('copy').textContent = t('pressCopy'); };
+    try { navigator.clipboard.writeText(fileText(curFile)).then(done, fallback); } catch (_) { fallback(); }
   });
   $('download').addEventListener('click', () => {
     const blob = new Blob([fileText(curFile).replace(/\n/g, '\r\n')], { type: 'text/plain' });
@@ -868,23 +1044,30 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   });
 
-  $('run').addEventListener('click', () => { if (S) runAll(); });
-  $('reset').addEventListener('click', () => { if (!S) return; if (S.runName) pickRun(S.runName); else setScenario(S.basinName, S.metName, S.controlName, null); $('runlog').innerHTML += ' · คืนค่าตามไฟล์แล้ว'; });
+  $('run').addEventListener('click', () => { if (!S) return; $('runlog').textContent = t('running'); setTimeout(runModel, 10); });
+  $('reset').addEventListener('click', () => {
+    if (!S) return;
+    S.blocks = H.parseHms(P.texts[S.basinFile]);
+    if (S.controlFile) S.ctlBlocks = H.parseHms(P.texts[S.controlFile]);
+    renderControlFields(); renderParams(); renderNet(); markChanged();
+    $('runlog').innerHTML += ` · ${esc(t('resetDone'))}`;
+  });
 
   // ---------- default project ----------
+  applyStatic();
   const DEFAULT = { dir: 'data/vara1/', files: ['Vara1.hms', 'SEP.basin', 'Met_1.met', 'Vara1.gage', 'Control_1.control', 'Control_30.control', 'Vara1.run', 'Vara1.pdata', 'Vara1.dss', 'RUN_Run_1.results', 'RUN_Run_30.results'] };
   (async function boot() {
-    $('runlog').textContent = 'กำลังโหลดโปรเจกต์ Vara1…';
+    $('runlog').textContent = t('loadingDefault');
     try {
       const files = await Promise.all(DEFAULT.files.map(async (n) => {
         const r = await fetch(DEFAULT.dir + n);
-        if (!r.ok) throw new Error(`โหลด ${n} ไม่ได้ (${r.status})`);
+        if (!r.ok) throw new Error(t('loadFail', n, r.status));
         return /\.dss$/i.test(n) ? { name: n, buf: await r.arrayBuffer() } : { name: n, text: await r.text() };
       }));
       openProject(files);
     } catch (e) {
       $('runlog').textContent = '';
-      showError(`โหลดโปรเจกต์ตัวอย่างไม่ได้ (${e.message}) ถ้าเปิดไฟล์จากเครื่องโดยตรง ให้ใช้ปุ่มอัปโหลดโฟลเดอร์แทน`);
+      showError(t('defaultFail', e.message));
     }
   })();
 })();
