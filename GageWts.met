@@ -1,0 +1,33 @@
+Meteorology: GageWts
+     Description: Thiessen weights; 10-min data
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 02:54
+     Version: 4.13
+     Unit System: English
+     Precipitation Method: Gage Weights
+     Evapotranspiration Method: No Evapotranspiration
+     Snowmelt Method: None
+End:
+
+Subbasin: Subbasin-1
+     Depth Weight Fire Dept: 1
+     Time Weight Proj Office: 1.0
+End:
+
+Subbasin: Subbasin-2
+     Depth Weight Fire Dept: 0.2136
+     Depth Weight Proj Office: 0.7864
+     Time Weight Proj Office: 1.0
+End:
+
+Subbasin: Subbasin-3
+     Depth Weight Sidney: 0.7618
+     Depth Weight Proj Office: 0.2382
+     Time Weight Proj Office: 1.0
+End:
+
+Subbasin: Subbasin-4
+     Depth Weight Sidney: 0.0571
+     Depth Weight Proj Office: 0.9429
+     Time Weight Proj Office: 1.0
+End:

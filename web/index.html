@@ -1,0 +1,1278 @@
+<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<title>Castro Valley Runoff Model</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #f3f6f5; --surface: #ffffff; --surface-2: #eaf0ee;
+  --ink: #132020; --ink-2: #475755; --muted: #74837f;
+  --line: #d5dedb; --grid: #e6ecea;
+  --accent: #0c6a68; --accent-ink: #ffffff; --accent-soft: #d8ebe8;
+  --s-future: #2a78d6; --s-exist: #eb6834; --s-inflow: #8a9895;
+  --precip: #b4c4c1; --excess: #2a78d6;
+  --warn: #9a5b00; --warn-soft: #fbeed3; --bad: #b83433; --good: #1d7440;
+  --font-display: "Chakra Petch", "IBM Plex Sans Thai", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans Thai", "Leelawadee UI", "Tahoma", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Consolas", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0e1413; --surface: #151d1c; --surface-2: #1b2524;
+    --ink: #e6eeec; --ink-2: #b1c0bd; --muted: #7d8d8a;
+    --line: #2a3634; --grid: #212b2a;
+    --accent: #52b5ae; --accent-ink: #0b1312; --accent-soft: #1b3230;
+    --s-future: #3987e5; --s-exist: #d95926; --s-inflow: #7d8d8a;
+    --precip: #3f5350; --excess: #3987e5;
+    --warn: #e0a54a; --warn-soft: #33280f; --bad: #e66767; --good: #5cc28a;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e1413; --surface: #151d1c; --surface-2: #1b2524;
+  --ink: #e6eeec; --ink-2: #b1c0bd; --muted: #7d8d8a;
+  --line: #2a3634; --grid: #212b2a;
+  --accent: #52b5ae; --accent-ink: #0b1312; --accent-soft: #1b3230;
+  --s-future: #3987e5; --s-exist: #d95926; --s-inflow: #7d8d8a;
+  --precip: #3f5350; --excess: #3987e5;
+  --warn: #e0a54a; --warn-soft: #33280f; --bad: #e66767; --good: #5cc28a;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 var(--font-body); padding-inline: 16px; padding-block: 0 48px; }
+.wrap { max-width: 1240px; margin: 0 auto; display: grid; gap: 20px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: clamp(26px, 4vw, 36px); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 19px; font-weight: 600; }
+h3 { font-size: 15px; font-weight: 600; }
+p { margin: 0; }
+.mono, code, pre { font-family: var(--font-mono); }
+.num { font-variant-numeric: tabular-nums; }
+.eyebrow { font: 500 11.5px/1 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+header.top { padding-block: 28px 4px; display: grid; gap: 10px; }
+.lede { color: var(--ink-2); max-width: 70ch; }
+.notice { display: flex; gap: 10px; align-items: flex-start; background: var(--warn-soft); color: var(--ink); border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent); border-radius: 8px; padding: 10px 14px; font-size: 13.5px; max-width: 100%; }
+.notice b { color: var(--warn); font-weight: 600; }
+
+.runbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(6px); border-bottom: 1px solid var(--line); margin-inline: -16px; padding: 10px 16px; }
+.runbar-inner { max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button { font: 500 13.5px var(--font-body); border: 0; background: transparent; color: var(--ink-2); padding: 7px 12px; cursor: pointer; display: inline-flex; gap: 7px; align-items: center; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--ink); font-weight: 600; }
+.swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex: none; }
+.btn { font: 600 13.5px var(--font-body); border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); padding: 7px 14px; border-radius: 8px; cursor: pointer; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn:focus-visible, .seg button:focus-visible, input:focus-visible, .tab:focus-visible, tr[tabindex]:focus-visible, .node:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.runlog { font: 12.5px var(--font-mono); color: var(--muted); }
+.runlog .ok { color: var(--good); }
+
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 4px; align-content: start; }
+.kpi .v { font: 600 26px/1.1 var(--font-display); font-variant-numeric: tabular-nums; }
+.kpi .v small { font: 500 13px var(--font-body); color: var(--muted); margin-left: 4px; }
+.kpi .s { font-size: 13px; color: var(--ink-2); }
+.up { color: var(--bad); } .down { color: var(--good); }
+
+.main { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px; align-items: start; }
+@media (max-width: 900px) { .main { grid-template-columns: 1fr; } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.panel-head { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; justify-content: space-between; }
+.hint { font-size: 12.5px; color: var(--muted); }
+
+/* network schematic */
+#net { width: 100%; height: auto; display: block; }
+#net .link { stroke: var(--line); stroke-width: 2.5; fill: none; }
+#net .node { cursor: pointer; }
+#net .node .shape { fill: var(--surface-2); stroke: var(--ink-2); stroke-width: 1.2; }
+#net .node:hover .shape { stroke: var(--accent); }
+#net .node.sel .shape { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2.2; }
+#net .lbl { font: 600 12px var(--font-body); fill: var(--ink); }
+#net .sub { font: 11px var(--font-mono); fill: var(--muted); }
+#net .pk { font: 500 11px var(--font-mono); fill: var(--ink-2); }
+
+/* charts */
+.chart-box { position: relative; }
+.chart-box svg { display: block; width: 100%; height: auto; overflow: visible; }
+.axis text { font: 11px var(--font-mono); fill: var(--muted); }
+.axis line.g { stroke: var(--grid); stroke-width: 1; }
+.axis line.base { stroke: var(--ink-2); stroke-width: 1; }
+.axis .ttl { font: 500 11px var(--font-body); fill: var(--muted); }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; color: var(--ink-2); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.lkey { width: 16px; height: 0; border-top: 2px solid; display: inline-block; }
+.lkey.dash { border-top-style: dashed; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.12); min-width: 170px; display: grid; gap: 3px; z-index: 3; }
+.tip .t { font: 600 12px var(--font-mono); color: var(--ink); }
+.tip .r { display: flex; justify-content: space-between; gap: 14px; color: var(--ink-2); }
+.tip .r b { font: 500 12px var(--font-mono); color: var(--ink); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font: 500 12px var(--font-body); padding: 2px 9px; border-radius: 99px; background: var(--surface-2); color: var(--ink-2); border: 1px solid var(--line); }
+.chip.warn { background: var(--warn-soft); color: var(--warn); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
+
+/* params */
+.params { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px 14px; }
+.field { display: grid; gap: 3px; }
+.field label { font-size: 12.5px; color: var(--ink-2); }
+.field label .u { color: var(--muted); font-family: var(--font-mono); font-size: 11.5px; margin-left: 4px; }
+.field input { font: 14px var(--font-mono); padding: 6px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); width: 100%; }
+.field input.changed { border-color: var(--accent); background: var(--accent-soft); }
+.field input[aria-invalid="true"] { border-color: var(--bad); }
+.group-title { grid-column: 1 / -1; font: 500 11.5px var(--font-mono); letter-spacing: .07em; text-transform: uppercase; color: var(--muted); padding-top: 4px; border-top: 1px solid var(--grid); }
+.group-title:first-child { border-top: 0; padding-top: 0; }
+
+/* table */
+.tbl-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 760px; }
+th, td { padding: 7px 10px; text-align: right; border-bottom: 1px solid var(--grid); white-space: nowrap; }
+th { font: 500 11.5px var(--font-body); color: var(--muted); text-align: right; vertical-align: bottom; }
+th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align: left; }
+td { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+td:first-child { font-family: var(--font-body); font-weight: 500; }
+td:nth-child(2) { font-family: var(--font-body); color: var(--muted); }
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: var(--surface-2); }
+tbody tr.sel { background: var(--accent-soft); }
+.sep { border-left: 1px solid var(--line); }
+.err-lo { color: var(--good); } .err-mid { color: var(--warn); } .err-hi { color: var(--bad); }
+
+/* files */
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tab { font: 500 12.5px var(--font-mono); border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); padding: 5px 10px; border-radius: 6px; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.tab .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-left: 6px; vertical-align: middle; }
+.file-meta { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; justify-content: space-between; }
+pre.file { margin: 0; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; font-size: 12.5px; line-height: 1.55; max-height: 420px; overflow: auto; white-space: pre; color: var(--ink); }
+pre.file .k { color: var(--accent); }
+pre.file .b { color: var(--ink); font-weight: 600; }
+.methods { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px 20px; font-size: 13.5px; color: var(--ink-2); }
+.methods b { color: var(--ink); font-weight: 600; display: block; font-size: 13px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="runbar">
+  <div class="runbar-inner">
+    <span class="eyebrow">ฉากทัศน์ที่แก้ไข</span>
+    <div class="seg" role="group" aria-label="เลือกฉากทัศน์ที่จะแก้พารามิเตอร์">
+      <button id="sc-existing" aria-pressed="false"><span class="swatch" style="background:var(--s-exist)"></span>Existing · Castro 1</button>
+      <button id="sc-future" aria-pressed="true"><span class="swatch" style="background:var(--s-future)"></span>Future · Castro 2</button>
+    </div>
+    <button class="btn" id="run">รันแบบจำลอง</button>
+    <button class="btn ghost" id="reset">คืนค่าตามไฟล์</button>
+    <span class="runlog" id="runlog" aria-live="polite"></span>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow">HEC-HMS 4.13 · castro.hms · Control Jan73 · Δt 5 นาที</span>
+    <h1>Castro Valley Runoff Model</h1>
+    <p class="lede">จำลองน้ำท่าจากพายุวันที่ 16 มกราคม 1973 บนลุ่มน้ำ Castro Valley (5.51 ตร.ไมล์) ในเบราว์เซอร์ อ่านไฟล์ .basin / .met / .gage / .control ในรูปแบบของ HEC-HMS แล้วคำนวณ loss → transform → baseflow → routing ทีละ element เปรียบเทียบสภาพปัจจุบันกับสภาพอนาคต</p>
+    <div class="notice" role="note"><span>⚠</span><span><b>ไฟล์อินพุตเป็นไฟล์จำลอง (mock)</b> ไฟล์ .basin, .met, .gage และ .control ไม่ได้มาพร้อมโปรเจกต์ จึงสร้างขึ้นใหม่ ส่วน Future ถูกปรับค่าให้ใกล้ผลใน <code>RUN_Future.results</code> (ดูคอลัมน์ “อ้างอิง” ในตาราง) ส่วน Existing ตั้งค่าขึ้นเองเพื่อสาธิต ไม่ใช่ข้อมูลจริงของลุ่มน้ำ</span></div>
+  </header>
+
+  <section class="kpis" id="kpis" aria-label="สรุปผลที่ทางออก"></section>
+
+  <section class="main">
+    <div class="panel">
+      <div class="panel-head"><h2>โครงข่ายลุ่มน้ำ</h2><span class="hint">คลิก element เพื่อดูกราฟและแก้ค่า</span></div>
+      <svg id="net" viewBox="0 0 560 430" role="img" aria-label="แผนผังโครงข่ายลุ่มน้ำ Castro Valley"></svg>
+      <div class="legend"><span><span class="swatch" style="background:var(--surface-2);border:1px solid var(--ink-2)"></span>Subbasin</span><span><span class="swatch" style="background:var(--surface-2);border:1px solid var(--ink-2);border-radius:99px"></span>Junction</span><span>ตัวเลข = น้ำสูงสุด Future (cfs)</span></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div style="display:grid;gap:2px"><span class="eyebrow" id="el-kind"></span><h2 id="el-name"></h2></div>
+        <div class="chips" id="el-chips"></div>
+      </div>
+      <div class="legend" id="legend"></div>
+      <div class="chart-box" id="chart-box">
+        <svg id="hyeto" aria-label="กราฟฝนรายช่วงเวลา"></svg>
+        <svg id="hydro" aria-label="กราฟน้ำท่า (hydrograph)"></svg>
+        <div class="tip" id="tip" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="p-title">
+    <div class="panel-head"><h2 id="p-title">พารามิเตอร์</h2><span class="hint" id="p-hint"></span></div>
+    <div class="params" id="params"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="t-title">
+    <div class="panel-head"><h2 id="t-title">ผลสรุปทุก element</h2><span class="hint">อ้างอิง = ค่าจาก RUN_Future.results (HEC-HMS จริง)</span></div>
+    <div class="tbl-wrap"><table id="summary"></table></div>
+  </section>
+
+  <section class="panel" aria-labelledby="f-title">
+    <div class="panel-head"><h2 id="f-title">ไฟล์ของโปรเจกต์</h2><span class="hint">ไฟล์ .basin จะอัปเดตตามค่าที่แก้ · จุดสีบนแท็บ = มีการแก้ไข</span></div>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="file-meta"><span class="hint" id="file-desc"></span><button class="btn ghost" id="copy">คัดลอกเนื้อหาไฟล์</button></div>
+    <pre class="file" id="file" tabindex="0"></pre>
+  </section>
+
+  <section class="panel" aria-labelledby="m-title">
+    <h2 id="m-title">วิธีคำนวณในแบบจำลองนี้</h2>
+    <div class="methods">
+      <p><b>ฝน · Gage Weights</b>ความลึกฝนรวมจากค่าถ่วงน้ำหนัก Thiessen ของสถานี Fire Dept / Proj Office / Sidney รูปแบบเวลาจากสถานีบันทึก Proj Office ทุก 10 นาที แล้วแบ่งเป็นช่วง 5 นาที</p>
+      <p><b>Loss · Initial + Constant</b>พื้นที่ซึมน้ำได้เสียน้ำช่วงแรกตาม Initial Loss แล้วเสียต่อเนื่องตาม Constant Rate ส่วนพื้นที่ทึบน้ำ (% impervious) กลายเป็นน้ำท่าทั้งหมด</p>
+      <p><b>Transform · Clark UH</b>กราฟ time–area แบบมาตรฐานของ HEC-HMS ตามค่า Tc แล้วผ่านอ่างเก็บน้ำเชิงเส้นตามค่า Storage Coefficient R</p>
+      <p><b>Baseflow · Recession</b>น้ำท่าเริ่มต้น = อัตราต่อพื้นที่ × พื้นที่ ลดลงด้วย Recession Factor (ต่อวัน) เมื่อน้ำลดต่ำกว่า threshold × peak จะลดแบบ recession</p>
+      <p><b>Routing · Muskingum</b>แบ่งลำน้ำเป็น subreach ตามค่า Steps ใช้ค่า K/Steps และ x ต่อ subreach</p>
+      <p><b>Junction</b>รวมน้ำจากทุก element ที่ไหลเข้า</p>
+    </div>
+  </section>
+</div>
+
+<script type="text/x-hms" data-name="castro.hms">
+Project: castro
+     Description: Castro Valley Urban Study
+     Version: 4.13
+     Filepath Separator: \
+     DSS File Name: castro.dss
+     Time Zone ID: America/Los_Angeles
+End:
+
+Precipitation: GageWts
+     Filename: GageWts.met
+     Description: Thiessen weights; 10-min data
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 02:54
+End:
+
+Basin: Castro 1
+     Filename: Castro_1.basin
+     Description: Existing conditions
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:58
+End:
+
+Basin: Castro 2
+     Filename: Castro_2.basin
+     Description: Future conditions
+     Last Modified Date: 28 March 2011
+     Last Modified Time: 17:03
+End:
+
+Control: Jan73
+     FileName: Jan73.control
+     Description: Storm of 16 January 1973
+End:
+
+</script>
+<script type="text/x-hms" data-name="castro.gage">
+Gage: Fire Dept
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 02:54
+     Reference Height Units: Feet
+     Reference Height: 0.0
+     Gage Type: Precipitation
+     Precipitation Type: Total Storm
+     Total Storm Depth: 1.92
+End:
+
+Gage: Proj Office
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 02:54
+     Reference Height Units: Feet
+     Reference Height: 0.0
+     Gage Type: Precipitation
+     Precipitation Type: Incremental
+     Total Storm Depth: 1.33
+     Data Source Type: Inline (mock of DSS record)
+     DSS Pathname: /CASTRO VALLEY/PROJ OFFICE/PRECIP-INC/01JAN1973/10MIN/OBS/
+     Data Interval: 10
+     Start Date: 16 January 1973
+     Start Time: 03:00
+     Data Values: 0.0143, 0.02, 0.0286, 0.0372, 0.0429, 0.0401, 0.0358, 0.0315, 0.0343, 0.0401, 0.0472, 0.0572, 0.0687, 0.083, 0.0894, 0.0787, 0.0644, 0.0572, 0.0515, 0.0544, 0.0487, 0.0429, 0.0372, 0.0343, 0.0315, 0.0286, 0.0258, 0.0229, 0.02, 0.0172, 0.0143, 0.0114, 0.0086, 0.0057, 0.0029, 0.0014
+End:
+
+Gage: Sidney
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 02:54
+     Reference Height Units: Feet
+     Reference Height: 0.0
+     Gage Type: Precipitation
+     Precipitation Type: Total Storm
+     Total Storm Depth: 1.61
+End:
+</script>
+<script type="text/x-hms" data-name="castro.run">
+Run: Current
+     Description: Existing conditions for storm of 16 January 1973
+     Basin: Castro 1
+     Precip: GageWts
+     Control: Jan73
+     DSS File: Current.dss
+End:
+
+Run: Future
+     Description: Future conditions for storm of 16 January 1973
+     Basin: Castro 2
+     Precip: GageWts
+     Control: Jan73
+     DSS File: Future.dss
+End:
+</script>
+<script type="text/x-hms" data-name="Castro_1.basin">
+Basin: Castro 1
+     Description: Existing conditions
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:58
+     Version: 4.13
+     Filepath Separator: \
+     Unit System: English
+     Missing Flow To Zero: No
+     Enable Flow Ratio: No
+     Compute Local Flow At Junctions: No
+End:
+
+Subbasin: Subbasin-3
+     Canvas X: 60
+     Canvas Y: 40
+     Downstream: Reach-2
+     Area: 2.17
+     LossRate: Initial+Constant
+     Percent Impervious Area: 10
+     Initial Loss: 0.337
+     Constant Loss Rate: 0.168
+     Transform: Clark
+     Time of Concentration: 1.76
+     Storage Coefficient: 2.09
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Flow/Area Ratio: 0.54
+     Threshold Flow To Peak Ratio: 0.111
+End:
+
+Reach: Reach-2
+     Canvas X: 60
+     Canvas Y: 160
+     Downstream: West Branch
+     Route: Muskingum
+     Muskingum K: 4.85
+     Muskingum x: 0.1
+     Muskingum Steps: 3
+     Channel Loss: None
+End:
+
+Subbasin: Subbasin-4
+     Canvas X: 220
+     Canvas Y: 110
+     Downstream: West Branch
+     Area: 0.96
+     LossRate: Initial+Constant
+     Percent Impervious Area: 15
+     Initial Loss: 0.451
+     Constant Loss Rate: 0.183
+     Transform: Clark
+     Time of Concentration: 1.76
+     Storage Coefficient: 1.69
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Flow/Area Ratio: 0.54
+     Threshold Flow To Peak Ratio: 0.1
+End:
+
+Junction: West Branch
+     Canvas X: 140
+     Canvas Y: 260
+     Downstream: Outlet
+End:
+
+Subbasin: Subbasin-1
+     Canvas X: 460
+     Canvas Y: 40
+     Downstream: Reach-1
+     Area: 0.86
+     LossRate: Initial+Constant
+     Percent Impervious Area: 8
+     Initial Loss: 0.265
+     Constant Loss Rate: 0.171
+     Transform: Clark
+     Time of Concentration: 1.55
+     Storage Coefficient: 2.16
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Flow/Area Ratio: 0.54
+     Threshold Flow To Peak Ratio: 0.112
+End:
+
+Reach: Reach-1
+     Canvas X: 460
+     Canvas Y: 160
+     Downstream: East Branch
+     Route: Muskingum
+     Muskingum K: 0.55
+     Muskingum x: 0
+     Muskingum Steps: 3
+     Channel Loss: None
+End:
+
+Subbasin: Subbasin-2
+     Canvas X: 300
+     Canvas Y: 110
+     Downstream: East Branch
+     Area: 1.52
+     LossRate: Initial+Constant
+     Percent Impervious Area: 12
+     Initial Loss: 0.336
+     Constant Loss Rate: 0.166
+     Transform: Clark
+     Time of Concentration: 1.82
+     Storage Coefficient: 2.03
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Flow/Area Ratio: 0.54
+     Threshold Flow To Peak Ratio: 0.114
+End:
+
+Junction: East Branch
+     Canvas X: 380
+     Canvas Y: 260
+     Downstream: Outlet
+End:
+
+Junction: Outlet
+     Canvas X: 260
+     Canvas Y: 360
+End:
+</script>
+<script type="text/x-hms" data-name="Castro_2.basin">
+Basin: Castro 2
+     Description: Future conditions
+     Last Modified Date: 28 March 2011
+     Last Modified Time: 17:03
+     Version: 4.13
+     Filepath Separator: \
+     Unit System: English
+     Missing Flow To Zero: No
+     Enable Flow Ratio: No
+     Compute Local Flow At Junctions: No
+End:
+
+Subbasin: Subbasin-3
+     Canvas X: 60
+     Canvas Y: 40
+     Downstream: Reach-2
+     Area: 2.17
+     LossRate: Initial+Constant
+     Percent Impervious Area: 25
+     Initial Loss: 0.337
+     Constant Loss Rate: 0.168
+     Transform: Clark
+     Time of Concentration: 1.3
+     Storage Coefficient: 1.55
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Flow/Area Ratio: 0.54
+     Threshold Flow To Peak Ratio: 0.111
+End:
+
+Reach: Reach-2
+     Canvas X: 60
+     Canvas Y: 160
+     Downstream: West Branch
+     Route: Muskingum
+     Muskingum K: 4.85
+     Muskingum x: 0.1
+     Muskingum Steps: 3
+     Channel Loss: None
+End:
+
+Subbasin: Subbasin-4
+     Canvas X: 220
+     Canvas Y: 110
+     Downstream: West Branch
+     Area: 0.96
+     LossRate: Initial+Constant
+     Percent Impervious Area: 35
+     Initial Loss: 0.451
+     Constant Loss Rate: 0.183
+     Transform: Clark
+     Time of Concentration: 1.3
+     Storage Coefficient: 1.25
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Flow/Area Ratio: 0.54
+     Threshold Flow To Peak Ratio: 0.1
+End:
+
+Junction: West Branch
+     Canvas X: 140
+     Canvas Y: 260
+     Downstream: Outlet
+End:
+
+Subbasin: Subbasin-1
+     Canvas X: 460
+     Canvas Y: 40
+     Downstream: Reach-1
+     Area: 0.86
+     LossRate: Initial+Constant
+     Percent Impervious Area: 20
+     Initial Loss: 0.265
+     Constant Loss Rate: 0.171
+     Transform: Clark
+     Time of Concentration: 1.15
+     Storage Coefficient: 1.6
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Flow/Area Ratio: 0.54
+     Threshold Flow To Peak Ratio: 0.112
+End:
+
+Reach: Reach-1
+     Canvas X: 460
+     Canvas Y: 160
+     Downstream: East Branch
+     Route: Muskingum
+     Muskingum K: 0.55
+     Muskingum x: 0
+     Muskingum Steps: 3
+     Channel Loss: None
+End:
+
+Subbasin: Subbasin-2
+     Canvas X: 300
+     Canvas Y: 110
+     Downstream: East Branch
+     Area: 1.52
+     LossRate: Initial+Constant
+     Percent Impervious Area: 30
+     Initial Loss: 0.336
+     Constant Loss Rate: 0.166
+     Transform: Clark
+     Time of Concentration: 1.35
+     Storage Coefficient: 1.5
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Flow/Area Ratio: 0.54
+     Threshold Flow To Peak Ratio: 0.114
+End:
+
+Junction: East Branch
+     Canvas X: 380
+     Canvas Y: 260
+     Downstream: Outlet
+End:
+
+Junction: Outlet
+     Canvas X: 260
+     Canvas Y: 360
+End:
+</script>
+<script type="text/x-hms" data-name="GageWts.met">
+Meteorology: GageWts
+     Description: Thiessen weights; 10-min data
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 02:54
+     Version: 4.13
+     Unit System: English
+     Precipitation Method: Gage Weights
+     Evapotranspiration Method: No Evapotranspiration
+     Snowmelt Method: None
+End:
+
+Subbasin: Subbasin-1
+     Depth Weight Fire Dept: 1
+     Time Weight Proj Office: 1.0
+End:
+
+Subbasin: Subbasin-2
+     Depth Weight Fire Dept: 0.2136
+     Depth Weight Proj Office: 0.7864
+     Time Weight Proj Office: 1.0
+End:
+
+Subbasin: Subbasin-3
+     Depth Weight Sidney: 0.7618
+     Depth Weight Proj Office: 0.2382
+     Time Weight Proj Office: 1.0
+End:
+
+Subbasin: Subbasin-4
+     Depth Weight Sidney: 0.0571
+     Depth Weight Proj Office: 0.9429
+     Time Weight Proj Office: 1.0
+End:
+</script>
+<script type="text/x-hms" data-name="Jan73.control">
+Control: Jan73
+     Description: Storm of 16 January 1973
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 02:54
+     Version: 4.13
+     Start Date: 16 January 1973
+     Start Time: 03:00
+     End Date: 16 January 1973
+     End Time: 12:55
+     Time Interval: 5
+End:
+</script>
+<script type="application/json" id="ref">{"Subbasin-3":{"type":"Subbasin","area":2.17,"up":[],"peak":309.1071299,"peakTime":"06:55","vol":97.1396583,"depth":0.8393404,"precip":1.5433333,"loss":0.7216791,"excess":0.8216542,"lossMax":0.0105,"lossMaxTime":"03:50","baseVol":2.5874577,"baseMax":23.3290842,"peakIn":0},"Reach-2":{"type":"Reach","area":2.17,"up":["Subbasin-3"],"peak":161.3910231,"peakTime":"11:20","vol":96.0666918,"depth":0.8300694,"peakIn":309.1071299},"Subbasin-4":{"type":"Subbasin","area":0.96,"up":[],"peak":121.7933474,"peakTime":"06:50","vol":36.6801206,"depth":0.7164086,"precip":1.346,"loss":0.6552993,"excess":0.6907007,"lossMax":0.0099167,"lossMaxTime":"03:40","baseVol":1.4115494,"baseMax":10.4585866,"peakIn":0},"West Branch":{"type":"Junction","area":3.13,"up":["Reach-2","Subbasin-4"],"peak":243.0145098,"peakTime":"06:50","vol":132.7468124,"depth":0.7952086,"peakIn":243.0145098},"Subbasin-1":{"type":"Subbasin","area":0.86,"up":[],"peak":162.2892576,"peakTime":"06:55","vol":51.9815404,"depth":1.1333185,"precip":1.92,"loss":0.8071592,"excess":1.1128408,"lossMax":0.0114333,"lossMaxTime":"03:40","baseVol":1.2304898,"baseMax":12.1402946,"peakIn":0},"Reach-1":{"type":"Reach","area":0.86,"up":["Subbasin-1"],"peak":153.5918614,"peakTime":"07:30","vol":51.2089688,"depth":1.1164747,"peakIn":162.2892576},"Subbasin-2":{"type":"Subbasin","area":1.52,"up":[],"peak":210.9634633,"peakTime":"06:55","vol":66.6096605,"depth":0.8216653,"precip":1.456,"loss":0.6541887,"excess":0.8018113,"lossMax":0.0096833,"lossMaxTime":"03:40","baseVol":1.9151207,"baseMax":16.6731002,"peakIn":0},"East Branch":{"type":"Junction","area":2.38,"up":["Reach-1","Subbasin-2"],"peak":336.8836561,"peakTime":"06:55","vol":117.8186293,"depth":0.928193,"peakIn":336.8836561},"Outlet":{"type":"Junction","area":5.51,"up":["West Branch","East Branch"],"peak":579.8158616,"peakTime":"06:55","vol":250.5654417,"depth":0.8526501,"peakIn":579.8158616}}</script>
+
+<script>
+// Mini HEC-HMS engine: parses HMS text files and runs an event simulation.
+// Methods: Initial+Constant loss (with % impervious), Clark UH, Recession baseflow,
+// Muskingum routing, Junction summation. English units (in, mi2, cfs, ac-ft).
+(function (root) {
+  'use strict';
+
+  // ---------- HMS text-file parser ----------
+  // Blocks look like "Kind: Name\n     Key: Value\n ... End:"
+  function parseHms(text) {
+    const blocks = [];
+    let cur = null;
+    for (const raw of text.split(/\r?\n/)) {
+      const line = raw.trim();
+      if (!line) continue;
+      if (line === 'End:') { if (cur) blocks.push(cur); cur = null; continue; }
+      const i = line.indexOf(':');
+      if (i < 0) continue;
+      const key = line.slice(0, i).trim(), val = line.slice(i + 1).trim();
+      if (!cur) cur = { kind: key, name: val, props: {}, order: [] };
+      else { cur.props[key] = val; cur.order.push(key); }
+    }
+    return blocks;
+  }
+
+  function writeHms(blocks) {
+    return blocks.map(b => {
+      const lines = [`${b.kind}: ${b.name}`];
+      for (const k of b.order) lines.push(`     ${k}: ${b.props[k]}`);
+      lines.push('End:');
+      return lines.join('\n');
+    }).join('\n\n') + '\n';
+  }
+
+  // ---------- time helpers ----------
+  const MONTHS = { January: 0, February: 1, March: 2, April: 3, May: 4, June: 5, July: 6, August: 7, September: 8, October: 9, November: 10, December: 11 };
+  function parseDateTime(d, t) {
+    const [day, mon, yr] = d.split(/\s+/);
+    const [hh, mm] = t.split(':').map(Number);
+    return Date.UTC(+yr, MONTHS[mon], +day, hh, mm);
+  }
+  function fmtTime(ms) {
+    const d = new Date(ms);
+    return String(d.getUTCHours()).padStart(2, '0') + ':' + String(d.getUTCMinutes()).padStart(2, '0');
+  }
+
+  // ---------- precipitation ----------
+  // Gage-weights method: depth weights from total-storm gages, temporal pattern
+  // from a recording gage. Recording data = incremental depth at a fixed interval.
+  function subbasinHyetograph(met, gages, sub, times, dtMin) {
+    const sb = met.subbasins[sub];
+    if (!sb) throw new Error('No gage weights for ' + sub);
+    let total = 0;
+    for (const [g, w] of Object.entries(sb.depth)) total += w * gages[g].total;
+    // time pattern: weighted cumulative fraction of recording gages
+    const cumAt = (ms) => {
+      let c = 0;
+      for (const [g, w] of Object.entries(sb.time)) c += w * cumFraction(gages[g], ms);
+      return c;
+    };
+    const p = new Float64Array(times.length);
+    for (let i = 1; i < times.length; i++) p[i] = total * (cumAt(times[i]) - cumAt(times[i - 1]));
+    return p;
+  }
+  function cumFraction(g, ms) {
+    // linear interpolation of the cumulative recording-gage curve
+    const n = g.values.length, step = g.interval * 60000;
+    const sum = g.cumulative[n];
+    const x = (ms - g.start) / step;
+    if (x <= 0) return 0;
+    if (x >= n) return 1;
+    const i = Math.floor(x), f = x - i;
+    return (g.cumulative[i] + f * (g.cumulative[i + 1] - g.cumulative[i])) / sum;
+  }
+
+  // ---------- loss: initial + constant with impervious area ----------
+  function lossInitialConstant(p, prm, dtH) {
+    const imp = prm.impervious / 100, rate = prm.constantRate * dtH;
+    let il = prm.initialLoss;
+    const excess = new Float64Array(p.length), loss = new Float64Array(p.length);
+    for (let i = 0; i < p.length; i++) {
+      let pv = p[i], l = 0;
+      if (il > 0) { const a = Math.min(pv, il); il -= a; l += a; pv -= a; }
+      const c = Math.min(pv, rate); l += c; pv -= c;
+      loss[i] = (1 - imp) * l;
+      excess[i] = imp * p[i] + (1 - imp) * pv;
+    }
+    return { excess, loss };
+  }
+
+  // ---------- transform: Clark unit hydrograph ----------
+  const IN_MI2_TO_CF = 5280 * 5280 / 12;
+  function clark(excess, area, prm, dtH) {
+    const tc = prm.tc, R = prm.storage;
+    const cumA = (t) => {
+      if (t <= 0) return 0;
+      if (t >= tc) return 1;
+      const r = t / tc;
+      return r <= 0.5 ? 1.414 * Math.pow(r, 1.5) : 1 - 1.414 * Math.pow(1 - r, 1.5);
+    };
+    const nOrd = Math.ceil(tc / dtH) + 1;
+    const ta = [];
+    for (let k = 1; k <= nOrd; k++) ta.push(cumA(k * dtH) - cumA((k - 1) * dtH));
+    const conv = area * IN_MI2_TO_CF / (dtH * 3600); // in over area in one step -> cfs
+    const n = excess.length, inflow = new Float64Array(n + nOrd);
+    for (let i = 0; i < n; i++) if (excess[i] > 0)
+      for (let k = 0; k < nOrd; k++) inflow[i + k] += excess[i] * ta[k] * conv;
+    const ca = dtH / (R + 0.5 * dtH), cb = 1 - ca;
+    const q = new Float64Array(n);
+    let o = 0, prev = 0;
+    for (let i = 0; i < n; i++) {
+      const iAvg = 0.5 * (prev + inflow[i]);
+      o = ca * iAvg + cb * o;
+      prev = inflow[i];
+      q[i] = o;
+    }
+    return q;
+  }
+
+  // ---------- baseflow: recession ----------
+  function recession(direct, area, prm, dtH) {
+    const kStep = Math.pow(prm.recession, dtH / 24);
+    const q0 = prm.initialPerArea * area;
+    const n = direct.length, total = new Float64Array(n), base = new Float64Array(n);
+    let peak = 0, receding = false, thr = 0;
+    for (let i = 0; i < n; i++) {
+      const b = q0 * Math.pow(kStep, i);
+      let q = direct[i] + b;
+      if (!receding) {
+        if (q > peak) peak = q;
+        else if (peak > q0 * 1.01 && q < prm.thresholdRatio * peak) { receding = true; thr = total[i - 1]; }
+      }
+      if (receding) { thr *= kStep; q = Math.max(thr, direct[i]); }
+      total[i] = q; base[i] = q - direct[i];
+    }
+    return { total, base };
+  }
+
+  // ---------- routing: Muskingum ----------
+  function muskingum(inflow, prm, dtH) {
+    const n = Math.max(1, Math.round(prm.steps || 1));
+    const K = prm.K / n, X = prm.X;
+    const d = 2 * K * (1 - X) + dtH;
+    const c0 = (dtH - 2 * K * X) / d, c1 = (dtH + 2 * K * X) / d, c2 = (2 * K * (1 - X) - dtH) / d;
+    let I = inflow;
+    for (let s = 0; s < n; s++) {
+      const O = new Float64Array(I.length);
+      O[0] = I[0];
+      for (let i = 1; i < I.length; i++) O[i] = Math.max(0, c0 * I[i] + c1 * I[i - 1] + c2 * O[i - 1]);
+      I = O;
+    }
+    return I;
+  }
+
+  // ---------- model assembly ----------
+  const num = (v) => parseFloat(v);
+  function readBasin(text) {
+    const blocks = parseHms(text);
+    const elements = [];
+    let header = null;
+    for (const b of blocks) {
+      const p = b.props;
+      if (b.kind === 'Basin') { header = b; continue; }
+      const el = { kind: b.kind, name: b.name, downstream: p['Downstream'] || null, block: b };
+      if (b.kind === 'Subbasin') {
+        el.area = num(p['Area']);
+        el.loss = { method: p['LossRate'], initialLoss: num(p['Initial Loss']), constantRate: num(p['Constant Loss Rate']), impervious: num(p['Percent Impervious Area'] || 0) };
+        el.transform = { method: p['Transform'], tc: num(p['Time of Concentration']), storage: num(p['Storage Coefficient']) };
+        el.baseflow = { method: p['Baseflow'], recession: num(p['Recession Factor']), initialPerArea: num(p['Initial Flow/Area Ratio']), thresholdRatio: num(p['Threshold Flow To Peak Ratio']) };
+      } else if (b.kind === 'Reach') {
+        el.route = { method: p['Route'], K: num(p['Muskingum K']), X: num(p['Muskingum x']), steps: num(p['Muskingum Steps'] || 1) };
+      }
+      if (p['Canvas X']) { el.x = num(p['Canvas X']); el.y = num(p['Canvas Y']); }
+      elements.push(el);
+    }
+    return { header, elements };
+  }
+
+  function readMet(text) {
+    const blocks = parseHms(text);
+    const met = { header: blocks[0], subbasins: {} };
+    for (const b of blocks.slice(1)) {
+      if (b.kind !== 'Subbasin') continue;
+      const depth = {}, time = {};
+      for (const k of b.order) {
+        let m = /^Depth Weight (.+)$/.exec(k); if (m) depth[m[1]] = num(b.props[k]);
+        m = /^Time Weight (.+)$/.exec(k); if (m) time[m[1]] = num(b.props[k]);
+      }
+      met.subbasins[b.name] = { depth, time };
+    }
+    return met;
+  }
+
+  // Gage file: "Gage: name" blocks with Total Storm depth and, for recording
+  // gages, an inline incremental series (stand-in for the DSS record).
+  function readGages(text) {
+    const gages = {};
+    for (const b of parseHms(text)) {
+      if (b.kind !== 'Gage') continue;
+      const p = b.props;
+      const g = { name: b.name, total: num(p['Total Storm Depth']) };
+      if (p['Data Values']) {
+        g.values = p['Data Values'].split(/[\s,]+/).filter(Boolean).map(Number);
+        g.interval = num(p['Data Interval']);
+        g.start = parseDateTime(p['Start Date'], p['Start Time']);
+        g.cumulative = [0];
+        for (const v of g.values) g.cumulative.push(g.cumulative[g.cumulative.length - 1] + v);
+      }
+      gages[b.name] = g;
+    }
+    return gages;
+  }
+
+  function readControl(text) {
+    const b = parseHms(text)[0], p = b.props;
+    const start = parseDateTime(p['Start Date'], p['Start Time']);
+    const end = parseDateTime(p['End Date'], p['End Time']);
+    const dt = num(p['Time Interval']);
+    const times = [];
+    for (let t = start; t <= end; t += dt * 60000) times.push(t);
+    return { name: b.name, start, end, dtMin: dt, times };
+  }
+
+  function stats(series, times, area, dtH) {
+    let mx = -Infinity, mi = 0, mn = Infinity;
+    let vol = 0;
+    for (let i = 0; i < series.length; i++) {
+      if (series[i] > mx) { mx = series[i]; mi = i; }
+      if (series[i] < mn) mn = series[i];
+      if (i > 0) vol += series[i] * dtH * 3600;
+    }
+    const acft = vol / 43560;
+    return { peak: mx, peakTime: fmtTime(times[mi]), peakIndex: mi, min: mn, vol: acft, depth: area ? acft * 12 / (area * 640) : null };
+  }
+
+  function run(basin, met, gages, control) {
+    const dtH = control.dtMin / 60, times = control.times, n = times.length;
+    const res = {};
+    const byName = Object.fromEntries(basin.elements.map(e => [e.name, e]));
+    const upstream = {};
+    for (const e of basin.elements) if (e.downstream) (upstream[e.downstream] ||= []).push(e.name);
+    const done = new Set();
+    const compute = (name) => {
+      if (done.has(name)) return res[name];
+      const e = byName[name];
+      if (!e) throw new Error('Unknown element ' + name);
+      const ups = (upstream[name] || []).map(compute);
+      const inflow = new Float64Array(n);
+      let area = 0;
+      for (const u of ups) { area += u.area; for (let i = 0; i < n; i++) inflow[i] += u.outflow[i]; }
+      let r;
+      if (e.kind === 'Subbasin') {
+        const p = subbasinHyetograph(met, gages, name, times, control.dtMin);
+        const { excess, loss } = lossInitialConstant(p, e.loss, dtH);
+        const direct = clark(excess, e.area, e.transform, dtH);
+        const { total, base } = recession(direct, e.area, e.baseflow, dtH);
+        const sum = a => a.reduce((s, v) => s + v, 0);
+        const lossMaxI = loss.reduce((b, v, i, a) => v > a[b] ? i : b, 0);
+        r = { kind: e.kind, area: e.area, precip: p, loss, excess, direct, base, outflow: total,
+          totals: { precip: sum(p), loss: sum(loss), excess: sum(excess), lossMax: loss[lossMaxI], lossMaxTime: fmtTime(times[lossMaxI]) } };
+        r.baseStats = stats(base, times, e.area, dtH);
+      } else if (e.kind === 'Reach') {
+        r = { kind: e.kind, area, inflow, outflow: muskingum(inflow, e.route, dtH) };
+      } else {
+        r = { kind: e.kind, area, inflow, outflow: inflow };
+      }
+      r.name = name; r.upstream = upstream[name] || [];
+      r.stats = stats(r.outflow, times, r.area, dtH);
+      if (r.inflow) r.inStats = stats(r.inflow, times, r.area, dtH);
+      res[name] = r; done.add(name);
+      return r;
+    };
+    for (const e of basin.elements) compute(e.name);
+    return { times, dtH, results: res, order: basin.elements.map(e => e.name) };
+  }
+
+  const api = { parseHms, writeHms, readBasin, readMet, readGages, readControl, run, fmtTime };
+  if (typeof module !== 'undefined') module.exports = api; else root.MiniHMS = api;
+})(this);
+
+</script>
+<script>
+(function () {
+  'use strict';
+  const H = window.MiniHMS;
+  const $ = (id) => document.getElementById(id);
+  const FILES = {};
+  document.querySelectorAll('script[type="text/x-hms"]').forEach(s => { FILES[s.dataset.name] = s.textContent.replace(/^\n/, ''); });
+  const REF = JSON.parse(document.getElementById('ref').textContent);
+  const FILE_DESC = {
+    'castro.hms': 'ไฟล์โปรเจกต์ (ของจริง) อ้างถึงไฟล์อื่นทั้งหมด',
+    'castro.run': 'mock · ชุดการรัน Current และ Future',
+    'Castro_1.basin': 'mock · ลุ่มน้ำสภาพปัจจุบัน (Existing)',
+    'Castro_2.basin': 'mock · ลุ่มน้ำสภาพอนาคต (Future) ปรับค่าให้ใกล้ RUN_Future.results',
+    'GageWts.met': 'mock · ค่าถ่วงน้ำหนักสถานีฝน (Thiessen)',
+    'castro.gage': 'mock · สถานีวัดฝน ค่าฝนรายช่วงแทนเรคคอร์ดใน castro.dss',
+    'Jan73.control': 'mock · ช่วงเวลาจำลองและ Δt',
+  };
+
+  const met = H.readMet(FILES['GageWts.met']);
+  const gages = H.readGages(FILES['castro.gage']);
+  const control = H.readControl(FILES['Jan73.control']);
+
+  const SC = {
+    existing: { key: 'existing', file: 'Castro_1.basin', label: 'Existing', color: 'var(--s-exist)' },
+    future: { key: 'future', file: 'Castro_2.basin', label: 'Future', color: 'var(--s-future)' },
+  };
+  function loadScenario(s) {
+    const b = H.readBasin(FILES[s.file]);
+    s.blocks = [b.header, ...b.elements.map(e => e.block)];
+    s.original = JSON.parse(JSON.stringify(s.blocks.map(x => x.props)));
+    s.basin = b;
+  }
+  Object.values(SC).forEach(loadScenario);
+
+  let editing = 'future';
+  let selected = 'Outlet';
+  let lastRunAt = null;
+
+  function runAll() {
+    const t0 = performance.now();
+    for (const s of Object.values(SC)) {
+      s.basin = H.readBasin(H.writeHms(s.blocks));
+      s.out = H.run(s.basin, met, gages, control);
+    }
+    const ms = performance.now() - t0;
+    lastRunAt = new Date();
+    $('runlog').innerHTML = `<span class="ok">✓ รันเสร็จ</span> · ${control.times.length} ช่วงเวลา × ${SC.future.basin.elements.length} elements × 2 ฉากทัศน์ · ${ms.toFixed(0)} ms`;
+    renderAll();
+  }
+
+  // ---------- formatting ----------
+  const f1 = (v) => v == null || isNaN(v) ? '—' : v.toLocaleString('en-US', { maximumFractionDigits: 1, minimumFractionDigits: 1 });
+  const f2 = (v) => v == null || isNaN(v) ? '—' : v.toFixed(2);
+  const pct = (a, b) => (a - b) / b * 100;
+  const sgn = (v) => (v > 0 ? '+' : v < 0 ? '−' : '±') + Math.abs(v).toFixed(1) + '%';
+  const KIND_TH = { Subbasin: 'ลุ่มน้ำย่อย · Subbasin', Reach: 'ลำน้ำ · Reach', Junction: 'จุดบรรจบ · Junction' };
+  const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  function renderAll() {
+    renderKpis(); renderNet(); renderSelected(); renderParams(); renderTable(); renderFile();
+  }
+
+  // ---------- KPIs ----------
+  function renderKpis() {
+    const e = SC.existing.out.results.Outlet, f = SC.future.out.results.Outlet;
+    const dp = pct(f.stats.peak, e.stats.peak), dv = pct(f.stats.vol, e.stats.vol);
+    const subs = ['Subbasin-1', 'Subbasin-2', 'Subbasin-3', 'Subbasin-4'];
+    const errs = subs.map(k => Math.abs(pct(SC.future.out.results[k].stats.peak, REF[k].peak)));
+    const mae = errs.reduce((a, b) => a + b, 0) / errs.length;
+    const refErr = pct(f.stats.peak, REF.Outlet.peak);
+    $('kpis').innerHTML = `
+      <div class="kpi"><span class="eyebrow">น้ำสูงสุดที่ Outlet · Future</span><span class="v num">${f1(f.stats.peak)}<small>cfs</small></span><span class="s">เวลา ${f.stats.peakTime} น. · ${(f.stats.peak * 0.0283168).toFixed(1)} ลบ.ม./วินาที</span></div>
+      <div class="kpi"><span class="eyebrow">น้ำสูงสุดที่ Outlet · Existing</span><span class="v num">${f1(e.stats.peak)}<small>cfs</small></span><span class="s">Future ต่างจาก Existing <b class="${dp > 0 ? 'up' : 'down'}">${sgn(dp)}</b> · เวลา ${e.stats.peakTime} น.</span></div>
+      <div class="kpi"><span class="eyebrow">ปริมาตรน้ำท่า Outlet · Future</span><span class="v num">${f1(f.stats.vol)}<small>ac-ft</small></span><span class="s">ต่างจาก Existing <b class="${dv > 0 ? 'up' : 'down'}">${sgn(dv)}</b> · ลึก ${f2(f.stats.depth)} นิ้ว</span></div>
+      <div class="kpi"><span class="eyebrow">เทียบกับ RUN_Future.results</span><span class="v num">${mae.toFixed(1)}<small>% คลาดเฉลี่ย</small></span><span class="s">peak ของ 4 subbasin · ที่ Outlet คลาด <b class="${Math.abs(refErr) > 10 ? 'up' : ''}">${sgn(refErr)}</b></span></div>`;
+  }
+
+  // ---------- network ----------
+  function renderNet() {
+    const els = SC.future.basin.elements;
+    const pos = Object.fromEntries(els.map(e => [e.name, [e.x + 30, e.y + 30]]));
+    const R = SC.future.out.results;
+    let s = '';
+    for (const e of els) if (e.downstream) {
+      const [x1, y1] = pos[e.name], [x2, y2] = pos[e.downstream];
+      s += `<path class="link" d="M${x1},${y1} L${x2},${y2}"/>`;
+    }
+    for (const e of els) {
+      const [x, y] = pos[e.name];
+      const sel = e.name === selected ? ' sel' : '';
+      let shape;
+      if (e.kind === 'Subbasin') shape = `<rect class="shape" x="${x - 46}" y="${y - 22}" width="92" height="44" rx="6"/>`;
+      else if (e.kind === 'Reach') shape = `<rect class="shape" x="${x - 38}" y="${y - 13}" width="76" height="26" rx="13"/>`;
+      else shape = `<circle class="shape" cx="${x}" cy="${y}" r="${e.name === 'Outlet' ? 17 : 13}"/>`;
+      const pk = f1(R[e.name].stats.peak);
+      let text;
+      if (e.kind === 'Subbasin') text = `<text class="lbl" x="${x}" y="${y - 3}" text-anchor="middle">${e.name}</text><text class="pk" x="${x}" y="${y + 13}" text-anchor="middle">${pk}</text>`;
+      else if (e.kind === 'Reach') text = `<text class="lbl" x="${x}" y="${y + 4}" text-anchor="middle">${e.name}</text><text class="pk" x="${x + 44}" y="${y + 4}">${pk}</text>`;
+      else {
+        const below = e.name === 'Outlet';
+        text = `<text class="lbl" x="${x}" y="${below ? y + 34 : y + 30}" text-anchor="middle">${e.name}</text><text class="pk" x="${x}" y="${below ? y + 48 : y + 44}" text-anchor="middle">${pk}</text>`;
+      }
+      s += `<g class="node${sel}" data-name="${e.name}" tabindex="0" role="button" aria-label="${e.name} peak ${pk} cfs">${shape}${text}</g>`;
+    }
+    $('net').innerHTML = s;
+  }
+  $('net').addEventListener('click', (ev) => { const g = ev.target.closest('.node'); if (g) select(g.dataset.name); });
+  $('net').addEventListener('keydown', (ev) => { const g = ev.target.closest('.node'); if (g && (ev.key === 'Enter' || ev.key === ' ')) { ev.preventDefault(); select(g.dataset.name); } });
+
+  function select(name) { selected = name; renderNet(); renderSelected(); renderParams(); renderTable(); }
+
+  // ---------- charts ----------
+  const T = control.times, N = T.length;
+  function niceMax(v) {
+    if (v <= 0) return 1;
+    const p = Math.pow(10, Math.floor(Math.log10(v))), m = v / p;
+    const step = m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10;
+    return step * p;
+  }
+  let chartState = null;
+
+  function renderSelected() {
+    const fr = SC.future.out.results[selected], er = SC.existing.out.results[selected];
+    const el = SC.future.basin.elements.find(e => e.name === selected);
+    $('el-kind').textContent = KIND_TH[el.kind];
+    $('el-name').textContent = selected;
+    const chips = [`พื้นที่รับน้ำ ${fr.area.toFixed(2)} ตร.ไมล์`];
+    if (fr.upstream.length) chips.push('รับน้ำจาก ' + fr.upstream.join(', '));
+    if (el.downstream) chips.push('ไหลไป ' + el.downstream);
+    let html = chips.map(c => `<span class="chip">${esc(c)}</span>`).join('');
+    for (const s of Object.values(SC)) {
+      const e = s.basin.elements.find(x => x.name === selected);
+      if (e.kind === 'Reach') {
+        const K = e.route.K / e.route.steps, X = e.route.X, dt = control.dtMin / 60;
+        if (dt < 2 * K * X) html += `<span class="chip warn" title="Δt < 2KX ทำให้ค่าสัมประสิทธิ์ C0 ติดลบ">${s.label}: Δt &lt; 2KX (C0 ติดลบ)</span>`;
+        if (dt > 2 * K * (1 - X)) html += `<span class="chip warn" title="Δt > 2K(1−x) ทำให้ C2 ติดลบ">${s.label}: Δt &gt; 2K(1−x)</span>`;
+      }
+    }
+    $('el-chips').innerHTML = html;
+
+    const series = [
+      { key: 'exist', label: 'Existing · น้ำไหลออก', color: 'var(--s-exist)', data: er.outflow, stats: er.stats },
+      { key: 'future', label: 'Future · น้ำไหลออก', color: 'var(--s-future)', data: fr.outflow, stats: fr.stats },
+    ];
+    if (fr.kind === 'Reach') series.push({ key: 'in', label: 'Future · น้ำไหลเข้า', color: 'var(--s-inflow)', data: fr.inflow, dash: true });
+    const isSub = fr.kind === 'Subbasin';
+    $('legend').innerHTML = series.map(s => `<span><span class="lkey${s.dash ? ' dash' : ''}" style="border-color:${s.color}"></span>${s.label}</span>`).join('')
+      + (isSub ? `<span><span class="swatch" style="background:var(--precip)"></span>ฝน</span><span><span class="swatch" style="background:var(--excess)"></span>ฝนส่วนเกิน · Future</span>` : '');
+    chartState = { series, isSub, fr, er };
+    drawCharts();
+  }
+
+  function drawCharts() {
+    if (!chartState) return;
+    const { series, isSub, fr } = chartState;
+    const W = Math.max(320, $('chart-box').clientWidth);
+    const ml = 52, mr = 16;
+    const pw = W - ml - mr;
+    const x = (i) => ml + (i / (N - 1)) * pw;
+    const hourTicks = [];
+    for (let i = 0; i < N; i++) if (new Date(T[i]).getUTCMinutes() === 0) hourTicks.push(i);
+
+    // hyetograph panel (only subbasins)
+    const hy = $('hyeto');
+    if (isSub) {
+      const hh = 92, mt = 8, mb = 6;
+      const pmax = niceMax(Math.max(...fr.precip) * 1.05);
+      const y = (v) => mt + (v / pmax) * (hh - mt - mb); // hanging bars from the top
+      const bw = Math.max(1, pw / N - 1);
+      let s = `<g class="axis"><line class="g" x1="${ml}" x2="${W - mr}" y1="${mt}" y2="${mt}"/>`;
+      s += `<line class="g" x1="${ml}" x2="${W - mr}" y1="${y(pmax)}" y2="${y(pmax)}"/>`;
+      s += `<text x="${ml - 6}" y="${y(pmax) + 4}" text-anchor="end">${pmax.toFixed(2)}</text><text x="${ml - 6}" y="${mt + 4}" text-anchor="end">0</text>`;
+      s += `<text class="ttl" x="${ml}" y="${hh + 8}">ฝนราย 5 นาที (นิ้ว)</text></g>`;
+      for (let i = 1; i < N; i++) {
+        const p = fr.precip[i]; if (p <= 0) continue;
+        const cx = x(i) - bw / 2;
+        s += `<rect x="${cx.toFixed(1)}" y="${mt}" width="${bw.toFixed(1)}" height="${(y(p) - mt).toFixed(1)}" fill="var(--precip)"/>`;
+        const ex = fr.excess[i];
+        if (ex > 0) s += `<rect x="${cx.toFixed(1)}" y="${mt}" width="${bw.toFixed(1)}" height="${(y(ex) - mt).toFixed(1)}" fill="var(--excess)" opacity="0.85"/>`;
+      }
+      s += `<line id="hx" x1="0" x2="0" y1="${mt}" y2="${hh - mb}" stroke="var(--ink-2)" stroke-width="1" visibility="hidden"/>`;
+      hy.setAttribute('viewBox', `0 0 ${W} ${hh + 12}`);
+      hy.innerHTML = s; hy.hidden = false;
+    } else { hy.hidden = true; hy.innerHTML = ''; }
+
+    // hydrograph
+    const hh = 300, mt = 12, mb = 34;
+    const ymax = niceMax(Math.max(...series.map(s => Math.max(...s.data))) * 1.08);
+    const y = (v) => mt + (1 - v / ymax) * (hh - mt - mb);
+    const ticks = 5;
+    let s = '<g class="axis">';
+    for (let k = 0; k <= ticks; k++) {
+      const v = ymax * k / ticks, yy = y(v);
+      s += `<line class="${k === 0 ? 'base' : 'g'}" x1="${ml}" x2="${W - mr}" y1="${yy}" y2="${yy}"/>`;
+      s += `<text x="${ml - 6}" y="${yy + 4}" text-anchor="end">${v.toLocaleString('en-US')}</text>`;
+    }
+    const every = pw < 460 ? 2 : 1;
+    hourTicks.forEach((i, j) => { if (j % every) return; s += `<text x="${x(i)}" y="${hh - mb + 16}" text-anchor="middle">${H.fmtTime(T[i])}</text>`; });
+    s += `<text class="ttl" x="${ml}" y="${hh - 2}">cfs · เวลา 16 ม.ค. 1973</text></g>`;
+    for (const se of series) {
+      let d = '';
+      for (let i = 0; i < N; i++) d += (i ? 'L' : 'M') + x(i).toFixed(1) + ',' + y(se.data[i]).toFixed(1);
+      s += `<path d="${d}" fill="none" stroke="${se.color}" stroke-width="2" stroke-linejoin="round" ${se.dash ? 'stroke-dasharray="5 4"' : ''}/>`;
+    }
+    // peak markers + direct labels on outflow series
+    const outs = series.filter(se => se.stats);
+    const placed = [];
+    for (const se of outs) {
+      const i = se.stats.peakIndex, px = x(i), py = y(se.data[i]);
+      s += `<circle cx="${px}" cy="${py}" r="4.5" fill="${se.color}" stroke="var(--surface)" stroke-width="2"/>`;
+      let ly = py - 10;
+      for (const p of placed) if (Math.abs(p - ly) < 15) ly = p - 15;
+      placed.push(ly);
+      const anchor = px > W - 150 ? 'end' : 'start';
+      s += `<text x="${px + (anchor === 'start' ? 8 : -8)}" y="${ly}" text-anchor="${anchor}" style="font:500 11.5px var(--font-mono);fill:var(--ink)">${se.key === 'future' ? 'Future' : 'Existing'} ${f1(se.data[i])} @ ${se.stats.peakTime}</text>`;
+    }
+    s += `<line id="cx" x1="0" x2="0" y1="${mt}" y2="${hh - mb}" stroke="var(--ink-2)" stroke-width="1" visibility="hidden"/>`;
+    s += `<g id="dots"></g>`;
+    s += `<rect id="hit" x="${ml}" y="0" width="${pw}" height="${hh - mb}" fill="transparent"/>`;
+    const hd = $('hydro');
+    hd.setAttribute('viewBox', `0 0 ${W} ${hh}`);
+    hd.innerHTML = s;
+    chartState.geom = { x, y, ml, pw, W };
+  }
+
+  function hover(ev) {
+    if (!chartState || !chartState.geom) return;
+    const { x, y, ml, pw, W } = chartState.geom;
+    const hd = $('hydro'), r = hd.getBoundingClientRect();
+    const sx = (ev.clientX - r.left) * (W / r.width);
+    const i = Math.max(0, Math.min(N - 1, Math.round((sx - ml) / pw * (N - 1))));
+    const xx = x(i);
+    const cx = $('cx'); cx.setAttribute('x1', xx); cx.setAttribute('x2', xx); cx.setAttribute('visibility', 'visible');
+    const hx = $('hx'); if (hx) { hx.setAttribute('x1', xx); hx.setAttribute('x2', xx); hx.setAttribute('visibility', 'visible'); }
+    $('dots').innerHTML = chartState.series.map(se => `<circle cx="${xx}" cy="${y(se.data[i])}" r="4" fill="${se.color}" stroke="var(--surface)" stroke-width="2"/>`).join('');
+    const { fr, isSub } = chartState;
+    let h = `<span class="t">${H.fmtTime(T[i])} น.</span>`;
+    for (const se of chartState.series) h += `<span class="r"><span><span class="lkey${se.dash ? ' dash' : ''}" style="border-color:${se.color};margin-right:6px"></span>${se.label.split(' · ')[0]}${se.key === 'in' ? ' (เข้า)' : ''}</span><b>${f1(se.data[i])} cfs</b></span>`;
+    if (isSub) h += `<span class="r"><span>ฝน / ส่วนเกิน</span><b>${fr.precip[i].toFixed(3)} / ${fr.excess[i].toFixed(3)} นิ้ว</b></span>`;
+    const tip = $('tip'); tip.innerHTML = h; tip.hidden = false;
+    const box = $('chart-box').getBoundingClientRect();
+    const px = ev.clientX - box.left, tw = tip.offsetWidth;
+    tip.style.left = (px + 14 + tw > box.width ? px - tw - 14 : px + 14) + 'px';
+    tip.style.top = Math.max(0, ev.clientY - box.top - 30) + 'px';
+  }
+  function unhover() {
+    $('tip').hidden = true;
+    const cx = $('cx'); if (cx) cx.setAttribute('visibility', 'hidden');
+    const hx = $('hx'); if (hx) hx.setAttribute('visibility', 'hidden');
+    const d = $('dots'); if (d) d.innerHTML = '';
+  }
+  $('hydro').addEventListener('pointermove', hover);
+  $('hydro').addEventListener('pointerleave', unhover);
+  let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(drawCharts, 120); });
+
+  // ---------- parameter editor ----------
+  const PARAMS = {
+    Subbasin: [
+      ['พื้นที่', null],
+      ['Area', 'พื้นที่', 'mi²', 0.01, null],
+      ['Loss · Initial + Constant', null],
+      ['Percent Impervious Area', 'พื้นที่ทึบน้ำ', '%', 0, 100],
+      ['Initial Loss', 'การสูญเสียช่วงแรก', 'in', 0, null],
+      ['Constant Loss Rate', 'อัตราสูญเสียคงที่', 'in/hr', 0, null],
+      ['Transform · Clark', null],
+      ['Time of Concentration', 'เวลารวมตัว Tc', 'hr', 0.09, null],
+      ['Storage Coefficient', 'สัมประสิทธิ์เก็บกัก R', 'hr', 0.01, null],
+      ['Baseflow · Recession', null],
+      ['Initial Flow/Area Ratio', 'น้ำท่าเริ่มต้นต่อพื้นที่', 'cfs/mi²', 0, null],
+      ['Recession Factor', 'ค่าคงที่การลดลง', '/วัน', 0.01, 1],
+      ['Threshold Flow To Peak Ratio', 'threshold ต่อ peak', '', 0.01, 1],
+    ],
+    Reach: [
+      ['Routing · Muskingum', null],
+      ['Muskingum K', 'เวลาเดินทาง K', 'hr', 0.01, null],
+      ['Muskingum x', 'ค่าถ่วง x', '', 0, 0.5],
+      ['Muskingum Steps', 'จำนวน subreach', '', 1, 50],
+    ],
+  };
+  function renderParams() {
+    const s = SC[editing];
+    const e = s.basin.elements.find(x => x.name === selected);
+    const idx = s.blocks.findIndex(b => b.name === selected && b.kind === e.kind);
+    const blk = s.blocks[idx], orig = s.original[idx];
+    $('p-title').textContent = `พารามิเตอร์ · ${selected}`;
+    $('p-hint').innerHTML = `กำลังแก้ <b style="color:${s.color}">${s.label}</b> (${s.file}) · แก้แล้วรันใหม่ทันที`;
+    const defs = PARAMS[e.kind];
+    if (!defs) { $('params').innerHTML = `<p class="hint" style="grid-column:1/-1">Junction ไม่มีพารามิเตอร์ ทำหน้าที่รวมน้ำจาก ${e.name === 'Outlet' ? 'West Branch และ East Branch' : SC.future.out.results[selected].upstream.join(' และ ')}</p>`; return; }
+    let h = '';
+    for (const d of defs) {
+      if (d[1] === null) { h += `<div class="group-title">${d[0]}</div>`; continue; }
+      const [key, th, unit, min, max] = d;
+      const id = 'p-' + key.replace(/\W+/g, '-').toLowerCase();
+      const changed = blk.props[key] !== orig[key];
+      h += `<div class="field"><label for="${id}">${th}<span class="u">${unit}</span></label><input id="${id}" class="${changed ? 'changed' : ''}" data-key="${key}" data-min="${min}" data-max="${max ?? ''}" inputmode="decimal" value="${esc(blk.props[key])}" title="${key}${changed ? ' · ค่าในไฟล์: ' + orig[key] : ''}"></div>`;
+    }
+    $('params').innerHTML = h;
+  }
+  let pt;
+  $('params').addEventListener('input', (ev) => {
+    const inp = ev.target; if (!inp.dataset.key) return;
+    const v = parseFloat(inp.value), min = parseFloat(inp.dataset.min), max = inp.dataset.max === '' ? Infinity : parseFloat(inp.dataset.max);
+    const ok = inp.value.trim() !== '' && !isNaN(v) && v >= min && v <= max && (inp.dataset.key !== 'Muskingum Steps' || Number.isInteger(v));
+    inp.setAttribute('aria-invalid', ok ? 'false' : 'true');
+    if (!ok) { $('runlog').innerHTML = `ค่า ${esc(inp.dataset.key)} ต้องอยู่ระหว่าง ${min} ถึง ${max === Infinity ? '∞' : max}`; return; }
+    const s = SC[editing];
+    const blk = s.blocks.find(b => b.name === selected && b.kind !== 'Basin');
+    blk.props[inp.dataset.key] = inp.value.trim();
+    clearTimeout(pt);
+    pt = setTimeout(() => {
+      const active = document.activeElement && document.activeElement.id;
+      runAll();
+      if (active) { const el = $(active); if (el) { el.focus(); const n = el.value.length; try { el.setSelectionRange(n, n); } catch (_) {} } }
+    }, 250);
+  });
+
+  // ---------- summary table ----------
+  function errClass(v) { const a = Math.abs(v); return a < 3 ? 'err-lo' : a < 10 ? 'err-mid' : 'err-hi'; }
+  function renderTable() {
+    const E = SC.existing.out.results, F = SC.future.out.results;
+    let h = `<thead><tr><th rowspan="2">Element</th><th rowspan="2">ชนิด</th><th rowspan="2">พื้นที่<br>ตร.ไมล์</th>
+      <th colspan="2" class="sep">Existing</th><th colspan="4" class="sep">Future</th><th colspan="3" class="sep">อ้างอิง RUN_Future.results</th></tr>
+      <tr><th class="sep">peak cfs</th><th>เวลา</th><th class="sep">peak cfs</th><th>เวลา</th><th>ปริมาตร ac-ft</th><th>ต่างจาก Existing</th><th class="sep">peak cfs</th><th>เวลา</th><th>คลาดเคลื่อน</th></tr></thead><tbody>`;
+    for (const name of SC.future.out.order) {
+      const e = E[name], f = F[name], r = REF[name];
+      const d = pct(f.stats.peak, e.stats.peak), er = pct(f.stats.peak, r.peak);
+      h += `<tr data-name="${name}" tabindex="0" class="${name === selected ? 'sel' : ''}"><td>${name}</td><td>${f.kind}</td><td>${f.area.toFixed(2)}</td>
+        <td class="sep">${f1(e.stats.peak)}</td><td>${e.stats.peakTime}</td>
+        <td class="sep">${f1(f.stats.peak)}</td><td>${f.stats.peakTime}</td><td>${f1(f.stats.vol)}</td><td class="${d > 0 ? 'up' : 'down'}">${sgn(d)}</td>
+        <td class="sep">${f1(r.peak)}</td><td>${r.peakTime}</td><td class="${errClass(er)}">${sgn(er)}</td></tr>`;
+    }
+    $('summary').innerHTML = h + '</tbody>';
+  }
+  $('summary').addEventListener('click', (ev) => { const tr = ev.target.closest('tr[data-name]'); if (tr) select(tr.dataset.name); });
+  $('summary').addEventListener('keydown', (ev) => { const tr = ev.target.closest('tr[data-name]'); if (tr && ev.key === 'Enter') select(tr.dataset.name); });
+
+  // ---------- files ----------
+  const ORDER = ['castro.hms', 'castro.run', 'Castro_1.basin', 'Castro_2.basin', 'GageWts.met', 'castro.gage', 'Jan73.control'];
+  let curFile = 'Castro_2.basin';
+  function fileText(name) {
+    for (const s of Object.values(SC)) if (s.file === name) return H.writeHms(s.blocks);
+    return FILES[name];
+  }
+  function isEdited(name) {
+    for (const s of Object.values(SC)) if (s.file === name) return s.blocks.some((b, i) => JSON.stringify(b.props) !== JSON.stringify(s.original[i]));
+    return false;
+  }
+  function renderFile() {
+    $('tabs').innerHTML = ORDER.map(n => `<button class="tab" role="tab" aria-selected="${n === curFile}" data-f="${n}">${n}${isEdited(n) ? '<span class="dot" aria-label="แก้ไขแล้ว"></span>' : ''}</button>`).join('');
+    $('file-desc').textContent = FILE_DESC[curFile] + (isEdited(curFile) ? ' · มีค่าที่แก้ในหน้านี้' : '');
+    const t = fileText(curFile);
+    $('file').innerHTML = esc(t).split('\n').map(l => {
+      const m = /^(\s*)([^:]+):(.*)$/.exec(l);
+      if (!m) return l;
+      return m[1] ? `${m[1]}<span class="k">${m[2]}</span>:${m[3]}` : `<span class="b">${m[2]}:${m[3]}</span>`;
+    }).join('\n');
+  }
+  $('tabs').addEventListener('click', (ev) => { const b = ev.target.closest('[data-f]'); if (b) { curFile = b.dataset.f; renderFile(); } });
+  $('copy').addEventListener('click', () => {
+    const t = fileText(curFile);
+    const done = () => { $('copy').textContent = 'คัดลอกแล้ว'; setTimeout(() => { $('copy').textContent = 'คัดลอกเนื้อหาไฟล์'; }, 1500); };
+    const fallback = () => { const r = document.createRange(); r.selectNodeContents($('file')); const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); $('copy').textContent = 'เลือกข้อความแล้ว กด Ctrl+C'; };
+    try { navigator.clipboard.writeText(t).then(done, fallback); } catch (_) { fallback(); }
+  });
+
+  // ---------- controls ----------
+  function setEditing(k) {
+    editing = k;
+    $('sc-existing').setAttribute('aria-pressed', k === 'existing');
+    $('sc-future').setAttribute('aria-pressed', k === 'future');
+    curFile = SC[k].file;
+    renderParams(); renderFile();
+  }
+  $('sc-existing').addEventListener('click', () => setEditing('existing'));
+  $('sc-future').addEventListener('click', () => setEditing('future'));
+  $('run').addEventListener('click', runAll);
+  $('reset').addEventListener('click', () => { Object.values(SC).forEach(loadScenario); runAll(); $('runlog').innerHTML += ' · คืนค่าตามไฟล์แล้ว'; });
+
+  runAll();
+})();
+</script>
+</body></html>

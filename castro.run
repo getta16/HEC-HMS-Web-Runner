@@ -1,0 +1,15 @@
+Run: Current
+     Description: Existing conditions for storm of 16 January 1973
+     Basin: Castro 1
+     Precip: GageWts
+     Control: Jan73
+     DSS File: Current.dss
+End:
+
+Run: Future
+     Description: Future conditions for storm of 16 January 1973
+     Basin: Castro 2
+     Precip: GageWts
+     Control: Jan73
+     DSS File: Future.dss
+End:
