@@ -291,8 +291,8 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   const base = (p) => p.split(/[\\/]/).pop();
   const lc = (s) => (s || '').toLowerCase();
   const store = { get(k) { try { return localStorage.getItem(k); } catch (_) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (_) {} } };
-  const TEXT_EXT = /\.(hms|basin|met|gage|control|run|pdata|results)$/i;
-  const VIEW_EXT = /\.(hms|basin|met|gage|control|run|pdata)$/i;
+  const TEXT_EXT = /\.(hms|basin|met|gage|grid|control|run|pdata|results)$/i;
+  const VIEW_EXT = /\.(hms|basin|met|gage|grid|control|run|pdata)$/i;
 
   // ---------- language ----------
   const I18N = {
@@ -312,7 +312,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       filesHint: 'จุดสีบนแท็บ = มีค่าที่แก้ในหน้านี้ · ปุ่มดาวน์โหลดจะบันทึกไฟล์ที่แก้แล้ว',
       copy: 'คัดลอก', copied: 'คัดลอกแล้ว', pressCopy: 'กด Ctrl+C', download: 'ดาวน์โหลดไฟล์นี้',
       methodsTitle: 'วิธีคำนวณที่รองรับ',
-      methods: '<p><b>ฝน · Specified Average / Gage Weights</b>อ่านฝนรายช่วงจากไฟล์ .dss ตาม Pathname ใน .gage แล้วกระจายลงแต่ละ time step แบบเส้นตรงบนกราฟฝนสะสม ค่าที่หายไป (missing) จะถูกตั้งเป็น 0 เหมือนใน HEC-HMS</p><p><b>ฝน · Frequency Based Hypothetical</b>สร้างพายุออกแบบจากตารางความลึกฝน–ช่วงเวลา (interpolate แบบ log-log) แล้ววางฝนรายช่วงสลับก่อน/หลังจุด peak ตาม % ที่กำหนด เหมือน HEC-HMS คำนวณที่ time step ของ control รองรับ Re-sort และ Depth-Area Reduction แบบ TP-40/TP-49</p><p><b>Loss · None / Initial+Constant / SCS Curve Number</b>รวมการคิดพื้นที่ทึบน้ำ (% impervious) ด้วย</p><p><b>Transform · User-Specified UH / SCS / Clark / Snyder</b>ถ้า UH มีช่วงเวลาไม่เท่ากับ time interval จะแปลงด้วยวิธี S-curve ส่วน Clark และ Snyder (Standard) สร้าง UH ด้วยขั้นตอนเดียวกับ HEC-HMS 4.13 (Snyder แปลง tp, Cp เป็น Clark Tc, R แบบวนซ้ำ)</p><p><b>Baseflow · None / Recession</b> · <b>Routing · None / Lag / Muskingum</b></p><p><b>Reservoir · Outflow Structures</b>ใช้ตาราง Elevation-Storage (หรือ Elevation-Area) กับ orifice, ogee / broad-crested spillway และ level dam top แก้สมการต่อเนื่องแบบ sub-step และ adaptive control เหมือน HEC-HMS ยังไม่รองรับ tailwater, การระเหย, ปั๊ม, gate และ dam break</p><p><b>Diversion · Inflow-Diversion Table</b>ผันน้ำตามตาราง โดยจำกัดด้วยอัตราผันสูงสุดและปริมาตรผันสูงสุด แล้วส่งน้ำที่ผันไปยัง element ปลายทาง</p><p><b>ไฟล์ DSS</b>อ่าน DSS เวอร์ชัน 7 (HEC-HMS 4.x) ได้เฉพาะอนุกรมเวลาแบบช่วงคงที่และ pattern ยังอ่าน DSS 6 และข้อมูลกริดไม่ได้</p>',
+      methods: '<p><b>ฝน · Specified Average / Weighted Gages</b>อ่านฝนจากไฟล์ .dss ตาม Pathname ใน .gage (ฝนรายช่วงหรือฝนสะสม) แล้วกระจายลงแต่ละ time step แบบเส้นตรงบนกราฟฝนสะสม Weighted Gages ถ่วงน้ำหนักความลึกด้วย Volume Weight และรูปแบบด้วย Temporal Distribution Weight รองรับ HEC-1 weighting, indexing และ depth override</p><p><b>ฝน · Frequency Based Hypothetical</b>สร้างพายุออกแบบจากตารางความลึก–ช่วงเวลา (log-log) วางฝนสลับก่อน/หลัง peak ที่ time step ของ control รองรับ Re-sort และ Depth-Area Reduction แบบ TP-40/TP-49</p><p><b>ฝน · Gridded Precipitation</b>อ่าน grid ฝน (HRAP/SHG) จาก DSS 6 หรือ 7 และไฟล์ grid cell (File-Specified) คำนวณ loss ราย cell และใช้ Modified Clark ราย cell</p><p><b>คายระเหย · Monthly Evaporation</b>ค่า pan × สัมประสิทธิ์รายเดือน กระจายเท่ากันตลอดเดือน</p><p><b>Loss · Initial+Constant / SCS Curve Number / Deficit Constant / Soil Moisture Accounting</b>SMA ใช้ร่วมกับ Canopy และ Surface แบบ Simple โดยแบ่ง sub-step แบบเดียวกับ HEC-HMS</p><p><b>Transform · User-Specified UH / SCS / Clark / Snyder / Modified Clark</b>สร้าง UH ด้วยขั้นตอนเดียวกับ HEC-HMS 4.13 (SCS ใช้ spline, Snyder แปลงเป็น Clark แบบวนซ้ำ)</p><p><b>Baseflow · Recession / Linear Reservoir</b>Linear Reservoir รับน้ำจาก groundwater ของ SMA</p><p><b>Routing · Lag / Muskingum / Modified Puls</b>Modified Puls ใช้ตาราง Storage-Outflow แบ่ง subreach</p><p><b>Reservoir · Outflow Structures</b>ตาราง Elevation-Storage/Area กับ orifice, culvert (box, circular; วิธี FHWA/HY-8), ปั๊ม Head-Discharge, ogee / broad-crested spillway และ level dam top พร้อม tailwater แบบ Specified Stage ยังไม่รองรับการระเหย, gate และ dam break</p><p><b>Diversion · Inflow-Diversion Table</b>ผันน้ำตามตาราง จำกัดด้วยอัตราและปริมาตรผันสูงสุด แล้วส่งน้ำที่ผันไปยัง element ปลายทาง</p><p><b>ไฟล์ DSS</b>อ่าน DSS เวอร์ชัน 6 และ 7: time series (รวมที่ถูกบีบอัด), paired data และ grid</p>',
       errTitle: 'รันไม่ได้', noHms: 'ไม่มีไฟล์ .hms', files: (n) => `${n} ไฟล์`,
       noRunFile: '(ไม่มีไฟล์ .run)', custom: '(กำหนดเอง)',
       days: (d) => `${d} วัน`, hours: (h) => `${h} ชั่วโมง`, steps: (n) => `${n} ช่วงเวลา`,
@@ -383,7 +383,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       filesHint: 'Dot on a tab = edited on this page · Download saves the edited file',
       copy: 'Copy', copied: 'Copied', pressCopy: 'Press Ctrl+C', download: 'Download this file',
       methodsTitle: 'Supported methods',
-      methods: '<p><b>Precipitation · Specified Average / Gage Weights</b>Reads incremental rainfall from the .dss file at the Pathname in the .gage file and distributes it over each time step linearly along the cumulative curve. Missing values are set to 0, as in HEC-HMS.</p><p><b>Precipitation · Frequency Based Hypothetical</b>Builds a design storm from the depth–duration table (log-log interpolation) and places the incremental blocks alternately before and after the peak at the set percentage, as HEC-HMS does, at the control time step. Re-sort and TP-40/TP-49 depth-area reduction are supported.</p><p><b>Loss · None / Initial+Constant / SCS Curve Number</b>Includes percent impervious area.</p><p><b>Transform · User-Specified UH / SCS / Clark / Snyder</b>A UH whose duration differs from the time interval is converted with the S-curve method. Clark and Snyder (Standard) build the UH with the same steps as HEC-HMS 4.13 (Snyder iterates tp and Cp into Clark Tc and R).</p><p><b>Baseflow · None / Recession</b> · <b>Routing · None / Lag / Muskingum</b></p><p><b>Reservoir · Outflow Structures</b>Elevation-Storage (or Elevation-Area) table with orifice, ogee / broad-crested spillway and level dam top, solved with the HEC-HMS sub-step and adaptive-control scheme. Tailwater, evaporation, pumps, gates and dam break are not supported yet.</p><p><b>Diversion · Inflow-Diversion Table</b>Diverts flow by table, limited by the maximum diversion flow and volume, and sends it to the target element.</p><p><b>DSS files</b>Reads DSS version 7 (HEC-HMS 4.x) regular time series and patterns only. DSS 6 and gridded data are not supported yet.</p>',
+      methods: '<p><b>Precipitation · Specified Average / Weighted Gages</b>Reads gage rainfall (incremental or cumulative) from .dss at the Pathname in the .gage file and spreads it over each time step along the cumulative curve. Weighted Gages weight depth by Volume Weight and the pattern by Temporal Distribution Weight, with the HEC-1 scheme, indexing and depth override.</p><p><b>Precipitation · Frequency Based Hypothetical</b>Design storm from the depth–duration table (log-log), blocks placed alternately around the peak at the control time step. Re-sort and TP-40/TP-49 depth-area reduction supported.</p><p><b>Precipitation · Gridded Precipitation</b>Reads rainfall grids (HRAP/SHG) from DSS 6 or 7 with a File-Specified grid-cell file; loss is computed per cell and Modified Clark per cell.</p><p><b>Evapotranspiration · Monthly Evaporation</b>Pan × monthly coefficient spread evenly over the month.</p><p><b>Loss · Initial+Constant / SCS Curve Number / Deficit Constant / Soil Moisture Accounting</b>SMA works with Simple canopy and Simple surface, using the same sub-stepping as HEC-HMS.</p><p><b>Transform · User-Specified UH / SCS / Clark / Snyder / Modified Clark</b>Unit hydrographs are built the same way as HEC-HMS 4.13 (SCS with a spline, Snyder iterated into Clark Tc and R).</p><p><b>Baseflow · Recession / Linear Reservoir</b>Linear Reservoir is fed by the SMA groundwater layers.</p><p><b>Routing · Lag / Muskingum / Modified Puls</b>Modified Puls uses the storage-outflow table split into subreaches.</p><p><b>Reservoir · Outflow Structures</b>Elevation-storage/area table with orifice, culvert (box, circular; FHWA/HY-8 method), head-discharge pump, ogee / broad-crested spillway and level dam top, with Specified Stage tailwater. Evaporation, gates and dam break are not supported yet.</p><p><b>Diversion · Inflow-Diversion Table</b>Diverts flow by table, limited by the maximum diversion flow and volume, and sends it to the target element.</p><p><b>DSS files</b>Reads DSS version 6 and 7: time series (including compressed), paired data and grids.</p>',
       errTitle: 'Cannot run', noHms: 'no .hms file', files: (n) => `${n} files`,
       noRunFile: '(no .run file)', custom: '(custom)',
       days: (d) => `${d} days`, hours: (h) => `${h} hours`, steps: (n) => `${n} time steps`,
@@ -529,7 +529,10 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     const gages = {}, pdata = {};
     for (const g of gageFiles()) Object.assign(gages, H.readGages(P.texts[g], getDss));
     for (const n of Object.keys(P.texts).filter(n => /\.pdata$/i.test(n))) Object.assign(pdata, H.readPairedData(P.texts[n], getDss));
-    return { met, gages, pdata };
+    const grids = {}, cells = {};
+    for (const n of Object.keys(P.texts).filter(n => /\.grid$/i.test(n))) Object.assign(grids, H.readGrids(P.texts[n]));
+    for (const n of Object.keys(P.texts).filter(n => /^\s*GRIDCELL:/mi.test(P.texts[n]))) Object.assign(cells, H.readCells(P.texts[n]));
+    return { met, gages, pdata, ext: { grids, cells, getDss } };
   }
 
   function runModel() {
@@ -539,9 +542,9 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       if (S.missing.length) throw new Error(t('missingFiles', S.missing.join(', ')));
       const basin = H.readBasin(H.writeHms(S.blocks));
       const control = H.readControl(H.writeHms(S.ctlBlocks));
-      const { met, gages, pdata } = loadInputs();
-      for (const sb of Object.values(met.subbasins)) { const g = gages[sb.gage]; if (g && g.error) throw new Error(t('gageErr', sb.gage, g.error)); }
-      const out = H.run(basin, met, gages, control, pdata);
+      const { met, gages, pdata, ext } = loadInputs();
+      for (const sb of Object.values(met.subbasins)) for (const name of [sb.gage, ...(sb.weights || []).map(w => w.gage)]) { const g = gages[name]; if (g && g.error) throw new Error(t('gageErr', name, g.error)); }
+      const out = H.run(basin, met, gages, control, pdata, ext);
       OUT = { ...out, basin, control, met, gages, pdata, u: basin.units, basinSnap: JSON.stringify(S.blocks.map(b => b.props)) };
       if (!selected || !basin.elements.find(e => e.name === selected)) selected = out.outlet;
       runInfo = { n: control.times.length, e: basin.elements.length, ms: Math.round(performance.now() - t0) };
@@ -610,7 +613,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       const { met, gages } = loadInputs();
       let a = Infinity, b = -Infinity;
       for (const sb of Object.values(met.subbasins)) {
-        for (const g of (sb.gage ? [sb.gage] : Object.keys(sb.time))) { const G = gages[g]; if (!G || !G.values) continue; a = Math.min(a, G.start); b = Math.max(b, G.start + G.values.length * G.interval * 60000); }
+        for (const g of (sb.weights && sb.weights.length ? sb.weights.map(w => w.gage) : sb.gage ? [sb.gage] : Object.keys(sb.time))) { const G = gages[g]; if (!G || !G.values) continue; a = Math.min(a, G.start); b = Math.max(b, G.start + G.values.length * G.interval * 60000); }
       }
       return isFinite(a) ? [a, b] : null;
     } catch (_) { return null; }
@@ -651,6 +654,10 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       const name = base(f.webkitRelativePath || f.name);
       if (/\.dss$/i.test(name)) { if (f.size < 200 * 1024 * 1024) files.push({ name, buf: await f.arrayBuffer() }); }
       else if (TEXT_EXT.test(name)) files.push({ name, text: await f.text() });
+      else if ((!/\.[^.]+$/.test(name) || /\.mod$/i.test(name)) && f.size < 20 * 1024 * 1024) { // grid-cell file
+        const text = await f.text();
+        if (/^\s*GRIDCELL:/mi.test(text)) files.push({ name, text });
+      }
     }
     return files;
   }
