@@ -122,6 +122,7 @@ header.top { padding-block: 20px 0; display: grid; gap: 10px; }
 
 #net { width: 100%; height: auto; display: block; }
 #net .link { stroke: var(--line); stroke-width: 2.5; fill: none; }
+#net .link.div { stroke-dasharray: 6 5; }
 #net .node { cursor: pointer; }
 #net .node .shape { fill: var(--surface-2); stroke: var(--ink-2); stroke-width: 1.2; }
 #net .node:hover .shape { stroke: var(--accent); }
@@ -240,7 +241,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     <div class="panel">
       <div class="panel-head"><h2 data-i18n="netTitle"></h2><span class="hint" data-i18n="netHint"></span></div>
       <svg id="net" viewBox="0 0 400 300" role="img" aria-label="Basin network"></svg>
-      <div class="legend"><span><span class="swatch" style="background:var(--surface-2);border:1px solid var(--ink-2)"></span>Subbasin</span><span><span class="swatch" style="background:var(--surface-2);border:1px solid var(--ink-2);border-radius:99px"></span>Junction / Sink</span><span id="net-unit"></span></div>
+      <div class="legend"><span><span class="swatch" style="background:var(--surface-2);border:1px solid var(--ink-2)"></span>Subbasin</span><span><span class="swatch" style="background:var(--surface-2);border:1px solid var(--ink-2);border-radius:99px"></span>Junction / Sink</span><span id="leg-res" hidden>▽ Reservoir</span><span id="leg-div" hidden>◇ Diversion</span><span id="net-unit"></span></div>
     </div>
     <div class="panel">
       <div class="panel-head">
@@ -311,7 +312,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       filesHint: 'จุดสีบนแท็บ = มีค่าที่แก้ในหน้านี้ · ปุ่มดาวน์โหลดจะบันทึกไฟล์ที่แก้แล้ว',
       copy: 'คัดลอก', copied: 'คัดลอกแล้ว', pressCopy: 'กด Ctrl+C', download: 'ดาวน์โหลดไฟล์นี้',
       methodsTitle: 'วิธีคำนวณที่รองรับ',
-      methods: '<p><b>ฝน · Specified Average / Gage Weights</b>อ่านฝนรายช่วงจากไฟล์ .dss ตาม Pathname ใน .gage แล้วกระจายลงแต่ละ time step แบบเส้นตรงบนกราฟฝนสะสม ค่าที่หายไป (missing) จะถูกตั้งเป็น 0 เหมือนใน HEC-HMS</p><p><b>Loss · None / Initial+Constant / SCS Curve Number</b>รวมการคิดพื้นที่ทึบน้ำ (% impervious) ด้วย</p><p><b>Transform · User-Specified UH / SCS / Clark</b>ถ้า UH มีช่วงเวลาไม่เท่ากับ time interval จะแปลงด้วยวิธี S-curve</p><p><b>Baseflow · None / Recession</b> · <b>Routing · None / Lag / Muskingum</b></p><p><b>ไฟล์ DSS</b>อ่าน DSS เวอร์ชัน 7 (HEC-HMS 4.x) ได้เฉพาะอนุกรมเวลาแบบช่วงคงที่และ pattern ยังอ่าน DSS 6 และข้อมูลกริดไม่ได้</p>',
+      methods: '<p><b>ฝน · Specified Average / Gage Weights</b>อ่านฝนรายช่วงจากไฟล์ .dss ตาม Pathname ใน .gage แล้วกระจายลงแต่ละ time step แบบเส้นตรงบนกราฟฝนสะสม ค่าที่หายไป (missing) จะถูกตั้งเป็น 0 เหมือนใน HEC-HMS</p><p><b>ฝน · Frequency Based Hypothetical</b>สร้างพายุออกแบบจากตารางความลึกฝน–ช่วงเวลา (interpolate แบบ log-log) แล้ววางฝนรายช่วงสลับก่อน/หลังจุด peak ตาม % ที่กำหนด เหมือน HEC-HMS คำนวณที่ time step ของ control รองรับ Re-sort และ Depth-Area Reduction แบบ TP-40/TP-49</p><p><b>Loss · None / Initial+Constant / SCS Curve Number</b>รวมการคิดพื้นที่ทึบน้ำ (% impervious) ด้วย</p><p><b>Transform · User-Specified UH / SCS / Clark / Snyder</b>ถ้า UH มีช่วงเวลาไม่เท่ากับ time interval จะแปลงด้วยวิธี S-curve ส่วน Clark และ Snyder (Standard) สร้าง UH ด้วยขั้นตอนเดียวกับ HEC-HMS 4.13 (Snyder แปลง tp, Cp เป็น Clark Tc, R แบบวนซ้ำ)</p><p><b>Baseflow · None / Recession</b> · <b>Routing · None / Lag / Muskingum</b></p><p><b>Reservoir · Outflow Structures</b>ใช้ตาราง Elevation-Storage (หรือ Elevation-Area) กับ orifice, ogee / broad-crested spillway และ level dam top แก้สมการต่อเนื่องแบบ sub-step และ adaptive control เหมือน HEC-HMS ยังไม่รองรับ tailwater, การระเหย, ปั๊ม, gate และ dam break</p><p><b>Diversion · Inflow-Diversion Table</b>ผันน้ำตามตาราง โดยจำกัดด้วยอัตราผันสูงสุดและปริมาตรผันสูงสุด แล้วส่งน้ำที่ผันไปยัง element ปลายทาง</p><p><b>ไฟล์ DSS</b>อ่าน DSS เวอร์ชัน 7 (HEC-HMS 4.x) ได้เฉพาะอนุกรมเวลาแบบช่วงคงที่และ pattern ยังอ่าน DSS 6 และข้อมูลกริดไม่ได้</p>',
       errTitle: 'รันไม่ได้', noHms: 'ไม่มีไฟล์ .hms', files: (n) => `${n} ไฟล์`,
       noRunFile: '(ไม่มีไฟล์ .run)', custom: '(กำหนดเอง)',
       days: (d) => `${d} วัน`, hours: (h) => `${h} ชั่วโมง`, steps: (n) => `${n} ช่วงเวลา`,
@@ -339,7 +340,9 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       oldRain: (p, u) => `ฝนใน .results (${p} ${u}) ต่างจากข้อมูลฝนปัจจุบัน ผลอาจมาจากการรันครั้งเก่า`,
       noCompare: (r, a, b, i) => `ช่วงเวลาหรือ interval ไม่ตรงกับ RUN_${r}.results (${a} ถึง ${b}${i ? ', ' + i : ''}) จึงไม่เทียบ`,
       netUnit: (u) => `ตัวเลข = น้ำสูงสุด (${u})`,
-      kind: { Subbasin: 'ลุ่มน้ำย่อย · Subbasin', Reach: 'ลำน้ำ · Reach', Junction: 'จุดบรรจบ · Junction', Sink: 'จุดออก · Sink', Source: 'แหล่งน้ำ · Source' },
+      kind: { Subbasin: 'ลุ่มน้ำย่อย · Subbasin', Reach: 'ลำน้ำ · Reach', Junction: 'จุดบรรจบ · Junction', Sink: 'จุดออก · Sink', Source: 'แหล่งน้ำ · Source', Reservoir: 'อ่างเก็บน้ำ · Reservoir', Diversion: 'จุดผันน้ำ · Diversion' },
+      cMaxElev: (v, u) => `ระดับน้ำสูงสุด ${v} ${u}`, cMaxStor: (v, u) => `เก็บกักสูงสุด ${v} ${u}`, cDivTo: (n) => `ผันไป ${n}`, cDivVol: (v, u) => `ปริมาตรผัน ${v} ${u}`,
+      diverted: 'น้ำที่ผัน', structFlow: (s) => `ไหลผ่าน ${s}`,
       cArea: (a, u) => `พื้นที่รับน้ำ ${a} ${u}`, cFrom: (l) => `รับน้ำจาก ${l}`, cTo: (n) => `ไหลไป ${n}`,
       cRain: (v, u) => `ฝน ${v} ${u}`, cExcess: (v, u) => `ส่วนเกิน ${v} ${u}`,
       c0neg: 'Δt < 2KX (C0 ติดลบ)', c2neg: 'Δt > 2K(1−x)',
@@ -380,7 +383,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       filesHint: 'Dot on a tab = edited on this page · Download saves the edited file',
       copy: 'Copy', copied: 'Copied', pressCopy: 'Press Ctrl+C', download: 'Download this file',
       methodsTitle: 'Supported methods',
-      methods: '<p><b>Precipitation · Specified Average / Gage Weights</b>Reads incremental rainfall from the .dss file at the Pathname in the .gage file and distributes it over each time step linearly along the cumulative curve. Missing values are set to 0, as in HEC-HMS.</p><p><b>Loss · None / Initial+Constant / SCS Curve Number</b>Includes percent impervious area.</p><p><b>Transform · User-Specified UH / SCS / Clark</b>A UH whose duration differs from the time interval is converted with the S-curve method.</p><p><b>Baseflow · None / Recession</b> · <b>Routing · None / Lag / Muskingum</b></p><p><b>DSS files</b>Reads DSS version 7 (HEC-HMS 4.x) regular time series and patterns only. DSS 6 and gridded data are not supported yet.</p>',
+      methods: '<p><b>Precipitation · Specified Average / Gage Weights</b>Reads incremental rainfall from the .dss file at the Pathname in the .gage file and distributes it over each time step linearly along the cumulative curve. Missing values are set to 0, as in HEC-HMS.</p><p><b>Precipitation · Frequency Based Hypothetical</b>Builds a design storm from the depth–duration table (log-log interpolation) and places the incremental blocks alternately before and after the peak at the set percentage, as HEC-HMS does, at the control time step. Re-sort and TP-40/TP-49 depth-area reduction are supported.</p><p><b>Loss · None / Initial+Constant / SCS Curve Number</b>Includes percent impervious area.</p><p><b>Transform · User-Specified UH / SCS / Clark / Snyder</b>A UH whose duration differs from the time interval is converted with the S-curve method. Clark and Snyder (Standard) build the UH with the same steps as HEC-HMS 4.13 (Snyder iterates tp and Cp into Clark Tc and R).</p><p><b>Baseflow · None / Recession</b> · <b>Routing · None / Lag / Muskingum</b></p><p><b>Reservoir · Outflow Structures</b>Elevation-Storage (or Elevation-Area) table with orifice, ogee / broad-crested spillway and level dam top, solved with the HEC-HMS sub-step and adaptive-control scheme. Tailwater, evaporation, pumps, gates and dam break are not supported yet.</p><p><b>Diversion · Inflow-Diversion Table</b>Diverts flow by table, limited by the maximum diversion flow and volume, and sends it to the target element.</p><p><b>DSS files</b>Reads DSS version 7 (HEC-HMS 4.x) regular time series and patterns only. DSS 6 and gridded data are not supported yet.</p>',
       errTitle: 'Cannot run', noHms: 'no .hms file', files: (n) => `${n} files`,
       noRunFile: '(no .run file)', custom: '(custom)',
       days: (d) => `${d} days`, hours: (h) => `${h} hours`, steps: (n) => `${n} time steps`,
@@ -408,7 +411,9 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       oldRain: (p, u) => `Rainfall in .results (${p} ${u}) differs from the current data; the results file may be from an older run`,
       noCompare: (r, a, b, i) => `Time window or interval differs from RUN_${r}.results (${a} to ${b}${i ? ', ' + i : ''}), so no comparison`,
       netUnit: (u) => `Numbers = peak flow (${u})`,
-      kind: { Subbasin: 'Subbasin', Reach: 'Reach', Junction: 'Junction', Sink: 'Sink', Source: 'Source' },
+      kind: { Subbasin: 'Subbasin', Reach: 'Reach', Junction: 'Junction', Sink: 'Sink', Source: 'Source', Reservoir: 'Reservoir', Diversion: 'Diversion' },
+      cMaxElev: (v, u) => `Max elevation ${v} ${u}`, cMaxStor: (v, u) => `Max storage ${v} ${u}`, cDivTo: (n) => `Diverts to ${n}`, cDivVol: (v, u) => `Diverted volume ${v} ${u}`,
+      diverted: 'Diverted flow', structFlow: (s) => `Through ${s}`,
       cArea: (a, u) => `Drainage area ${a} ${u}`, cFrom: (l) => `Inflow from ${l}`, cTo: (n) => `Flows to ${n}`,
       cRain: (v, u) => `Rain ${v} ${u}`, cExcess: (v, u) => `Excess ${v} ${u}`,
       c0neg: 'Δt < 2KX (negative C0)', c2neg: 'Δt > 2K(1−x)',
@@ -750,6 +755,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     } else els.forEach((e, i) => { pos[e.name] = [W / 2, els.length === 1 ? Hh / 2 : pad + i * (Hh - 2 * pad) / (els.length - 1)]; });
     let s = '';
     for (const e of els) if (e.downstream && pos[e.downstream]) { const [x1, y1] = pos[e.name], [x2, y2] = pos[e.downstream]; s += `<path class="link" d="M${x1},${y1} L${x2},${y2}"/>`; }
+    for (const e of els) if (e.divertTo && pos[e.divertTo]) { const [x1, y1] = pos[e.name], [x2, y2] = pos[e.divertTo]; s += `<path class="link div" d="M${x1},${y1} L${x2},${y2}"/>`; }
     for (const e of els) {
       const [x, y] = pos[e.name];
       const sel = e.name === selected ? ' sel' : '';
@@ -757,9 +763,13 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       let shape, text;
       if (e.kind === 'Subbasin') { shape = `<rect class="shape" x="${x - 52}" y="${y - 22}" width="104" height="44" rx="6"/>`; text = `<text class="lbl" x="${x}" y="${pk ? y - 3 : y + 4}" text-anchor="middle">${esc(e.name)}</text><text class="pk" x="${x}" y="${y + 13}" text-anchor="middle">${pk}</text>`; }
       else if (e.kind === 'Reach') { shape = `<rect class="shape" x="${x - 40}" y="${y - 13}" width="80" height="26" rx="13"/>`; text = `<text class="lbl" x="${x}" y="${y + 4}" text-anchor="middle">${esc(e.name)}</text><text class="pk" x="${x + 46}" y="${y + 4}">${pk}</text>`; }
+      else if (e.kind === 'Reservoir') { shape = `<path class="shape" d="M${x - 18},${y - 14} L${x + 18},${y - 14} L${x},${y + 16} Z"/>`; text = `<text class="lbl" x="${x}" y="${y + 32}" text-anchor="middle">${esc(e.name)}</text><text class="pk" x="${x}" y="${y + 46}" text-anchor="middle">${pk}</text>`; }
+      else if (e.kind === 'Diversion') { shape = `<path class="shape" d="M${x},${y - 16} L${x + 16},${y} L${x},${y + 16} L${x - 16},${y} Z"/>`; text = `<text class="lbl" x="${x}" y="${y + 32}" text-anchor="middle">${esc(e.name)}</text><text class="pk" x="${x}" y="${y + 46}" text-anchor="middle">${pk}</text>`; }
       else { shape = `<circle class="shape" cx="${x}" cy="${y}" r="14"/>`; text = `<text class="lbl" x="${x}" y="${y + 32}" text-anchor="middle">${esc(e.name)}</text><text class="pk" x="${x}" y="${y + 46}" text-anchor="middle">${pk}</text>`; }
       s += `<g class="node${sel}" data-name="${esc(e.name)}" tabindex="0" role="button" aria-label="${esc(e.name)}">${shape}${text}</g>`;
     }
+    $('leg-res').hidden = !els.some(e => e.kind === 'Reservoir');
+    $('leg-div').hidden = !els.some(e => e.kind === 'Diversion');
     svg.setAttribute('viewBox', `0 0 ${W} ${Hh}`);
     svg.innerHTML = s;
     $('net-unit').textContent = OUT ? t('netUnit', OUT.u.flow) : '';
@@ -791,6 +801,8 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     if (r.upstream.length) chips.push(t('cFrom', r.upstream.join(', ')));
     if (oel.downstream) chips.push(t('cTo', oel.downstream));
     if (oel.kind === 'Subbasin') chips.push(t('cRain', fAuto(r.totals.precip), u.depth), t('cExcess', fAuto(r.totals.excess), u.depth));
+    if (oel.kind === 'Reservoir') chips.push(t('cMaxElev', fAuto(Math.max(...r.elevation)), u.metric ? 'm' : 'ft'), t('cMaxStor', fAuto(Math.max(...r.storage)), r.storageUnits.toLowerCase()));
+    if (oel.kind === 'Diversion') { chips.push(t('cDivTo', r.divertTo)); chips.push(t('cDivVol', fAuto(r.diverted.reduce((a, v) => a + v, 0) * OUT.dtH * 3600 * u.volFactor), u.vol)); }
     let html = chips.map(c => `<span class="chip">${esc(c)}</span>`).join('');
     if (oel.kind === 'Reach' && oel.route.method === 'Muskingum') {
       const K = oel.route.K / oel.route.steps, X = oel.route.X, dt = OUT.control.dtMin / 60;
@@ -799,7 +811,9 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     }
     $('el-chips').innerHTML = html;
     const series = [{ key: 'out', label: t('outflow'), color: 'var(--s-out)', data: r.outflow, stats: r.stats }];
-    if (r.inflow && oel.kind === 'Reach') series.push({ key: 'in', label: t('inflow'), color: 'var(--s-inflow)', data: r.inflow, dash: true });
+    if (r.inflow && ['Reach', 'Reservoir', 'Diversion'].includes(oel.kind)) series.push({ key: 'in', label: t('inflow'), color: 'var(--s-inflow)', data: r.inflow, dash: true });
+    if (oel.kind === 'Diversion') series.push({ key: 'div', label: t('diverted'), color: 'var(--s-base)', data: r.diverted, dash: true });
+    if (oel.kind === 'Reservoir' && r.structures.length > 1) r.structures.forEach((st, j) => { if (st.flow.some(v => v > 0)) series.push({ key: 'st' + j, label: t('structFlow', st.method || st.type), color: j ? 'var(--s-ref)' : 'var(--s-base)', data: st.flow, dash: true }); });
     if (oel.kind === 'Subbasin' && r.base.some(v => v > 0)) series.push({ key: 'base', label: t('baseflow'), color: 'var(--s-base)', data: r.base, dash: true });
     const isSub = oel.kind === 'Subbasin';
     $('legend').innerHTML = series.map(s => `<span><span class="lkey${s.dash ? ' dash' : ''}" style="border-color:${s.color}"></span>${esc(s.label)}</span>`).join('')
@@ -921,8 +935,11 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     transform: {
       'Clark': [['Time of Concentration', L('เวลารวมตัว Tc', 'Time of concentration Tc'), 'hr', 0.01, null], ['Storage Coefficient', L('สัมประสิทธิ์เก็บกัก R', 'Storage coefficient R'), 'hr', 0.01, null]],
       'SCS': [['Lag', L('Lag time', 'Lag time'), 'min', 0.1, null]],
+      'Snyder': [['Snyder Tp', L('Lag time tp', 'Lag time tp'), 'hr', 0.01, null], ['Snyder Cp', L('สัมประสิทธิ์ peak Cp', 'Peaking coefficient Cp'), '', 0.1, 1]],
     },
-    baseflow: { 'Recession': [['Initial Flow/Area Ratio', L('น้ำท่าเริ่มต้นต่อพื้นที่', 'Initial flow per area'), 'fpa', 0, null], ['Recession Factor', L('ค่าคงที่การลดลง', 'Recession constant'), 'perday', 0.01, 1], ['Threshold Flow To Peak Ratio', L('threshold ต่อ peak', 'Threshold ratio to peak'), '', 0.01, 1]] },
+    reservoir: [['Initial Elevation', L('ระดับน้ำเริ่มต้น', 'Initial elevation'), 'elev', null, null]],
+    diversion: [['Maximum Diversion Flow', L('อัตราผันสูงสุด', 'Maximum diversion flow'), 'flow', 0, null], ['Maximum Diversion Volume', L('ปริมาตรผันสูงสุด', 'Maximum diversion volume'), 'kvol', 0, null]],
+    baseflow: { 'Recession': [['Initial Flow/Area Ratio', L('น้ำท่าเริ่มต้นต่อพื้นที่', 'Initial flow per area'), 'fpa', 0, null], ['Recession Factor', L('ค่าคงที่การลดลง', 'Recession constant'), 'perday', 0.01, 1], ['Threshold Flow To Peak Ratio', L('threshold ต่อ peak', 'Threshold ratio to peak'), '', 0.01, 1], ['Threshold Flow', L('threshold flow', 'Threshold flow'), 'flow', 0, null]] },
     route: {
       'Muskingum': [['Muskingum K', L('เวลาเดินทาง K', 'Travel time K'), 'hr', 0.01, null], ['Muskingum x', L('ค่าถ่วง x', 'Weighting x'), '', 0, 0.5], ['Muskingum Steps', L('จำนวน subreach', 'Subreaches'), '', 1, 50]],
       'Lag': [['Lag', L('Lag time', 'Lag time'), 'min', 0, null]],
@@ -933,7 +950,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     $('p-title').textContent = selected ? t('paramsOf', selected) : t('params');
     if (!b || !selected) { $('params').innerHTML = ''; $('p-hint').textContent = ''; return; }
     const u = b.units;
-    const unitOf = (k) => ({ area: u.area, depth: u.depth, rate: u.rate, fpa: u.flowPerArea, perday: LANG === 'th' ? '/วัน' : '/day' }[k] ?? k);
+    const unitOf = (k) => ({ area: u.area, depth: u.depth, rate: u.rate, fpa: u.flowPerArea, flow: u.flow, elev: u.metric ? 'm' : 'ft', kvol: u.metric ? '1000 m³' : 'ac-ft', perday: LANG === 'th' ? '/วัน' : '/day' }[k] ?? k);
     const idx = S.blocks.findIndex(x => x.name === selected && x.kind !== 'Basin');
     if (idx < 0) { $('params').innerHTML = ''; return; }
     const blk = S.blocks[idx], orig = JSON.parse(S.original)[idx], p = blk.props;
@@ -945,6 +962,8 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       groups.push([`Transform · ${p['Transform'] || 'None'}`, PARAM_DEFS.transform[p['Transform']] || [], p['Transform']]);
       groups.push([`Baseflow · ${p['Baseflow'] || 'None'}`, PARAM_DEFS.baseflow[p['Baseflow']] || [], p['Baseflow']]);
     } else if (blk.kind === 'Reach') groups.push([`Routing · ${p['Route'] || 'None'}`, PARAM_DEFS.route[p['Route']] || [], p['Route']]);
+    else if (blk.kind === 'Reservoir') groups.push([`Reservoir · ${p['Route'] || ''}`, PARAM_DEFS.reservoir, 'reservoir']);
+    else if (blk.kind === 'Diversion') groups.push([`Diversion · ${p['Diverter'] || ''}`, PARAM_DEFS.diversion, 'diversion']);
     if (!groups.length) { $('params').innerHTML = `<p class="hint" style="grid-column:1/-1">${esc(t('noParams', blk.kind))}</p>`; return; }
     let pdata = null;
     try { pdata = loadInputs().pdata; } catch (_) {}
