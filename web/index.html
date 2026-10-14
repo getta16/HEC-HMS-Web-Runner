@@ -98,7 +98,9 @@ header.top { padding-block: 20px 0; display: grid; gap: 10px; }
 
 .main { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 20px; align-items: stretch; }
 .net-panel { grid-template-rows: auto minmax(0, 1fr) auto; }
-@media (max-width: 900px) { .main { grid-template-columns: 1fr; } }
+.main.net-big { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+.main.net-big .net-box { min-height: min(75vh, 820px); }
+@media (max-width: 900px) { .main, .main.net-big { grid-template-columns: 1fr; } }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
 .panel-head { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; justify-content: space-between; }
 .hint { font-size: 12.5px; color: var(--muted); }
@@ -255,7 +257,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
           <button type="button" id="z-in" data-i18n-title="zIn" aria-label="Zoom in">+</button>
           <button type="button" id="z-out" data-i18n-title="zOut" aria-label="Zoom out">−</button>
           <button type="button" id="z-sel" data-i18n-title="zSel" aria-label="Zoom to element">◎</button>
-          <button type="button" id="z-fit" data-i18n-title="zFit" aria-label="Fit all">⤢</button>
+          <button type="button" id="z-fit" data-i18n-title="zFit" aria-pressed="false">⤢</button>
         </div>
         <span class="zoom-lvl" id="z-lvl"></span>
       </div>
@@ -326,7 +328,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       ctlHint: 'ค่าที่แก้จะมีผลเมื่อกด “รันแบบจำลอง” ไฟล์ .control ด้านล่างจะเปลี่ยนตามค่าที่แก้',
       dropHere: 'ลากไฟล์หรือโฟลเดอร์โปรเจกต์ HEC-HMS มาวางที่นี่',
       netTitle: 'โครงข่ายลุ่มน้ำ', netHint: 'คลิก element เพื่อดูกราฟ · ล้อเมาส์/ลากเพื่อซูมและเลื่อน · ดับเบิลคลิกเพื่อซูมเข้า element',
-      zIn: 'ซูมเข้า', zOut: 'ซูมออก', zSel: 'ซูมไปที่ element ที่เลือก', zFit: 'แสดงทั้งโครงข่าย',
+      zIn: 'ซูมเข้า', zOut: 'ซูมออก', zSel: 'ซูมไปที่ element ที่เลือก', zFit: 'ขยายแผนผังโครงข่าย (ยังเห็นกราฟอยู่)', zShrink: 'ย่อแผนผังกลับขนาดเดิม',
       tblTitle: 'ผลสรุปทุก element', filesTitle: 'ไฟล์ของโปรเจกต์',
       filesHint: 'จุดสีบนแท็บ = มีค่าที่แก้ในหน้านี้ · ปุ่มดาวน์โหลดจะบันทึกไฟล์ที่แก้แล้ว',
       copy: 'คัดลอก', copied: 'คัดลอกแล้ว', pressCopy: 'กด Ctrl+C', download: 'ดาวน์โหลดไฟล์นี้',
@@ -398,7 +400,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       ctlHint: 'Changes take effect when you press “Run model”. The .control file below reflects your edits.',
       dropHere: 'Drag HEC-HMS project files or a folder here',
       netTitle: 'Basin network', netHint: 'Click an element to see its graph · wheel/drag to zoom and pan · double-click to zoom to an element',
-      zIn: 'Zoom in', zOut: 'Zoom out', zSel: 'Zoom to selected element', zFit: 'Fit whole network',
+      zIn: 'Zoom in', zOut: 'Zoom out', zSel: 'Zoom to selected element', zFit: 'Enlarge the network (charts stay visible)', zShrink: 'Restore the network to its normal size',
       tblTitle: 'Summary of all elements', filesTitle: 'Project files',
       filesHint: 'Dot on a tab = edited on this page · Download saves the edited file',
       copy: 'Copy', copied: 'Copied', pressCopy: 'Press Ctrl+C', download: 'Download this file',
@@ -859,7 +861,14 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   $('net').addEventListener('dblclick', (ev) => { const g = ev.target.closest('.node'); if (g) zoomTo(g.dataset.name); else { const [x, y] = svgPt(ev); zoomAt(2, x, y); } });
   $('z-in').addEventListener('click', () => zoomAt(1.5));
   $('z-out').addEventListener('click', () => zoomAt(1 / 1.5));
-  $('z-fit').addEventListener('click', () => { Object.assign(NV, { k: 1, cx: 0.5, cy: 0.5 }); applyView(); });
+  // ⤢ enlarges the network panel (charts stay beside it, or below on narrow screens); pressing again restores it
+  $('z-fit').addEventListener('click', () => {
+    const big = document.querySelector('.main').classList.toggle('net-big'), b = $('z-fit');
+    b.setAttribute('aria-pressed', big); b.textContent = big ? '⤡' : '⤢';
+    b.dataset.i18nTitle = big ? 'zShrink' : 'zFit'; b.title = t(b.dataset.i18nTitle);
+    Object.assign(NV, { k: 1, cx: 0.5, cy: 0.5 });
+    requestAnimationFrame(() => { renderNet(); drawCharts(); if (big) $('net-box').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
+  });
   $('z-sel').addEventListener('click', () => { if (selected) zoomTo(selected); });
   let netRz = 0;
   if (window.ResizeObserver) new ResizeObserver(() => { cancelAnimationFrame(netRz); netRz = requestAnimationFrame(renderNet); }).observe($('net-box'));
@@ -1179,7 +1188,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       const files = await Promise.all(x.files.map(async (n) => {
         const r = await fetch(`data/${x.id}/${encodeURIComponent(n)}`);
         if (!r.ok) throw new Error(t('loadFail', n, r.status));
-        return /.dss$/i.test(n) ? { name: n, buf: await r.arrayBuffer() } : { name: n, text: await r.text() };
+        return /\.dss$/i.test(n) ? { name: n, buf: await r.arrayBuffer() } : { name: n, text: await r.text() };
       }));
       openProject(files);
       if (P) { P.sample = x.id; renderProjects(); }
@@ -1202,7 +1211,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       return;
     }
     renderProjects();
-    const want = (location.hash.match(/^#p=([w-]+)/) || [])[1] || store.get('hms-project');
+    const want = (location.hash.match(/^#p=([\w-]+)/) || [])[1] || store.get('hms-project');
     loadSample(SAMPLES.some(x => x.id === want) ? want : 'vara1');
   })();
 })();
