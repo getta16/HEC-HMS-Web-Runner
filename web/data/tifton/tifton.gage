@@ -1,0 +1,39 @@
+Gage Manager: tifton
+     Gage Manager: tifton
+     Version: 4.13
+     Filepath Separator: \
+End: 
+
+Gage: Gage 74006
+     Gage: Gage 74006
+     Gage Type: Flow
+     Last Modified Date: 23 June 2005
+     Last Modified Time: 15:03:18
+     Reference Height Units: Feet
+     Reference Height: 32.808
+     Data Source Type: External DSS
+     Filename: tifton.dss
+     Pathname: /ARS/74006/FLOW//15MIN/OBS/
+     Variant: Variant-1
+       Start Time: 1 January 1970, 01:00
+       End Time: 30 June 1970, 01:00
+       Start Time: 1 January 1970, 01:00
+       End Time: 30 June 1970, 23:00
+     End Variant: Variant-1
+End: 
+
+Gage: Gage 38
+     Gage: Gage 38
+     Gage Type: Precipitation
+     Last Modified Date: 23 June 2005
+     Last Modified Time: 15:05:05
+     Reference Height Units: Feet
+     Reference Height: 32.808
+     Data Source Type: External DSS
+     Filename: tifton.dss
+     Pathname: /ARS/000038/PRECIP-CUM/01APR1968/15MIN/OBS/
+     Variant: Variant-1
+       Start Time: 1 January 1970, 01:00
+       End Time: 30 June 1970, 23:00
+     End Variant: Variant-1
+End: 

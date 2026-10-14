@@ -1,0 +1,39 @@
+Project: KSM_004_Desktop_V2
+     Description: 
+     Version: 4.13
+     Filepath Separator: \
+     DSS File Name: KSM_004_Desktop_V2.dss
+     Time Zone ID: Asia/Bangkok
+End:
+
+Precipitation: Met 1 sep2023
+     Filename: Met_1_sep2023.met
+     Description: 
+     Last Modified Date: 9 October 2026
+     Last Modified Time: 08:01
+End:
+
+Precipitation: Met 2 Sep2026
+     Filename: Met_2_Sep2026.met
+     Description: 
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:29
+End:
+
+Basin: KSM
+     Filename: KSM.basin
+     Description: 
+     Last Modified Date: 9 October 2026
+     Last Modified Time: 08:03
+End:
+
+Control: Control 1 sep2023
+     FileName: Control_1_sep2023.control
+     Description: 
+End:
+
+Control: Control 2 sep2026
+     FileName: Control_2_sep2026.control
+     Description: 
+End:
+

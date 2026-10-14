@@ -1,0 +1,127 @@
+Meteorology: Met 1
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 03:59:20
+     Version: 4.13
+     Unit System: Metric
+     Set Missing Data to Default: Yes
+     Precipitation Method: Frequency Based Hypothetical
+     Air Temperature Method: None
+     Atmospheric Pressure Method: None
+     Dew Point Method: None
+     Wind Speed Method: None
+     Shortwave Radiation Method: None
+     Longwave Radiation Method: None
+     Snowmelt Method: None
+     Evapotranspiration Method: No Evapotranspiration
+     Use Basin Model: SEP4
+End:
+
+Precip Method Parameters: Frequency Based Hypothetical
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 04:00:44
+     Storm Type: Hydro-35/TP-40/TP-49
+     Single Hypothetical Storm Size: Yes
+     Uniform Depth Duration Curve: Yes
+     User Specified Storm Area: No
+     Storm Size: 
+     Re-sort Storm Symmetrically: No
+     Total Duration: 1440
+     Time Interval: 5
+     Percent of Duration Before Peak Rainfall: 50
+     Depth-Area Reduction Method: No Reduction
+     Depth 5: 20.000000
+     Depth 10: 25.000000
+     Depth 15: 30.000000
+     Depth 30: 35.000000
+     Depth 60: 40.000000
+     Depth 120: 80.000000
+     Depth 180: 90.000000
+     Depth 360: 100.000000
+     Depth 720: 150.000000
+     Depth 1440: 200.000000
+     Depth 2880: 
+     Depth 4320: 
+     Depth 5760: 
+     Depth 10080: 
+     Depth 14400: 
+End:
+
+Subbasin: S3
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 04:00:44
+     Depth 5: 
+     Depth 10: 
+     Depth 15: 
+     Depth 30: 
+     Depth 60: 
+     Depth 120: 
+     Depth 180: 
+     Depth 360: 
+     Depth 720: 
+     Depth 1440: 
+     Depth 2880: 
+     Depth 4320: 
+     Depth 5760: 
+     Depth 10080: 
+     Depth 14400: 
+End:
+
+Subbasin: S4
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 04:00:44
+     Depth 5: 
+     Depth 10: 
+     Depth 15: 
+     Depth 30: 
+     Depth 60: 
+     Depth 120: 
+     Depth 180: 
+     Depth 360: 
+     Depth 720: 
+     Depth 1440: 
+     Depth 2880: 
+     Depth 4320: 
+     Depth 5760: 
+     Depth 10080: 
+     Depth 14400: 
+End:
+
+Subbasin: S1
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 04:00:44
+     Depth 5: 
+     Depth 10: 
+     Depth 15: 
+     Depth 30: 
+     Depth 60: 
+     Depth 120: 
+     Depth 180: 
+     Depth 360: 
+     Depth 720: 
+     Depth 1440: 
+     Depth 2880: 
+     Depth 4320: 
+     Depth 5760: 
+     Depth 10080: 
+     Depth 14400: 
+End:
+
+Subbasin: S2
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 04:00:44
+     Depth 5: 
+     Depth 10: 
+     Depth 15: 
+     Depth 30: 
+     Depth 60: 
+     Depth 120: 
+     Depth 180: 
+     Depth 360: 
+     Depth 720: 
+     Depth 1440: 
+     Depth 2880: 
+     Depth 4320: 
+     Depth 5760: 
+     Depth 10080: 
+     Depth 14400: 
+End:

@@ -1,0 +1,166 @@
+Basin: Tifton
+     Description: ARS Watershed 74006
+     Last Modified Date: 28 March 2011
+     Last Modified Time: 16:57:30
+     Version: 4.13
+     Filepath Separator: \
+     Unit System: English
+     Missing Flow To Zero: No
+     Enable Flow Ratio: No
+     Compute Local Flow At Junctions: No
+     Unregulated Output Required: No
+
+     Enable Sediment Routing: No
+End:
+
+Subbasin: 74006
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 03:13:00
+     Canvas X: 241449.67557417502
+     Canvas Y: 3512247.8959952653
+     Label X: 16.0
+     Label Y: 0.0
+     Area: 19.27
+     Downstream: Station I
+
+     Discretization: None
+     File: Tifton.sqlite
+
+     Canopy: Simple
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: Default Tension-Factor
+     Initial Canopy Storage Percent: 0
+     Canopy Storage Capacity: 0.2
+     Crop Coefficient: 1.0
+     End Canopy:
+
+     Surface: Simple
+     Initial Surface Storage Percent: 0
+     Surface Storage Capacity: 0.0
+     Surface Albedo: 0.20
+     End Surface:
+
+     LossRate: Soil Moisture Account
+     Percent Impervious Area: 0.0
+     Initial Soil Storage Percent: 80
+     Initial Gw1 Storage Percent: 0
+     Initial Gw2 Storage Percent: 2
+     Soil Maximum Infiltration: 2.0
+     Soil Storage Capacity: 9.0
+     Soil Tension Capacity: 8.5
+     Soil Maximum Percolation: 0.02
+     Groundwater 1 Storage Capacity: 10.0
+     Groundwater 1 Routing Coefficient: 100
+     Groundwater 1 Maximum Percolation: 0.02
+     Groundwater 2 Storage Capacity: 24.0
+     Groundwater 2 Routing Coefficient: 500
+     Groundwater 2 Maximum Percolation: 0.0
+
+     Transform: Clark
+     Clark Method: Specified
+     Time of Concentration: 20
+     Storage Coefficient: 20
+     Time Area Method: Default
+
+     Baseflow: Linear Reservoir
+     Groundwater Layer: 1
+     GW-1 Number Reservoirs: 1
+     GW-1 Routing Coefficient: 140
+     GW-1 Initial Baseflow: 0.0
+     Groundwater Layer: 2
+     GW-2 Number Reservoirs: 1
+     GW-2 Routing Coefficient: 240
+     GW-2 Initial Baseflow: 20
+End:
+
+Junction: Station I
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 03:09:43
+     Canvas X: 245683.849
+     Canvas Y: 3506828.36
+     Label X: 16.0
+     Label Y: 0.0
+     Computation Point: Yes
+     Observed Hydrograph Gage: Gage 74006
+End:
+
+Basin Layer Properties:
+     Element Layer:
+          Name: Icons
+          Layer shown: Yes
+     End Layer:
+     Map Layer:
+          Filename: maps\rivers.shp
+          Layer:0
+          Display name: rivers
+          Minimum Scale: Undefined
+          Maximum Scale: Undefined
+          Layer shown: Yes
+     End Layer:
+     Map Layer:
+          Filename: maps\subbasin.shp
+          Layer:0
+          Display name: subbasin
+          Minimum Scale: Undefined
+          Maximum Scale: Undefined
+          Layer shown: Yes
+     End Layer:
+End:
+
+Basin Spatial Properties:
+End:
+
+Basin Schematic Properties:
+     Last View N: 3516110.0
+     Last View S: 3506180.0
+     Last View W: 237461.0
+     Last View E: 245921.0
+     Maximum View N: 3516110.0
+     Maximum View S: 3506180.0
+     Maximum View W: 237461.0
+     Maximum View E: 245921.0
+     Extent Method: Elements
+     Buffer: 0
+     Draw Icons: Yes
+     Draw Icon Labels: Name
+     Draw Map Objects: No
+     Draw Gridlines: Yes
+     Draw Flow Direction: No
+     Draw HillShade Layer: Yes
+     Draw Elevation Layer: Yes
+     Elevation Layer Color Palette: Default
+     Ignore Elevation Color Ramp Scale: No
+     Use Interpolated Color Ramp for Elevation Layer: Yes
+     Color Ramp Opacity Level for Elevation Layer: 33.0
+     Fix Element Locations: No
+     Fix Hydrologic Order: No
+End:
+
+Computation Point: Station I
+     Parameter Set: 1
+     End Parameter Set:
+     Parameter Set: 2
+     End Parameter Set:
+     Parameter Set: 3
+     End Parameter Set:
+     Parameter Set: 4
+     End Parameter Set:
+     Parameter Set: 5
+     End Parameter Set:
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+End Computation Point: 

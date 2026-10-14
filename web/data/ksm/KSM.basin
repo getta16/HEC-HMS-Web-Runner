@@ -1,0 +1,2018 @@
+Basin: KSM
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:27:30
+     Version: 4.13
+     Filepath Separator: \
+     Unit System: Metric
+     Missing Flow To Zero: No
+     Enable Flow Ratio: No
+     Compute Local Flow At Junctions: No
+     Unregulated Output Required: No
+
+     Enable Sediment Routing: No
+End:
+
+Reach: River0_KSM_01_Upper01
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 08:25:58
+     Canvas X: 516013.2580482886
+     Canvas Y: 1800600.0545847137
+     From Canvas X: 515482.0580013544
+     From Canvas Y: 1800801.851458552
+     Downstream: Junction-01
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 1
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Reach: River1_KTD-KSM_01
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 04:43:50
+     Canvas X: 516013.2580482886
+     Canvas Y: 1800600.0545847137
+     From Canvas X: 515482.0580013544
+     From Canvas Y: 1800801.8514585525
+     Downstream: Junction-01
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 3
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_UP_KSM7
+     Last Modified Date: 11 February 2025
+     Last Modified Time: 06:24:21
+     Latitude Degrees:  16.298055555555557
+     Longitude Degrees: 99.085
+     Canvas X: 509523.2879980051
+     Canvas Y: 1800119.843280141
+     Area: 123.03
+     Downstream: Junction-01
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 26
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 10
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 2
+     Threshold Flow: 0.55
+End:
+
+Subbasin: SB_UP_KSM3
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 15:10:33
+     Latitude Degrees:  16.193417580967772
+     Longitude Degrees: 99.14328039425759
+     Canvas X: 515314.97402073763
+     Canvas Y: 1790335.6837992445
+     Area: 96.271
+     Downstream: Junction-01
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 25
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 10
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 2
+     Threshold Flow: 0.55
+End:
+
+Subbasin: SB_UP_KSM1
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 15:10:42
+     Latitude Degrees:  16.142816125829317
+     Longitude Degrees: 99.09863988981074
+     Canvas X: 510624.75765086693
+     Canvas Y: 1783651.4783623794
+     Area: 48.237
+     Downstream: Junction-01
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 25
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 6
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 2
+     Threshold Flow: 0.55
+End:
+
+Subbasin: SB_UP_KSM2
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 15:10:39
+     Latitude Degrees:  16.138725642455373
+     Longitude Degrees: 99.14712746553045
+     Canvas X: 515730.5063803726
+     Canvas Y: 1784286.1463289459
+     Area: 44.406
+     Downstream: Junction-01
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 25
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 6
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 2
+     Threshold Flow: 0.55
+End:
+
+Subbasin: SB_UP_KSM4
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 15:54:17
+     Latitude Degrees:  16.25538899387333
+     Longitude Degrees: 99.16154958470588
+     Canvas X: 517262.3374692554
+     Canvas Y: 1797192.2316862298
+     Area: 32.108
+     Downstream: Junction-01
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 26
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 4
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 2
+     Threshold Flow: 0.55
+End:
+
+Junction: Junction-01
+     Last Modified Date: 8 September 2023
+     Last Modified Time: 06:42:18
+     Canvas X: 516013.2580482886
+     Canvas Y: 1800600.0545847137
+     From Canvas X: 516037.72990618786
+     From Canvas Y: 1801071.3929057939
+     Downstream: River0_KSM_02_Upper02
+End:
+
+Reach: River0_KSM_02_Upper02
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 07:59:48
+     Canvas X: 528188.2142611899
+     Canvas Y: 1805584.3223567982
+     From Canvas X: 516013.2580482886
+     From Canvas Y: 1800600.0545847137
+     Downstream: Weir_KSM
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 1.1
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_UP_KSM5
+     Last Modified Date: 9 October 2026
+     Last Modified Time: 07:51:40
+     Latitude Degrees:  16.321666666666665
+     Longitude Degrees: 99.16416666666667
+     Canvas X: 515335.39751324255
+     Canvas Y: 1806365.438348378
+     Area: 112.52
+     Downstream: Weir_KSM
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 28
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 10
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 2
+     Threshold Flow: 0.55
+End:
+
+Subbasin: SB_UP_KSM8
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 15:10:20
+     Latitude Degrees:  16.382619431203853
+     Longitude Degrees: 99.18673950928516
+     Canvas X: 519941.1187339025
+     Canvas Y: 1811268.5277160627
+     Area: 42.056
+     Downstream: Weir_KSM
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 28
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 5
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 2
+     Threshold Flow: 0.55
+End:
+
+Subbasin: SB_UP_KSM6
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 15:10:23
+     Latitude Degrees:  16.33441673618988
+     Longitude Degrees: 99.23459285290978
+     Canvas X: 525057.3446188502
+     Canvas Y: 1805941.696474536
+     Area: 26.532
+     Downstream: Weir_KSM
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 28
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 3
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 2
+     Threshold Flow: 0.55
+End:
+
+Subbasin: SB_KSM_W
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 15:07:38
+     Latitude Degrees:  16.329519929391303
+     Longitude Degrees: 99.25944308852708
+     Canvas X: 527712.3537183307
+     Canvas Y: 1805403.2358642255
+     Area: 0.4888
+     Downstream: Weir_KSM
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 32
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.5
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 2
+     Threshold Flow: 0.55
+End:
+
+Junction: Weir_KSM
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:03:09
+     Canvas X: 528188.2142611899
+     Canvas Y: 1805584.3223567982
+     From Canvas X: 528156.3669235021
+     From Canvas Y: 1805660.07489859
+     Observed Hydrograph Gage: RID-KU-WL001
+     Downstream: River0_KSM_03_KSM-KTK
+End:
+
+Reach: River0_KSM_03_KSM-KTK
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 07:59:48
+     Canvas X: 534856.5272909437
+     Canvas Y: 1806570.0912236343
+     From Canvas X: 528188.2142611899
+     From Canvas Y: 1805584.3223567982
+     Downstream: Weir_TSKD
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 3
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Reach: River1_KTK2-KTK1
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 04:43:50
+     Canvas X: 534811.2226148905
+     Canvas Y: 1806529.3345925228
+     From Canvas X: 534541.6882822539
+     From Canvas Y: 1804147.623860506
+     Downstream: River1_KTK1-KSM_03
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2.5
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Reach: River1_KTK1-KSM_03
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 04:43:50
+     Canvas X: 534856.5272909437
+     Canvas Y: 1806570.0912236343
+     From Canvas X: 534811.2226148905
+     From Canvas Y: 1806529.3345925228
+     Downstream: Weir_TSKD
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2.5
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_TSKD1
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 05:40:31
+     Latitude Degrees:  16.327618244230113
+     Longitude Degrees: 99.28828594639111
+     Canvas X: 530793.5154493888
+     Canvas Y: 1805197.0137354003
+     Area: 18.237
+     Downstream: Weir_TSKD
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 1.1833
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Subbasin: SB_KSM_P47
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 15:46:05
+     Latitude Degrees:  16.337478572102814
+     Longitude Degrees: 99.26165399085089
+     Canvas X: 528445.9099158905
+     Canvas Y: 1806927.3967388477
+     Area: 2.9679
+     Downstream: Weir_TSKD
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.46667
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Subbasin: SB_KTK
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 05:40:31
+     Latitude Degrees:  16.315394535665195
+     Longitude Degrees: 99.31869629960653
+     Canvas X: 534043.9646473835
+     Canvas Y: 1803849.673955716
+     Area: 1.1189
+     Downstream: Weir_TSKD
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.28333
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Junction: Weir_TSKD
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 16:36:29
+     Canvas X: 534856.5272909437
+     Canvas Y: 1806570.0912236343
+     From Canvas X: 534856.5272909437
+     From Canvas Y: 1806570.0912236343
+     Downstream: River0_KSM_04_KTK-TSKD
+End:
+
+Reach: River0_KSM_04_KTK-TSKD
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 15:25:19
+     Canvas X: 535911.3217377206
+     Canvas Y: 1810549.0950792788
+     From Canvas X: 534856.5272909437
+     From Canvas Y: 1806570.0912236343
+     Downstream: Junction-KKY
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2.8
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Reach: River1_KKYK2-KKYK1
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 04:43:50
+     Canvas X: 535847.7574388754
+     Canvas Y: 1810547.1702887684
+     From Canvas X: 529380.205941684
+     From Canvas Y: 1809083.2794140156
+     Downstream: River1_KKYK1-KSM_04
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2.5
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Reach: River1_KKYK1-KSM_04
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 04:43:50
+     Canvas X: 535911.3217377206
+     Canvas Y: 1810549.0950792788
+     From Canvas X: 535847.7574388754
+     From Canvas Y: 1810547.1702887684
+     Downstream: Junction-KKY
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2.5
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_TSKD2
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 05:40:31
+     Latitude Degrees:  16.341479106731068
+     Longitude Degrees: 99.3194069237701
+     Canvas X: 534115.3536365681
+     Canvas Y: 1806735.2494082856
+     Area: 17.201
+     Downstream: Junction-KKY
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 1.15
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Subbasin: SB_KKY2
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 05:40:31
+     Latitude Degrees:  16.359828890625703
+     Longitude Degrees: 99.30355884370705
+     Canvas X: 532419.6037078087
+     Canvas Y: 1808762.5019192006
+     Area: 11.167
+     Downstream: Junction-KKY
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.91667
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Subbasin: SB_KKY1
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 15:07:22
+     Latitude Degrees:  16.363825625405354
+     Longitude Degrees: 99.25941239273926
+     Canvas X: 527633.7220915067
+     Canvas Y: 1808739.6011421282
+     Area: 8.0596
+     Downstream: Junction-KKY
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.78333
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Junction: Junction-KKY
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 16:36:53
+     Canvas X: 535911.3217377206
+     Canvas Y: 1810549.0950792788
+     From Canvas X: 535911.3217377206
+     From Canvas Y: 1810549.0950792788
+     Downstream: River0_KSM_05_TSKD-KP
+End:
+
+Reach: River0_KSM_05_TSKD-KP
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 14:49:28
+     Canvas X: 536237.326558024
+     Canvas Y: 1811466.3046062062
+     From Canvas X: 535911.3217377206
+     From Canvas Y: 1810549.0950792788
+     Downstream: Junction_KP
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 0.5
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_KP1
+     Last Modified Date: 9 October 2026
+     Last Modified Time: 07:57:02
+     Latitude Degrees:  16.46611111111111
+     Longitude Degrees: 99.19585367348118
+     Canvas X: 523873.76588667516
+     Canvas Y: 1821884.2384145053
+     Area: 44.324
+     Downstream: J2
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 1.8333
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Junction: J2
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:23:01
+     Canvas X: 525454.8348593492
+     Canvas Y: 1822585.4234006768
+     From Canvas X: 525454.8348593492
+     From Canvas Y: 1822585.4234006768
+     Downstream: River1_KP5-KP4
+End:
+
+Reach: River1_KP5-KP4
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:28:14
+     Canvas X: 525723.1020430556
+     Canvas Y: 1822715.7252480683
+     From Canvas X: 525454.8348593492
+     From Canvas Y: 1822585.4234006768
+     Downstream: J3
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2.5
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_KP2
+     Last Modified Date: 11 February 2025
+     Last Modified Time: 06:20:58
+     Latitude Degrees:  16.486095025696795
+     Longitude Degrees: 99.2388888888889
+     Canvas X: 525414.786791833
+     Canvas Y: 1822819.0371278585
+     Area: 0.1150
+     Downstream: J3
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.3
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Junction: J3
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:33:39
+     Canvas X: 525723.1020430556
+     Canvas Y: 1822715.7252480683
+     From Canvas X: 525711.8099592476
+     From Canvas Y: 1822695.5555863483
+     Downstream: River1_KP4-KP3
+End:
+
+Reach: River1_KP4-KP3
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:51:11
+     Canvas X: 527202.2634396427
+     Canvas Y: 1821203.5456961764
+     From Canvas X: 525723.1020430556
+     From Canvas Y: 1822715.7252480683
+     Downstream: J4
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 0.5
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_KP3
+     Last Modified Date: 11 February 2025
+     Last Modified Time: 06:21:17
+     Latitude Degrees:  16.479991907595405
+     Longitude Degrees: 99.24333333333334
+     Canvas X: 525981.7381282451
+     Canvas Y: 1822045.622663713
+     Area: 1.2070
+     Downstream: J4
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.3
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Junction: J4
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:51:11
+     Canvas X: 527202.2634396427
+     Canvas Y: 1821203.5456961764
+     From Canvas X: 526505.7536643418
+     From Canvas Y: 1821692.3142339091
+     Downstream: River1_KP2-KP1
+End:
+
+Reach: River1_KP3-KP2
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:51:11
+     Canvas X: 527202.2634396427
+     Canvas Y: 1821203.5456961764
+     From Canvas X: 529093.2981937672
+     From Canvas Y: 1819642.9798315747
+     Downstream: J5
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 1
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_KP4
+     Last Modified Date: 9 October 2026
+     Last Modified Time: 07:57:05
+     Latitude Degrees:  16.457473705143318
+     Longitude Degrees: 99.23333333333333
+     Canvas X: 524903.5188239607
+     Canvas Y: 1819554.015557713
+     Area: 34.151
+     Downstream: J5
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 1.6167
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Junction: J5
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:51:11
+     Canvas X: 527202.2634396427
+     Canvas Y: 1821203.5456961764
+     From Canvas X: 529087.3690774757
+     From Canvas Y: 1819666.6727229636
+     Downstream: River1_KP2-KP1
+End:
+
+Reach: River1_KP2-KP1
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:51:11
+     Canvas X: 535169.1112218498
+     Canvas Y: 1812023.1639979037
+     From Canvas X: 527202.2634396427
+     From Canvas Y: 1821203.5456961764
+     Downstream: J6
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2.5
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_KMD1
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:56:29
+     Latitude Degrees:  16.40518531632368
+     Longitude Degrees: 99.23516590396505
+     Canvas X: 525109.4979971517
+     Canvas Y: 1813770.1204651517
+     Area: 35.054
+     Downstream: J7
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 28
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 1.6333
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Junction: J7
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:56:52
+     Canvas X: 528617.3331972355
+     Canvas Y: 1813057.329324661
+     From Canvas X: 528617.3331972355
+     From Canvas Y: 1813057.329324661
+     Downstream: River1_KMD1-KP1
+End:
+
+Reach: River1_KMD1-KP1
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:56:52
+     Canvas X: 535169.1112218498
+     Canvas Y: 1812023.1639979037
+     From Canvas X: 528617.3331972355
+     From Canvas Y: 1813057.329324661
+     Downstream: J6
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_KP5
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:52:08
+     Latitude Degrees:  16.418637564378923
+     Longitude Degrees: 99.29451740076755
+     Canvas X: 531387.2813448475
+     Canvas Y: 1815264.4968986954
+     Area: 39.319
+     Downstream: J6
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 25
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 1.7333
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Subbasin: SB_KMD2
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:52:30
+     Latitude Degrees:  16.387484361020636
+     Longitude Degrees: 99.28261238774384
+     Canvas X: 532060.6225228156
+     Canvas Y: 1811056.9711854695
+     Area: 23.462
+     Downstream: J6
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 1.3333
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Junction: J6
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:55:02
+     Canvas X: 535169.1112218498
+     Canvas Y: 1812023.1639979037
+     From Canvas X: 535169.1112218498
+     From Canvas Y: 1812023.1639979037
+     Downstream: River1_KP1_KSM
+End:
+
+Reach: River1_KP1_KSM
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:54:25
+     Canvas X: 536237.326558024
+     Canvas Y: 1811466.3046062062
+     From Canvas X: 535169.1112218498
+     From Canvas Y: 1812023.1639979037
+     Downstream: Junction_KP
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 0.5
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Junction: Junction_KP
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 16:37:13
+     Canvas X: 536237.326558024
+     Canvas Y: 1811466.3046062062
+     From Canvas X: 536232.4874278198
+     From Canvas Y: 1811434.5894183663
+     Downstream: River0_KSM_06_TSKD-NPK
+End:
+
+Reach: River0_KSM_06_TSKD-NPK
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 07:59:21
+     Canvas X: 537867.5825014991
+     Canvas Y: 1814740.2991665103
+     From Canvas X: 536237.326558024
+     From Canvas Y: 1811466.3046062062
+     Downstream: Weir_NPK
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2.5
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_NPK
+     Last Modified Date: 11 February 2025
+     Last Modified Time: 06:21:59
+     Latitude Degrees:  16.39581761689167
+     Longitude Degrees: 99.3425
+     Canvas X: 536657.4393542479
+     Canvas Y: 1813459.6762629396
+     Area: 6.9402
+     Downstream: Weir_NPK
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 1
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Junction: Weir_NPK
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:04:13
+     Canvas X: 537867.5825014991
+     Canvas Y: 1814740.2991665103
+     From Canvas X: 542459.1957892508
+     From Canvas Y: 1818070.3573264035
+     Observed Hydrograph Gage: RID-KU-WL006
+     Downstream: River0_NPK_TRN
+End:
+
+Reach: River0_NPK_TRN
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:16:49
+     Canvas X: 540191.8697840786
+     Canvas Y: 1815411.908857231
+     From Canvas X: 537867.5825014991
+     From Canvas Y: 1814740.2991665103
+     Downstream: Junction-TRN
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2.2
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_TRN
+     Last Modified Date: 11 February 2025
+     Last Modified Time: 06:22:57
+     Latitude Degrees:  16.39
+     Longitude Degrees: 99.36777777777777
+     Canvas X: 539261.6634774976
+     Canvas Y: 1812103.538142899
+     Area: 29.763
+     Downstream: Junction-TRN
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 1.5
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Junction: Junction-TRN
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 16:42:53
+     Canvas X: 540191.8697840786
+     Canvas Y: 1815411.908857231
+     From Canvas X: 537938.2954300735
+     From Canvas Y: 1814709.4017198477
+     Downstream: River0_TRN_NBK
+End:
+
+Reach: River0_TRN_NBK
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:17:17
+     Canvas X: 541973.4351952521
+     Canvas Y: 1817147.7931040162
+     From Canvas X: 540191.8697840786
+     From Canvas Y: 1815411.908857231
+     Downstream: Weir_NBK
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_NBK
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:13:40
+     Latitude Degrees:  16.42360055201171
+     Longitude Degrees: 99.37922147347832
+     Canvas X: 540907.5413595065
+     Canvas Y: 1815731.677007954
+     Area: 3.4400
+     Downstream: Weir_NBK
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 1
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Junction: Weir_NBK
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 16:44:52
+     Canvas X: 541973.4351952521
+     Canvas Y: 1817147.7931040162
+     From Canvas X: 542020.9528794303
+     From Canvas Y: 1817100.957981472
+     Downstream: River0_NBK-KKY
+End:
+
+Reach: River0_NBK-KKY
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:13:32
+     Canvas X: 542387.6934735278
+     Canvas Y: 1818196.127038042
+     From Canvas X: 541973.4351952521
+     From Canvas Y: 1817147.7931040162
+     Downstream: Junction-KKYang
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 1.5
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_NG1
+     Last Modified Date: 9 October 2026
+     Last Modified Time: 08:03:01
+     Latitude Degrees:  16.516944444444444
+     Longitude Degrees: 99.31
+     Canvas X: 533048.6891104198
+     Canvas Y: 1826189.2621319373
+     Area: 10.755
+     Downstream: J1
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.5
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 0.85
+     Threshold Flow: 0.11
+End:
+
+Junction: J1
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:15:40
+     Canvas X: 532258.5742351691
+     Canvas Y: 1822842.7115978587
+     From Canvas X: 532197.6660159837
+     From Canvas Y: 1822797.0304334697
+     Downstream: River1_KKY-KSM_10
+End:
+
+Reach: River1_KKY-KSM_10
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:15:40
+     Canvas X: 542387.6934735278
+     Canvas Y: 1818196.127038042
+     From Canvas X: 532258.5742351691
+     From Canvas Y: 1822842.7115978587
+     Downstream: Junction-KKYang
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2.5
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_NG2
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:21:36
+     Latitude Degrees:  16.473343002272212
+     Longitude Degrees: 99.32178392894511
+     Canvas X: 536324.1978657992
+     Canvas Y: 1821563.6389949638
+     Area: 122.53
+     Downstream: Junction-KKYang
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 4
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 2.5
+     Snyder Cp: 0.3
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Baseflow: 1
+     Threshold Flow: 1
+End:
+
+Subbasin: SB_TKD1
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:16:02
+     Latitude Degrees:  16.439598889011325
+     Longitude Degrees: 99.39253023487427
+     Canvas X: 541745.0293733071
+     Canvas Y: 1817787.3294054642
+     Area: 0.9573
+     Downstream: Junction-KKYang
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 2
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.26667
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 0.5
+     Threshold Flow: 0.5
+End:
+
+Junction: Junction-KKYang
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:11:56
+     Canvas X: 542387.6934735278
+     Canvas Y: 1818196.127038042
+     From Canvas X: 542517.9054291816
+     From Canvas Y: 1817980.0838619554
+     Downstream: River0_KKYang_TKD
+End:
+
+Reach: River0_KKYang_TKD
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:13:58
+     Canvas X: 545135.0211062983
+     Canvas Y: 1818727.166348894
+     From Canvas X: 542387.6934735278
+     From Canvas Y: 1818196.127038042
+     Downstream: Weir_TKD
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_TKD2
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 08:47:15
+     Latitude Degrees:  16.434229601409932
+     Longitude Degrees: 99.40349873812565
+     Canvas X: 543309.878069912
+     Canvas Y: 1816783.058300404
+     Area: 12.973
+     Downstream: Weir_TKD
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 30
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 1
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 0.5
+     Threshold Flow: 0.5
+End:
+
+Junction: Weir_TKD
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:03:50
+     Canvas X: 545135.0211062983
+     Canvas Y: 1818727.166348894
+     From Canvas X: 544964.1843691407
+     From Canvas Y: 1818726.572108044
+     Observed Hydrograph Gage: RID-KU-WL008
+     Downstream: River0_TKD_MC
+End:
+
+Reach: River0_TKD_MC
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:09:34
+     Canvas X: 552703.183584063
+     Canvas Y: 1822715.4482536353
+     From Canvas X: 545135.0211062983
+     From Canvas Y: 1818727.166348894
+     Downstream: Junction_MC
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 3
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Reach: River1_MC-KSM-12
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:06:33
+     Canvas X: 552703.183584063
+     Canvas Y: 1822715.4482536353
+     From Canvas X: 552695.3501244872
+     From Canvas Y: 1822701.7355452674
+     Downstream: Junction_MC
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 3
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_MC
+     Last Modified Date: 9 October 2026
+     Last Modified Time: 07:53:28
+     Latitude Degrees:  16.514444444444443
+     Longitude Degrees: 99.41527777777779
+     Canvas X: 544304.1701991298
+     Canvas Y: 1825891.7519323651
+     Area: 126.66
+     Downstream: Junction_MC
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 35
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 3.1167
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 0.125
+     Threshold Flow: 0.125
+End:
+
+Subbasin: SB_LOW_KSM1
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 05:40:31
+     Latitude Degrees:  16.46723931640155
+     Longitude Degrees: 99.45281791604296
+     Canvas X: 548333.9359760457
+     Canvas Y: 1820674.057793583
+     Area: 18.852
+     Downstream: Junction_MC
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 35
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 1.2
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 0.125
+     Threshold Flow: 0.125
+End:
+
+Subbasin: SB_KSM_P26A
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 08:46:24
+     Latitude Degrees:  16.451492401373528
+     Longitude Degrees: 99.43052001518632
+     Canvas X: 546177.2506090808
+     Canvas Y: 1819310.4180657312
+     Area: 1.3176
+     Downstream: Junction_MC
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 35
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.31667
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 0.125
+     Threshold Flow: 0.125
+End:
+
+Junction: Junction_MC
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:07:29
+     Canvas X: 552703.183584063
+     Canvas Y: 1822715.4482536353
+     From Canvas X: 552632.6504614747
+     From Canvas Y: 1822676.5591209785
+     Downstream: River0_MC_SWAR
+End:
+
+Reach: River0_MC_SWAR
+     Last Modified Date: 9 October 2026
+     Last Modified Time: 07:48:14
+     Canvas X: 547375.063166178
+     Canvas Y: 1809616.4598811958
+     From Canvas X: 552703.183584063
+     From Canvas Y: 1822715.4482536353
+     Downstream: Junction-12
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 0.2
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: SB_PBRT
+     Last Modified Date: 14 September 2023
+     Last Modified Time: 15:05:32
+     Latitude Degrees:  16.478994684232074
+     Longitude Degrees: 99.50426700974135
+     Canvas X: 553121.4328407026
+     Canvas Y: 1822005.4265212973
+     Area: 2.0771
+     Downstream: Junction-12
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 35
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.4
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 0.125
+     Threshold Flow: 0.125
+End:
+
+Junction: Junction-12
+     Last Modified Date: 9 October 2026
+     Last Modified Time: 07:48:14
+     Canvas X: 547375.063166178
+     Canvas Y: 1809616.4598811958
+     From Canvas X: 552906.8856457716
+     From Canvas Y: 1822966.529110932
+     Downstream: Outlet_KSM
+End:
+
+Subbasin: SB_LOW_KSM2
+     Last Modified Date: 12 September 2023
+     Last Modified Time: 05:40:31
+     Latitude Degrees:  16.491360217269357
+     Longitude Degrees: 99.49428742129325
+     Canvas X: 552753.9636759481
+     Canvas Y: 1823352.7527659205
+     Area: 0.3794
+     Downstream: Outlet_KSM
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 35
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.16667
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 0.125
+     Threshold Flow: 0.125
+End:
+
+Junction: Outlet_KSM
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:31:10
+     Canvas X: 553287.9875110954
+     Canvas Y: 1823281.8833270853
+     From Canvas X: 557168.4444045977
+     From Canvas Y: 1813664.3586860483
+End:
+
+Subbasin: SB_ML3
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:31:10
+     Latitude Degrees:  16.419622965806322
+     Longitude Degrees: 99.50053476341756
+     Canvas X: 554788.8744923078
+     Canvas Y: 1813617.8495970415
+     Area: 52.543
+     Downstream: Outlet_ML
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 35
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 2
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 0.125
+     Threshold Flow: 0.125
+End:
+
+Subbasin: SB_ML1
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:30:40
+     Latitude Degrees:  16.417507279107646
+     Longitude Degrees: 99.44161435254824
+     Canvas X: 547150.0460655862
+     Canvas Y: 1815169.9639470754
+     Area: 45.466
+     Downstream: Outlet_ML
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 35
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 1.8667
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 0.125
+     Threshold Flow: 0.125
+End:
+
+Subbasin: SB_ML2
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:30:55
+     Latitude Degrees:  16.408700725409695
+     Longitude Degrees: 99.47916244037245
+     Canvas X: 550228.0587588912
+     Canvas Y: 1814776.9519381311
+     Area: 16.740
+     Downstream: Outlet_ML
+
+     Discretization: None
+     File: KSM.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 0.0
+     Curve Number: 35
+     Initial Abstraction: 8
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 1.1333
+     Snyder Cp: 0.1
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Baseflow: 0.125
+     Threshold Flow: 0.125
+End:
+
+Reach: River1_TKD-ML
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:27:39
+     Canvas X: 556476.7328336061
+     Canvas Y: 1813427.8112336476
+     From Canvas X: 556355.182397139
+     From Canvas Y: 1813564.5027194927
+     Downstream: Outlet_ML
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 3
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Junction: Outlet_ML
+     Last Modified Date: 15 September 2023
+     Last Modified Time: 02:31:10
+     Canvas X: 556476.7328336061
+     Canvas Y: 1813427.8112336476
+     From Canvas X: 556476.7328336061
+     From Canvas Y: 1813427.8112336476
+End:
+
+Basin Layer Properties:
+     Element Layer:
+          Name: Icons
+          Layer shown: Yes
+     End Layer:
+     Element Layer:
+          Name: Reaches
+          Layer shown: Yes
+     End Layer:
+     2D Connection Layer:
+          Layer shown: No
+     End Layer:
+     Element Layer:
+          Name: Subbasins
+          Layer shown: Yes
+     End Layer:
+     Discretization Layer:
+          Layer shown: No
+     End Layer:
+     Base Layer:
+          Name: Terrain
+          Layer shown: Yes
+          Properties Filename: maps\elevation4123062552024.xml
+     End Layer:
+End:
+
+Basin Spatial Properties:
+     Coordinate System: PROJCS["WGS 84 / UTM zone 47N",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",99],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["Easting",EAST],AXIS["Northing",NORTH],AUTHORITY["EPSG","32647"]]
+     Terrain: Terrain 1
+End:
+
+Basin Schematic Properties:
+     Last View N: 1826139.59691842
+     Last View S: 1779642.759950744
+     Last View W: 508483.7014813117
+     Last View E: 553822.4976503372
+     Maximum View N: 1826139.59691842
+     Maximum View S: 1779642.759950744
+     Maximum View W: 508483.7014813117
+     Maximum View E: 553822.4976503372
+     Extent Method: Elements
+     Buffer: 0
+     Draw Icons: Yes
+     Draw Icon Labels: Name
+     Draw Map Objects: No
+     Draw Gridlines: No
+     Draw Flow Direction: Yes
+     Draw HillShade Layer: Yes
+     Draw Elevation Layer: Yes
+     Elevation Layer Color Palette: Gray Scale
+     Ignore Elevation Color Ramp Scale: No
+     Use Interpolated Color Ramp for Elevation Layer: Yes
+     Color Ramp Opacity Level for Elevation Layer: 33.0
+     Fix Element Locations: No
+     Fix Hydrologic Order: No
+End:

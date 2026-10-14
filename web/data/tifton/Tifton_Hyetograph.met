@@ -1,0 +1,61 @@
+Meteorology: Tifton Hyetograph
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:38:11
+     Version: 4.13
+     Unit System: English
+     Set Missing Data to Default: Yes
+     Precipitation Method: Specified Average
+     Air Temperature Method: None
+     Atmospheric Pressure Method: None
+     Dew Point Method: None
+     Wind Speed Method: None
+     Shortwave Radiation Method: None
+     Longwave Radiation Method: None
+     Snowmelt Method: None
+     Evapotranspiration Method: Monthly Evaporation
+     Use Basin Model: Tifton
+End:
+
+Precip Method Parameters: Specified Average
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:38:10
+     Allow Depth Override: Yes
+End:
+
+Evapotranspiration Method Parameters: Monthly Evaporation
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:38:11
+End:
+
+Subbasin: 74006
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:38:11
+     Gage: Gage 38
+
+     Begin Et: Monthly Evaporation
+     Pan Evaporation: 2.22
+     Pan Evaporation: 2.78
+     Pan Evaporation: 4.53
+     Pan Evaporation: 6.00
+     Pan Evaporation: 7.08
+     Pan Evaporation: 6.97
+     Pan Evaporation: 6.81
+     Pan Evaporation: 6.32
+     Pan Evaporation: 5.12
+     Pan Evaporation: 4.24
+     Pan Evaporation: 2.80
+     Pan Evaporation: 2.17
+     Evapotranspiration Coefficient: 0.7
+     Evapotranspiration Coefficient: 0.7
+     Evapotranspiration Coefficient: 0.7
+     Evapotranspiration Coefficient: 0.7
+     Evapotranspiration Coefficient: 0.7
+     Evapotranspiration Coefficient: 0.7
+     Evapotranspiration Coefficient: 0.7
+     Evapotranspiration Coefficient: 0.7
+     Evapotranspiration Coefficient: 0.7
+     Evapotranspiration Coefficient: 0.7
+     Evapotranspiration Coefficient: 0.7
+     Evapotranspiration Coefficient: 0.7
+     End Et:
+End:

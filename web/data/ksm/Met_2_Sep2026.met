@@ -1,0 +1,385 @@
+Meteorology: Met 2 Sep2026
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 03:21:45
+     Version: 4.13
+     Unit System: Metric
+     Set Missing Data to Default: Yes
+     Precipitation Method: Weighted Gages
+     Air Temperature Method: None
+     Atmospheric Pressure Method: None
+     Dew Point Method: None
+     Wind Speed Method: None
+     Shortwave Radiation Method: None
+     Longwave Radiation Method: None
+     Snowmelt Method: None
+     Evapotranspiration Method: No Evapotranspiration
+     Use Basin Model: KSM
+End:
+
+Gage: RID-KU 001
+     Type: Recording
+End:
+
+Gage: RID-KU 002
+     Type: Recording
+End:
+
+Gage: RID-KU 003
+     Type: Recording
+End:
+
+Gage: RID-KU 004
+     Type: Recording
+End:
+
+Precip Method Parameters: Weighted Gages
+     Last Modified Date: 8 September 2023
+     Last Modified Time: 06:54:40
+     Use HEC1 Weighting Scheme: Yes
+     Use Indexing: No
+     Allow Depth Override: No
+End:
+
+Subbasin: SB_PBRT
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:28:24
+     Gage: RID-KU 003
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_KSM_P47
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:26:43
+     Gage: RID-KU 001
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_KSM_W
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:26:43
+     Gage: RID-KU 001
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_KP1
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:27:39
+     Gage: RID-KU 002
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_KP2
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:27:39
+     Gage: RID-KU 002
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_KP3
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:27:39
+     Gage: RID-KU 002
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_KP4
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:27:39
+     Gage: RID-KU 002
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_TRN
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:29:13
+     Gage: RID-KU 004
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_TSKD2
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:29:13
+     Gage: RID-KU 001
+     Volume Weight: 0.90
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 004
+     Volume Weight: 0.1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_TSKD1
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:26:43
+     Gage: RID-KU 001
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_NBK
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:29:13
+     Gage: RID-KU 004
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_NG1
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:27:39
+     Gage: RID-KU 002
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_NG2
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:29:13
+     Gage: RID-KU 002
+     Volume Weight: 0.43
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 003
+     Volume Weight: 0.03
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 004
+     Volume Weight: 0.54
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_KMD1
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:27:39
+     Gage: RID-KU 001
+     Volume Weight: 0.55
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 002
+     Volume Weight: 0.45
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_KTK
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:26:43
+     Gage: RID-KU 001
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_KMD2
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:29:13
+     Gage: RID-KU 001
+     Volume Weight: 0.87
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 002
+     Volume Weight: 0.08
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 004
+     Volume Weight: 0.05
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_NPK
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:29:13
+     Gage: RID-KU 004
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_KKY2
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:27:39
+     Gage: RID-KU 001
+     Volume Weight: 0.93
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 002
+     Volume Weight: 0.07
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_KKY1
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:26:43
+     Gage: RID-KU 001
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_KSM_P26A
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:28:24
+     Gage: RID-KU 003
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_UP_KSM8
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:27:39
+     Gage: RID-KU 001
+     Volume Weight: 0.77
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 002
+     Volume Weight: 0.23
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_KP5
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:29:13
+     Gage: RID-KU 001
+     Volume Weight: 0.17
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 003
+     Volume Weight: 0.41
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 004
+     Volume Weight: 0.42
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_UP_KSM7
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:27:39
+     Gage: RID-KU 001
+     Volume Weight: 0.98
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 002
+     Volume Weight: 0.02
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_UP_KSM6
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:26:43
+     Gage: RID-KU 001
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_TKD2
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:29:13
+     Gage: RID-KU 003
+     Volume Weight: 0.56
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 004
+     Volume Weight: 0.44
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_ML1
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:29:13
+     Gage: RID-KU 003
+     Volume Weight: 0.92
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 004
+     Volume Weight: 0.08
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_UP_KSM5
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:26:43
+     Gage: RID-KU 001
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_TKD1
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:29:13
+     Gage: RID-KU 003
+     Volume Weight: 0.15
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 004
+     Volume Weight: 0.85
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_ML2
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:28:24
+     Gage: RID-KU 003
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_UP_KSM4
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:26:43
+     Gage: RID-KU 001
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_LOW_KSM1
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:28:24
+     Gage: RID-KU 003
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_ML3
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:28:24
+     Gage: RID-KU 003
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_UP_KSM3
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:26:43
+     Gage: RID-KU 001
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_UP_KSM2
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:26:43
+     Gage: RID-KU 001
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_UP_KSM1
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:26:43
+     Gage: RID-KU 001
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_MC
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:29:13
+     Gage: RID-KU 002
+     Volume Weight: 0.01
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 003
+     Volume Weight: 0.97
+     Temporal Distribution Weight: 1
+     Gage: RID-KU 004
+     Volume Weight: 0.02
+     Temporal Distribution Weight: 1
+End:
+
+Subbasin: SB_LOW_KSM2
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:28:24
+     Gage: RID-KU 003
+     Volume Weight: 1
+     Temporal Distribution Weight: 1
+End:

@@ -1,0 +1,41 @@
+Project: river bend
+     Description: Interior Watershed model for the Green River
+     Version: 4.13
+     Filepath Separator: \
+     DSS File Name: river_bend.dss
+     Time Zone ID: America/Los_Angeles
+End:
+
+Precipitation: Historic Precipitation
+     Filename: Historic_Precipitation.met
+     Description: 
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:38
+End:
+
+Basin: Minimum Facility
+     Filename: Minimum_Facility.basin
+     Description: 
+     Last Modified Date: 1 April 2021
+     Last Modified Time: 22:49
+End:
+
+Basin: Minimum Facility + 4Pumps
+     Filename: Minimum_Facility_+_4Pumps.basin
+     Description: 
+     Last Modified Date: 1 April 2021
+     Last Modified Time: 22:53
+End:
+
+Basin: Minimum Facility + Pump
+     Filename: Minimum_Facility_+_Pump.basin
+     Description: 
+     Last Modified Date: 1 April 2021
+     Last Modified Time: 22:51
+End:
+
+Control: 1951
+     FileName: 1951.control
+     Description: 
+End:
+

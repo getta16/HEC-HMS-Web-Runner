@@ -1,0 +1,988 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RunResults>
+  <RunName>Jan 96 storm</RunName>
+  <Description>Base conditions for January 1996</Description>
+  <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+  <StartTime>16Jan1996, 24:00</StartTime>
+  <EndTime>21Jan1996, 23:00</EndTime>
+  <BasinElement name="86" type="Subbasin">
+    <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+    <SubbasinArea area="635" units="MI2" />
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="635" units="MI2" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//86/FLOW//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//86/FLOW-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Incremental Precip" displayString="Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//86/PRECIP-INC//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Precip" displayString="Cumulative Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//86/PRECIP-CUM//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Standard Deviation" displayString="Precipitation Standard Deviation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//86/PRECIP-STAND DEV//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Infiltration" displayString="Soil Infiltration" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//86/INFILTRATION//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Excess" displayString="Excess Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//86/PRECIP-EXCESS//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Excess" displayString="Cumulative Excess Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//86/PRECIP-EXCESS-CUM//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Loss" displayString="Precipitation Loss" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//86/PRECIP-LOSS//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Loss" displayString="Cumulative Precipitation Loss" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//86/PRECIP-LOSS-CUM//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Direct Runoff" displayString="Direct Runoff" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//86/FLOW-DIRECT//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Baseflow" displayString="Baseflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//86/FLOW-BASE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="16Jan1996, 24:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="16Jan1996, 24:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="0.0000000" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.0000000" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="215.9891166" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="6700.4671906" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="19Jan1996, 04:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="16852.7218607" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="0.4976198" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="1704.1039791" units="CFS" />
+      <StatisticMeasure type="Direct Flow Minimum" displayString="Minimum Direct Flow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Direct Flow Minimum Time" displayString="Time of Minimum Direct Flow" value="16Jan1996, 24:00" />
+      <StatisticMeasure type="Direct Flow Maximum" displayString="Maximum Direct Flow" value="6526.4508485" units="CFS" />
+      <StatisticMeasure type="Direct Flow Maximum Time" displayString="Time of Maximum Direct Flow" value="19Jan1996, 04:00" />
+      <StatisticMeasure type="Direct Flow Volume" displayString="Direct Flow Volume" value="12673.1030553" units="AC-FT" />
+      <StatisticMeasure type="Direct Flow Depth" displayString="Direct Flow Depth" value="0.3742058" units="IN" />
+      <StatisticMeasure type="Direct Flow Average" displayString="Direct Flow Average" value="1277.9718190" units="CFS" />
+      <StatisticMeasure type="Baseflow Minimum" displayString="Minimum Baseflow" value="141.5838573" units="CFS" />
+      <StatisticMeasure type="Baseflow Minimum Time" displayString="Time of Minimum Baseflow" value="20Jan1996, 01:00" />
+      <StatisticMeasure type="Baseflow Maximum" displayString="Maximum Baseflow" value="911.1649880" units="CFS" />
+      <StatisticMeasure type="Baseflow Maximum Time" displayString="Time of Maximum Baseflow" value="21Jan1996, 05:00" />
+      <StatisticMeasure type="Baseflow Volume" displayString="Baseflow Volume" value="4179.6188054" units="AC-FT" />
+      <StatisticMeasure type="Baseflow Depth" displayString="Baseflow Depth" value="0.1234139" units="IN" />
+      <StatisticMeasure type="Baseflow Average" displayString="Baseflow Average" value="426.1321601" units="CFS" />
+      <StatisticMeasure type="Precipitation Maximum" displayString="Maximum Precipitation" value="0.8317538" units="IN" />
+      <StatisticMeasure type="Precipitation Maximum Time" displayString="Time of Maximum Precipitation" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Precipitation Total" displayString="Precipitation Total" value="2.0853491" units="IN" />
+      <StatisticMeasure type="Precipitation Volume" displayString="Precipitation Volume" value="70623.8183063" units="AC-FT" />
+      <StatisticMeasure type="Loss Maximum" displayString="Maximum Loss" value="0.5273565" units="IN" />
+      <StatisticMeasure type="Loss Maximum Time" displayString="Time of Maximum Loss" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Loss Total" displayString="Loss Total" value="1.7104673" units="IN" />
+      <StatisticMeasure type="Loss Volume" displayString="Loss Volume" value="57927.8241790" units="AC-FT" />
+      <StatisticMeasure type="Excess Maximum" displayString="Maximum Excess" value="0.3043973" units="IN" />
+      <StatisticMeasure type="Excess Maximum Time" displayString="Time of Maximum Excess" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Excess Total" displayString="Excess Total" value="0.3748817" units="IN" />
+      <StatisticMeasure type="Excess Volume" displayString="Excess Volume" value="12695.9941273" units="AC-FT" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="Watts" type="Junction">
+    <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>Yes</IsComputationPoint>
+    <DrainageArea area="635" units="MI2" />
+    <ObservedFlowGage name="WATT" />
+    <FlowLink upstreamName="86" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Watts/FLOW//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Watts/FLOW-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Observed Flow" displayString="Observed Flow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Watts/FLOW-OBSERVED//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Residual Flow" displayString="Residual Flow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Watts/FLOW-RESIDUAL//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Observed Flow" displayString="Cumulative Observed Flow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Watts/FLOW-OBSERVED-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Combined Inflow" displayString="Combined Inflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Watts/FLOW-COMBINE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="215.9891166" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="6700.4671906" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="19Jan1996, 04:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="16852.7218607" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.4976198" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="1704.1039791" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="215.9891166" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="6700.4671906" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="19Jan1996, 04:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="16852.7218607" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="0.4976198" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="1704.1039791" units="CFS" />
+      <StatisticMeasure type="Observed Flow Minimum" displayString="Minimum Observed Flow" value="187.0000000" units="CFS" />
+      <StatisticMeasure type="Observed Flow Minimum Time" displayString="Time of Minimum Observed Flow" value="18Jan1996, 02:00" />
+      <StatisticMeasure type="Observed Flow Maximum" displayString="Maximum Observed Flow" value="6967.0000000" units="CFS" />
+      <StatisticMeasure type="Observed Flow Maximum Time" displayString="Time of Maximum Observed Flow" value="19Jan1996, 04:00" />
+      <StatisticMeasure type="Observed Flow Volume" displayString="Observed Flow Volume" value="15822.6446281" units="AC-FT" />
+      <StatisticMeasure type="Observed Flow Depth" displayString="Observed Flow Depth" value="0.4672041" units="IN" />
+      <StatisticMeasure type="Observed Flow Average" displayString="Observed Flow Average" value="1600.1833333" units="CFS" />
+      <StatisticMeasure type="Observed Flow RMSE Stdev" displayString="Observed Flow RMSE Stdev" value="0.2231385" units="CFS" />
+      <StatisticMeasure type="Observed Flow Nash Sutcliffe" displayString="Observed Flow Nash Sutcliffe" value="0.9502092" units="" />
+      <StatisticMeasure type="Observed Flow Percent Bias" displayString="Observed Flow Percent Bias" value="6.4942962" units="" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="R-1" type="Reach">
+    <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="635" units="MI2" />
+    <FlowLink upstreamName="Watts" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-1/FLOW//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-1/FLOW-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Combined Inflow" displayString="Combined Inflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-1/FLOW-COMBINE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="215.9891166" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="6700.4671906" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="19Jan1996, 04:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="16852.7218607" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.4976198" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="1704.1039791" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="222.3252857" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="18Jan1996, 09:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="6106.4848424" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="19Jan1996, 12:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="16587.4022593" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="0.4897855" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="1677.5462019" units="CFS" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="R-2" type="Reach">
+    <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="635" units="MI2" />
+    <FlowLink upstreamName="R-1" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-2/FLOW//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-2/FLOW-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Combined Inflow" displayString="Combined Inflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-2/FLOW-COMBINE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="222.3252857" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="18Jan1996, 09:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="6106.4848424" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="19Jan1996, 12:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="16587.4022593" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.4897855" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="1677.5462019" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="240.3037600" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="18Jan1996, 23:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="5643.7945986" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="20Jan1996, 02:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="15313.9229085" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="0.4521828" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="1550.0211779" units="CFS" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="85" type="Subbasin">
+    <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+    <SubbasinArea area="324" units="MI2" />
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="324" units="MI2" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//85/FLOW//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//85/FLOW-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Incremental Precip" displayString="Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//85/PRECIP-INC//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Precip" displayString="Cumulative Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//85/PRECIP-CUM//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Standard Deviation" displayString="Precipitation Standard Deviation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//85/PRECIP-STAND DEV//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Infiltration" displayString="Soil Infiltration" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//85/INFILTRATION//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Excess" displayString="Excess Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//85/PRECIP-EXCESS//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Excess" displayString="Cumulative Excess Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//85/PRECIP-EXCESS-CUM//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Loss" displayString="Precipitation Loss" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//85/PRECIP-LOSS//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Loss" displayString="Cumulative Precipitation Loss" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//85/PRECIP-LOSS-CUM//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Direct Runoff" displayString="Direct Runoff" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//85/FLOW-DIRECT//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Baseflow" displayString="Baseflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//85/FLOW-BASE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="16Jan1996, 24:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="16Jan1996, 24:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="0.0000000" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.0000000" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="73.7748182" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="18Jan1996, 07:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="679.1756312" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="19Jan1996, 07:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="2185.0267603" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="0.1264483" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="221.0753358" units="CFS" />
+      <StatisticMeasure type="Direct Flow Minimum" displayString="Minimum Direct Flow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Direct Flow Minimum Time" displayString="Time of Minimum Direct Flow" value="16Jan1996, 24:00" />
+      <StatisticMeasure type="Direct Flow Maximum" displayString="Maximum Direct Flow" value="620.9122850" units="CFS" />
+      <StatisticMeasure type="Direct Flow Maximum Time" displayString="Time of Maximum Direct Flow" value="19Jan1996, 07:00" />
+      <StatisticMeasure type="Direct Flow Volume" displayString="Direct Flow Volume" value="1557.4447910" units="AC-FT" />
+      <StatisticMeasure type="Direct Flow Depth" displayString="Direct Flow Depth" value="0.0901299" units="IN" />
+      <StatisticMeasure type="Direct Flow Average" displayString="Direct Flow Average" value="157.0974683" units="CFS" />
+      <StatisticMeasure type="Baseflow Minimum" displayString="Minimum Baseflow" value="39.5554198" units="CFS" />
+      <StatisticMeasure type="Baseflow Minimum Time" displayString="Time of Minimum Baseflow" value="20Jan1996, 23:00" />
+      <StatisticMeasure type="Baseflow Maximum" displayString="Maximum Baseflow" value="100.0000014" units="CFS" />
+      <StatisticMeasure type="Baseflow Maximum Time" displayString="Time of Maximum Baseflow" value="16Jan1996, 24:00" />
+      <StatisticMeasure type="Baseflow Volume" displayString="Baseflow Volume" value="627.5819693" units="AC-FT" />
+      <StatisticMeasure type="Baseflow Depth" displayString="Baseflow Depth" value="0.0363184" units="IN" />
+      <StatisticMeasure type="Baseflow Average" displayString="Baseflow Average" value="63.9778674" units="CFS" />
+      <StatisticMeasure type="Precipitation Maximum" displayString="Maximum Precipitation" value="0.4567732" units="IN" />
+      <StatisticMeasure type="Precipitation Maximum Time" displayString="Time of Maximum Precipitation" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Precipitation Total" displayString="Precipitation Total" value="1.5784397" units="IN" />
+      <StatisticMeasure type="Precipitation Volume" displayString="Precipitation Volume" value="27275.4371462" units="AC-FT" />
+      <StatisticMeasure type="Loss Maximum" displayString="Maximum Loss" value="0.3697952" units="IN" />
+      <StatisticMeasure type="Loss Maximum Time" displayString="Time of Maximum Loss" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Loss Total" displayString="Loss Total" value="1.4873310" units="IN" />
+      <StatisticMeasure type="Loss Volume" displayString="Loss Volume" value="25701.0782999" units="AC-FT" />
+      <StatisticMeasure type="Excess Maximum" displayString="Maximum Excess" value="0.0869780" units="IN" />
+      <StatisticMeasure type="Excess Maximum Time" displayString="Time of Maximum Excess" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Excess Total" displayString="Excess Total" value="0.0911087" units="IN" />
+      <StatisticMeasure type="Excess Volume" displayString="Excess Volume" value="1574.3588463" units="AC-FT" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="Tahlequah" type="Junction">
+    <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>Yes</IsComputationPoint>
+    <DrainageArea area="959" units="MI2" />
+    <ObservedFlowGage name="TAHL" />
+    <FlowLink upstreamName="R-2" />
+    <FlowLink upstreamName="85" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Tahlequah/FLOW//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Tahlequah/FLOW-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Observed Flow" displayString="Observed Flow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Tahlequah/FLOW-OBSERVED//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Residual Flow" displayString="Residual Flow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Tahlequah/FLOW-RESIDUAL//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Observed Flow" displayString="Cumulative Observed Flow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Tahlequah/FLOW-OBSERVED-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Combined Inflow" displayString="Combined Inflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Tahlequah/FLOW-COMBINE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="350.1710063" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="18Jan1996, 07:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="5933.5752709" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="20Jan1996, 02:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="17498.9496688" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.3421328" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="1771.0965137" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="350.1710063" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="18Jan1996, 07:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="5933.5752709" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="20Jan1996, 02:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="17498.9496688" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="0.3421328" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="1771.0965137" units="CFS" />
+      <StatisticMeasure type="Observed Flow Minimum" displayString="Minimum Observed Flow" value="362.0000000" units="CFS" />
+      <StatisticMeasure type="Observed Flow Minimum Time" displayString="Time of Minimum Observed Flow" value="18Jan1996, 01:00" />
+      <StatisticMeasure type="Observed Flow Maximum" displayString="Maximum Observed Flow" value="5874.0000000" units="CFS" />
+      <StatisticMeasure type="Observed Flow Maximum Time" displayString="Time of Maximum Observed Flow" value="19Jan1996, 24:00" />
+      <StatisticMeasure type="Observed Flow Volume" displayString="Observed Flow Volume" value="16058.3471074" units="AC-FT" />
+      <StatisticMeasure type="Observed Flow Depth" displayString="Observed Flow Depth" value="0.3139667" units="IN" />
+      <StatisticMeasure type="Observed Flow Average" displayString="Observed Flow Average" value="1743.3660714" units="CFS" />
+      <StatisticMeasure type="Observed Flow RMSE Stdev" displayString="Observed Flow RMSE Stdev" value="0.3383036" units="CFS" />
+      <StatisticMeasure type="Observed Flow Nash Sutcliffe" displayString="Observed Flow Nash Sutcliffe" value="0.8855507" units="" />
+      <StatisticMeasure type="Observed Flow Percent Bias" displayString="Observed Flow Percent Bias" value="4.1458735" units="" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="R-3" type="Reach">
+    <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="959" units="MI2" />
+    <FlowLink upstreamName="Tahlequah" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-3/FLOW//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-3/FLOW-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Combined Inflow" displayString="Combined Inflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-3/FLOW-COMBINE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="350.1710063" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="18Jan1996, 07:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="5933.5752709" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="20Jan1996, 02:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="17498.9496688" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.3421328" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="1771.0965137" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="359.6307130" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="18Jan1996, 10:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="5837.1835026" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="20Jan1996, 05:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="17078.4614078" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="0.3339115" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="1729.0264583" units="CFS" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="113" type="Subbasin">
+    <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+    <SubbasinArea area="307" units="MI2" />
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="307" units="MI2" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//113/FLOW//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//113/FLOW-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Incremental Precip" displayString="Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//113/PRECIP-INC//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Precip" displayString="Cumulative Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//113/PRECIP-CUM//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Standard Deviation" displayString="Precipitation Standard Deviation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//113/PRECIP-STAND DEV//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Infiltration" displayString="Soil Infiltration" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//113/INFILTRATION//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Excess" displayString="Excess Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//113/PRECIP-EXCESS//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Excess" displayString="Cumulative Excess Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//113/PRECIP-EXCESS-CUM//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Loss" displayString="Precipitation Loss" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//113/PRECIP-LOSS//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Loss" displayString="Cumulative Precipitation Loss" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//113/PRECIP-LOSS-CUM//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Direct Runoff" displayString="Direct Runoff" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//113/FLOW-DIRECT//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Baseflow" displayString="Baseflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//113/FLOW-BASE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="16Jan1996, 24:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="16Jan1996, 24:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="0.0000000" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.0000000" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="111.4598025" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="18Jan1996, 07:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="6546.1606092" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="18Jan1996, 24:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="12151.6434313" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="0.7421607" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="1228.3433985" units="CFS" />
+      <StatisticMeasure type="Direct Flow Minimum" displayString="Minimum Direct Flow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Direct Flow Minimum Time" displayString="Time of Minimum Direct Flow" value="16Jan1996, 24:00" />
+      <StatisticMeasure type="Direct Flow Maximum" displayString="Maximum Direct Flow" value="6452.5456079" units="CFS" />
+      <StatisticMeasure type="Direct Flow Maximum Time" displayString="Time of Maximum Direct Flow" value="18Jan1996, 24:00" />
+      <StatisticMeasure type="Direct Flow Volume" displayString="Direct Flow Volume" value="8837.7758374" units="AC-FT" />
+      <StatisticMeasure type="Direct Flow Depth" displayString="Direct Flow Depth" value="0.5397665" units="IN" />
+      <StatisticMeasure type="Direct Flow Average" displayString="Direct Flow Average" value="891.1507077" units="CFS" />
+      <StatisticMeasure type="Baseflow Minimum" displayString="Minimum Baseflow" value="79.2193554" units="CFS" />
+      <StatisticMeasure type="Baseflow Minimum Time" displayString="Time of Minimum Baseflow" value="19Jan1996, 17:00" />
+      <StatisticMeasure type="Baseflow Maximum" displayString="Maximum Baseflow" value="719.3763344" units="CFS" />
+      <StatisticMeasure type="Baseflow Maximum Time" displayString="Time of Maximum Baseflow" value="20Jan1996, 16:00" />
+      <StatisticMeasure type="Baseflow Volume" displayString="Baseflow Volume" value="3313.8675939" units="AC-FT" />
+      <StatisticMeasure type="Baseflow Depth" displayString="Baseflow Depth" value="0.2023942" units="IN" />
+      <StatisticMeasure type="Baseflow Average" displayString="Baseflow Average" value="337.1926908" units="CFS" />
+      <StatisticMeasure type="Precipitation Maximum" displayString="Maximum Precipitation" value="0.7575405" units="IN" />
+      <StatisticMeasure type="Precipitation Maximum Time" displayString="Time of Maximum Precipitation" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Precipitation Total" displayString="Precipitation Total" value="2.0514957" units="IN" />
+      <StatisticMeasure type="Precipitation Volume" displayString="Precipitation Volume" value="33589.8211340" units="AC-FT" />
+      <StatisticMeasure type="Loss Maximum" displayString="Maximum Loss" value="0.5377653" units="IN" />
+      <StatisticMeasure type="Loss Maximum Time" displayString="Time of Maximum Loss" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Loss Total" displayString="Loss Total" value="1.5116524" units="IN" />
+      <StatisticMeasure type="Loss Volume" displayString="Loss Volume" value="24750.7879626" units="AC-FT" />
+      <StatisticMeasure type="Excess Maximum" displayString="Maximum Excess" value="0.2197753" units="IN" />
+      <StatisticMeasure type="Excess Maximum Time" displayString="Time of Maximum Excess" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Excess Total" displayString="Excess Total" value="0.5398433" units="IN" />
+      <StatisticMeasure type="Excess Volume" displayString="Excess Volume" value="8839.0331713" units="AC-FT" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="Eldon" type="Junction">
+    <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>Yes</IsComputationPoint>
+    <DrainageArea area="307" units="MI2" />
+    <ObservedFlowGage name="ELDN" />
+    <FlowLink upstreamName="113" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Eldon/FLOW//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Eldon/FLOW-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Observed Flow" displayString="Observed Flow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Eldon/FLOW-OBSERVED//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Residual Flow" displayString="Residual Flow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Eldon/FLOW-RESIDUAL//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Observed Flow" displayString="Cumulative Observed Flow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Eldon/FLOW-OBSERVED-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Combined Inflow" displayString="Combined Inflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Eldon/FLOW-COMBINE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="111.4598025" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="18Jan1996, 07:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="6546.1606092" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="18Jan1996, 24:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="12151.6434313" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.7421607" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="1228.3433985" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="111.4598025" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="18Jan1996, 07:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="6546.1606092" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="18Jan1996, 24:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="12151.6434313" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="0.7421607" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="1228.3433985" units="CFS" />
+      <StatisticMeasure type="Observed Flow Minimum" displayString="Minimum Observed Flow" value="136.0000000" units="CFS" />
+      <StatisticMeasure type="Observed Flow Minimum Time" displayString="Time of Minimum Observed Flow" value="17Jan1996, 21:00" />
+      <StatisticMeasure type="Observed Flow Maximum" displayString="Maximum Observed Flow" value="7668.0000000" units="CFS" />
+      <StatisticMeasure type="Observed Flow Maximum Time" displayString="Time of Maximum Observed Flow" value="18Jan1996, 22:00" />
+      <StatisticMeasure type="Observed Flow Volume" displayString="Observed Flow Volume" value="10957.1900826" units="AC-FT" />
+      <StatisticMeasure type="Observed Flow Depth" displayString="Observed Flow Depth" value="0.6692095" units="IN" />
+      <StatisticMeasure type="Observed Flow Average" displayString="Observed Flow Average" value="1107.8416667" units="CFS" />
+      <StatisticMeasure type="Observed Flow RMSE Stdev" displayString="Observed Flow RMSE Stdev" value="0.3773938" units="CFS" />
+      <StatisticMeasure type="Observed Flow Nash Sutcliffe" displayString="Observed Flow Nash Sutcliffe" value="0.8575740" units="" />
+      <StatisticMeasure type="Observed Flow Percent Bias" displayString="Observed Flow Percent Bias" value="10.8771619" units="" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="R-4" type="Reach">
+    <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="307" units="MI2" />
+    <FlowLink upstreamName="Eldon" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-4/FLOW//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-4/FLOW-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Combined Inflow" displayString="Combined Inflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-4/FLOW-COMBINE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="111.4598025" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="18Jan1996, 07:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="6546.1606092" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="18Jan1996, 24:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="12151.6434313" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.7421607" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="1228.3433985" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="115.6150626" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="18Jan1996, 09:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="6202.2672539" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="19Jan1996, 03:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="11928.9463858" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="0.7285595" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="1206.0347829" units="CFS" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="conf" type="Junction">
+    <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="1266" units="MI2" />
+    <FlowLink upstreamName="R-3" />
+    <FlowLink upstreamName="R-4" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//conf/FLOW//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//conf/FLOW-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Combined Inflow" displayString="Combined Inflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//conf/FLOW-COMBINE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="475.7562761" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="18Jan1996, 09:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="6846.5982907" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="19Jan1996, 03:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="29007.4077936" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.4296121" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="2935.0612412" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="475.7562761" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="18Jan1996, 09:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="6846.5982907" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="19Jan1996, 03:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="29007.4077936" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="0.4296121" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="2935.0612412" units="CFS" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="R-5" type="Reach">
+    <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="1266" units="MI2" />
+    <FlowLink upstreamName="conf" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-5/FLOW//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-5/FLOW-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Combined Inflow" displayString="Combined Inflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//R-5/FLOW-COMBINE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="475.7562761" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="18Jan1996, 09:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="6846.5982907" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="19Jan1996, 03:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="29007.4077936" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.4296121" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="2935.0612412" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="475.7562761" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="18Jan1996, 11:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="6846.5982907" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="19Jan1996, 05:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="28779.8020198" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="0.4262412" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="2912.2931741" units="CFS" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="127" type="Subbasin">
+    <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+    <SubbasinArea area="345" units="MI2" />
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="345" units="MI2" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//127/FLOW//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//127/FLOW-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Incremental Precip" displayString="Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//127/PRECIP-INC//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Precip" displayString="Cumulative Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//127/PRECIP-CUM//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Standard Deviation" displayString="Precipitation Standard Deviation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//127/PRECIP-STAND DEV//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Infiltration" displayString="Soil Infiltration" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//127/INFILTRATION//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Excess" displayString="Excess Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//127/PRECIP-EXCESS//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Excess" displayString="Cumulative Excess Precipitation" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//127/PRECIP-EXCESS-CUM//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Loss" displayString="Precipitation Loss" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//127/PRECIP-LOSS//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Loss" displayString="Cumulative Precipitation Loss" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//127/PRECIP-LOSS-CUM//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Direct Runoff" displayString="Direct Runoff" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//127/FLOW-DIRECT//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Baseflow" displayString="Baseflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//127/FLOW-BASE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="16Jan1996, 24:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="16Jan1996, 24:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="0.0000000" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.0000000" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="64.1408979" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="17Jan1996, 23:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="5712.7539953" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="18Jan1996, 08:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="8265.0798079" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="0.4491891" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="835.4928478" units="CFS" />
+      <StatisticMeasure type="Direct Flow Minimum" displayString="Minimum Direct Flow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Direct Flow Minimum Time" displayString="Time of Minimum Direct Flow" value="16Jan1996, 24:00" />
+      <StatisticMeasure type="Direct Flow Maximum" displayString="Maximum Direct Flow" value="5654.3297943" units="CFS" />
+      <StatisticMeasure type="Direct Flow Maximum Time" displayString="Time of Maximum Direct Flow" value="18Jan1996, 08:00" />
+      <StatisticMeasure type="Direct Flow Volume" displayString="Direct Flow Volume" value="4832.2827053" units="AC-FT" />
+      <StatisticMeasure type="Direct Flow Depth" displayString="Direct Flow Depth" value="0.2626241" units="IN" />
+      <StatisticMeasure type="Direct Flow Average" displayString="Direct Flow Average" value="487.2552887" units="CFS" />
+      <StatisticMeasure type="Baseflow Minimum" displayString="Minimum Baseflow" value="50.4207979" units="CFS" />
+      <StatisticMeasure type="Baseflow Minimum Time" displayString="Time of Minimum Baseflow" value="18Jan1996, 23:00" />
+      <StatisticMeasure type="Baseflow Maximum" displayString="Maximum Baseflow" value="658.1114700" units="CFS" />
+      <StatisticMeasure type="Baseflow Maximum Time" displayString="Time of Maximum Baseflow" value="19Jan1996, 19:00" />
+      <StatisticMeasure type="Baseflow Volume" displayString="Baseflow Volume" value="3432.7971026" units="AC-FT" />
+      <StatisticMeasure type="Baseflow Depth" displayString="Baseflow Depth" value="0.1865651" units="IN" />
+      <StatisticMeasure type="Baseflow Average" displayString="Baseflow Average" value="348.2375592" units="CFS" />
+      <StatisticMeasure type="Precipitation Maximum" displayString="Maximum Precipitation" value="0.4030538" units="IN" />
+      <StatisticMeasure type="Precipitation Maximum Time" displayString="Time of Maximum Precipitation" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Precipitation Total" displayString="Precipitation Total" value="1.6423320" units="IN" />
+      <StatisticMeasure type="Precipitation Volume" displayString="Precipitation Volume" value="30218.9066249" units="AC-FT" />
+      <StatisticMeasure type="Loss Maximum" displayString="Maximum Loss" value="0.3343057" units="IN" />
+      <StatisticMeasure type="Loss Maximum Time" displayString="Time of Maximum Loss" value="18Jan1996, 05:00" />
+      <StatisticMeasure type="Loss Total" displayString="Loss Total" value="1.3797123" units="IN" />
+      <StatisticMeasure type="Loss Volume" displayString="Loss Volume" value="25386.7044763" units="AC-FT" />
+      <StatisticMeasure type="Excess Maximum" displayString="Maximum Excess" value="0.1331236" units="IN" />
+      <StatisticMeasure type="Excess Maximum Time" displayString="Time of Maximum Excess" value="18Jan1996, 06:00" />
+      <StatisticMeasure type="Excess Total" displayString="Excess Total" value="0.2626197" units="IN" />
+      <StatisticMeasure type="Excess Volume" displayString="Excess Volume" value="4832.2021486" units="AC-FT" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="Tenkiller" type="Junction">
+    <ExecutionTime>02Apr2021, 00:30:07</ExecutionTime>
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>Yes</IsComputationPoint>
+    <DrainageArea area="1611" units="MI2" />
+    <ObservedFlowGage name="TENK" />
+    <FlowLink upstreamName="R-5" />
+    <FlowLink upstreamName="127" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Tenkiller/FLOW//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Tenkiller/FLOW-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Observed Flow" displayString="Observed Flow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Tenkiller/FLOW-OBSERVED//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Residual Flow" displayString="Residual Flow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Tenkiller/FLOW-RESIDUAL//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Observed Flow" displayString="Cumulative Observed Flow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Tenkiller/FLOW-OBSERVED-CUMULATIVE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Combined Inflow" displayString="Combined Inflow" />
+        <DssFileName>Jan_96_storm.dss</DssFileName>
+        <DssPathname>//Tenkiller/FLOW-COMBINE//1HOUR/RUN:Jan 96 storm/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="569.7616958" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="17Jan1996, 23:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="7656.1176601" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="19Jan1996, 05:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="37044.8818277" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.4311555" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="3747.7860219" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="569.7616958" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="17Jan1996, 23:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="7656.1176601" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="19Jan1996, 05:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="37044.8818277" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="0.4311555" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="3747.7860219" units="CFS" />
+      <StatisticMeasure type="Observed Flow Minimum" displayString="Minimum Observed Flow" value="218.0800018" units="CFS" />
+      <StatisticMeasure type="Observed Flow Minimum Time" displayString="Time of Minimum Observed Flow" value="17Jan1996, 15:00" />
+      <StatisticMeasure type="Observed Flow Maximum" displayString="Maximum Observed Flow" value="7649.8901367" units="CFS" />
+      <StatisticMeasure type="Observed Flow Maximum Time" displayString="Time of Maximum Observed Flow" value="19Jan1996, 03:00" />
+      <StatisticMeasure type="Observed Flow Volume" displayString="Observed Flow Volume" value="33492.9269170" units="AC-FT" />
+      <StatisticMeasure type="Observed Flow Depth" displayString="Observed Flow Depth" value="0.3898153" units="IN" />
+      <StatisticMeasure type="Observed Flow Average" displayString="Observed Flow Average" value="3603.8217761" units="CFS" />
+      <StatisticMeasure type="Observed Flow RMSE Stdev" displayString="Observed Flow RMSE Stdev" value="0.4852316" units="CFS" />
+      <StatisticMeasure type="Observed Flow Nash Sutcliffe" displayString="Observed Flow Nash Sutcliffe" value="0.7645503" units="" />
+      <StatisticMeasure type="Observed Flow Percent Bias" displayString="Observed Flow Percent Bias" value="9.3771663" units="" />
+    </Statistics>
+  </BasinElement>
+</RunResults>
+

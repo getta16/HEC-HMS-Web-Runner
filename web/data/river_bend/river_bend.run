@@ -1,0 +1,54 @@
+Run: Minimum Facility
+     Default Description: Yes
+     Log File: Minimum_Facility.log
+     DSS File: Minimum_Facility.dss
+     Is Save Spatial Results: No
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 03:03:25
+     Last Execution Date: 1 April 2021
+     Last Execution Time: 22:49:08
+     Basin: Minimum Facility
+     Precip: Historic Precipitation
+     Control: 1951
+     Save State Type: None
+     Time-Series Output: Save All
+     Time Series Results Manager Start:
+     Time Series Results Manager End:
+End:
+
+Run: Minimum Facility + Pump
+     Default Description: Yes
+     Log File: Minimum_Facility_+_Pump.log
+     DSS File: Minimum_Facility_+_Pump.dss
+     Is Save Spatial Results: No
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 03:03:34
+     Last Execution Date: 1 April 2021
+     Last Execution Time: 22:51:22
+     Basin: Minimum Facility + Pump
+     Precip: Historic Precipitation
+     Control: 1951
+     Save State Type: None
+     Time-Series Output: Save All
+     Time Series Results Manager Start:
+     Time Series Results Manager End:
+End:
+
+Run: Minimum Facility + 4Pumps
+     Default Description: Yes
+     Log File: Minimum_Facility_+_4Pumps.log
+     DSS File: Minimum_Facility_+_4Pumps.dss
+     Is Save Spatial Results: No
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 03:03:41
+     Last Execution Date: 1 April 2021
+     Last Execution Time: 22:53:45
+     Basin: Minimum Facility + 4Pumps
+     Precip: Historic Precipitation
+     Control: 1951
+     Save State Type: None
+     Time-Series Output: Save All
+     Time Series Results Manager Start:
+     Time Series Results Manager End:
+End:
+

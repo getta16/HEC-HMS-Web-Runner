@@ -1,0 +1,27 @@
+Project: tifton
+     Description: Little River Watershed near Tifton, Georgia
+     Version: 4.13
+     Filepath Separator: \
+     DSS File Name: tifton.dss
+     Time Zone ID: America/Los_Angeles
+End:
+
+Precipitation: Tifton Hyetograph
+     Filename: Tifton_Hyetograph.met
+     Description: 
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:38
+End:
+
+Basin: Tifton
+     Filename: Tifton.basin
+     Description: ARS Watershed 74006
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 03:13
+End:
+
+Control: Jan1-Jun30 1970
+     FileName: Jan1_Jun30_1970.control
+     Description: 
+End:
+

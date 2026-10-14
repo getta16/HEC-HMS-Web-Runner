@@ -1,7 +1,7 @@
 // Mini HEC-HMS engine: reads HEC-HMS 4.x project files (text + DSS 7) and runs
 // an event simulation in the browser or Node.
 // Loss: None, Initial+Constant, SCS Curve Number. Transform: None, User-Specified UH,
-// Clark, SCS, Snyder (standard). Baseflow: None, Recession. Routing: None, Lag, Muskingum,
+// Clark, SCS, Snyder (standard). Baseflow: None, Recession, Monthly Constant. Routing: None, Lag, Muskingum,
 // Modified Puls.
 // Reservoir: controlled outflow (orifice, box/circular culvert, head-discharge pump, ogee /
 // broad-crested spillway, level dam top), specified-stage tailwater.
@@ -451,6 +451,7 @@
     if (!recs.length) return null;
     if (recs[0].pattern) return { pattern: true, interval: dtw, values: Array.from(recs[0].values, v => isNaN(v) ? 0 : v), units: recs[0].units };
     const pts = new Map();
+    let units = null; // empty blocks may carry other units, so take them from a block with data
     for (const r of recs) {
       const D = pathParts(r.path).D;
       const m = /^(\d{2})([A-Za-z]{3})(\d{4})$/.exec(D);
@@ -459,6 +460,7 @@
       for (let i = 0; i < r.n; i++) {
         const v = r.values[i];
         if (isNaN(v)) continue;
+        if (units == null) units = r.units;
         pts.set(blockStart + (r.firstIndex + i + 1) * dtw * 60000, v);
       }
     }
@@ -468,7 +470,7 @@
     const n = Math.round((times[times.length - 1] - start) / step);
     const values = new Float64Array(n);
     for (const [t, v] of pts) values[Math.round((t - start) / step) - 1] = v;
-    return { start, interval: dtw, values, units: recs[0].units };
+    return { start, interval: dtw, values, units: units == null ? recs[0].units : units };
   }
 
   // ---------- precipitation ----------
@@ -535,8 +537,8 @@
     const need = (g) => { if (!gages[g]) throw new Error(msg('noGage', g)); if (!gages[g].values) throw new Error(gages[g].error || msg('noGage', g)); return prepGage(gages[g]); };
     const p = new Float64Array(times.length);
     if (met.method === 'Specified Average') {
-      const g = need(sb.gage);
-      for (let i = 1; i < times.length; i++) p[i] = cumFraction(g, times[i]) - cumFraction(g, times[i - 1]);
+      const g = need(sb.gage), f = unitFactor(g.units, /metric|si/i.test(met.header.props['Unit System'] || ''));
+      for (let i = 1; i < times.length; i++) p[i] = (cumFraction(g, times[i]) - cumFraction(g, times[i - 1])) * f;
       return p;
     }
     if (met.method === 'Gage Weights') {
@@ -629,10 +631,47 @@
   }
 
   // ---------- transform ----------
-  // Unit hydrograph at the simulation step from a UH of duration D (S-curve method).
+  // Unit hydrograph at the simulation step from a UH of duration D whose ordinates are G minutes
+  // apart, as HEC-HMS 4.13 does it: same duration → natural-spline resample of the ordinates;
+  // otherwise an S-curve (UH lagged by D, enough copies), spline-resampled to Δt (clipped at 0),
+  // optionally smoothed after the peak (Tabular Passes), differenced over Δt and scaled by D/Δt,
+  // cut at the second zero or first negative after the peak.
   // uh[j] is the flow j steps after the end of a unit-depth excess period.
-  function resampleUH(U, D, dtMin) {
-    if (Math.abs(D - dtMin) < 1e-9) return [0, ...U.slice(1)].concat([0]);
+  function splineResample(y, G, dt, clip) {
+    const x = y.map((_, i) => i * G), f = naturalSpline(x, y), n = Math.floor((y.length - 1) * G / dt) + 1, out = [];
+    for (let i = 0; i <= n; i++) { const v = y.length > 2 ? f(i * dt) : NaN; out.push(isNaN(v) ? 0 : clip ? Math.max(0, v) : v); }
+    return out;
+  }
+  function resampleUH(U, D, dtMin, G = D, passes = 0) {
+    const r = Math.round(D / G);
+    if (Math.abs(D - dtMin) < 1e-9) return [0, ...(Math.abs(G - dtMin) < 1e-9 ? U : splineResample(U, G, dtMin, false)).slice(1).map(v => Math.max(0, v))].concat([0]);
+    if (U.length > 1 && Math.abs(r * G - D) < 1e-9 && r > 0) {
+      const u0 = U.slice(); let peak = 0;
+      for (let i = 1; i < u0.length; i++) if (u0[i] > u0[peak]) peak = i;
+      if (u0[u0.length - 1] !== 0) u0.push(0);
+      const copies = u0.length + (dtMin > G ? Math.floor(dtMin / G) : 0) + 1;
+      const S = new Array(u0.length + copies * r).fill(0);
+      for (let k = 0; k <= copies; k++) for (let i = 0; i < u0.length; i++) S[k * r + i] += u0[i];
+      let s = splineResample(S, G, dtMin, true);
+      const pk = Math.floor(peak * G / dtMin);
+      if (passes > 0 && pk < s.length - 2) {
+        for (let p = 0; p < passes; p++) {
+          const t = s.slice();
+          for (let i = pk + 1; i < s.length - 1; i++) t[i] = (s[i - 1] + s[i] + s[i + 1]) / 3;
+          t[t.length - 1] = (s[s.length - 2] + s[s.length - 1]) / 2;
+          s = t;
+        }
+      }
+      const k = D / dtMin, u = s.map((v, i) => (i ? v - s[i - 1] : v) * k);
+      let cut = -1, seen = false, zero = false;
+      for (let i = 0; i < u.length; i++) {
+        if (u[i] === 0) { if (i <= pk) continue; if (seen && !zero) { zero = true; continue; } if (seen && zero && cut === -1) cut = i; continue; }
+        if (u[i] < 0) { u[i] = 0; if (i > pk && cut === -1) cut = i; continue; }
+        seen = true;
+      }
+      const out = u.slice(0, cut === -1 ? u.length : cut);
+      return [0, ...out.slice(1)].concat([0]);
+    }
     const Ui = (x) => { if (x < 0) return 0; const k = Math.floor(x), f = x - k; const a = U[k] || 0, b = U[k + 1] || 0; return a + (b - a) * f; };
     const S = (t) => { let s = 0; for (let i = 0; i * D <= t; i++) s += Ui((t - i * D) / D); return s; };
     const n = Math.ceil((U.length + 1) * D / dtMin) + 1, u = [];
@@ -750,7 +789,7 @@
     if (prm.method === 'None' || !prm.method) return Float64Array.from(excess, e => e * u.depthAreaToFlow(area, dtH));
     if (prm.method === 'User-Specified UH') {
       if (!prm.uh) throw new Error(msg('noUH', prm.uhName));
-      return convolve(excess, resampleUH(prm.uh.values, prm.uh.interval, dtMin));
+      return convolve(excess, resampleUH(prm.uh.values, prm.uh.interval, dtMin, prm.uh.dataInterval || prm.uh.interval, prm.passes || 0));
     }
     if (prm.method === 'SCS') return convolve(excess, scsUH(prm.lag, prm.uhType, u.depthAreaToFlow(area, dtH), dtH));
     if (prm.method === 'Snyder') {
@@ -967,8 +1006,14 @@
   // Recession as in HEC-HMS 4.13: baseflow decays by k^(Δt/1 day); once the total flow falls
   // below the threshold (ratio × running peak, or a fixed flow) the total follows the recession
   // curve from the previous total, with a partial step on the crossing interval.
-  function baseflow(direct, area, prm, dtH) {
+  // Monthly Constant: the rate of each step's calendar month is added to the direct runoff.
+  function baseflow(direct, area, prm, dtH, times) {
     const n = direct.length;
+    if (prm.method === 'Monthly Constant') {
+      const base = Float64Array.from(times, t => prm.monthly[new Date(t).getUTCMonth()] || 0);
+      return { total: Float64Array.from(direct, (v, i) => v + base[i]), base };
+    }
+    if (prm.method && !/^(none|recession)$/i.test(prm.method)) throw new Error(msg('unsupported', 'Baseflow', prm.method));
     if (prm.method !== 'Recession') return { total: Float64Array.from(direct), base: new Float64Array(n) };
     const k = Math.pow(prm.recession, dtH / 24), ratio = isNaN(prm.thresholdFlow) ? prm.thresholdRatio : NaN;
     const q0 = !isNaN(prm.initialDischarge) ? prm.initialDischarge : (prm.initialPerArea || 0) * area;
@@ -1747,14 +1792,14 @@
       if (b.kind === 'Subbasin') {
         el.area = num(p['Area']);
         el.loss = { method: p['LossRate'], initialLoss: num(p['Initial Loss']), constantRate: num(p['Constant Loss Rate'] ?? p['Percolation Rate']), initialDeficit: num(p['Initial Deficit']), maxDeficit: num(p['Maximum Deficit']), impervious: num(p['Percent Impervious Area'] || 0), cn: num(p['Curve Number']), ia: num(p['Initial Abstraction']) };
-        el.transform = { method: p['Transform'], tc: num(p['Time of Concentration']), storage: num(p['Storage Coefficient']), lag: num(p['Lag']), uhName: p['Unit Hydrograph Name'], snyderMethod: p['Snyder Method'], modClarkMethod: p['Mod Clark Method'], uhType: p['Unitgraph Type'], tp: num(p['Snyder Tp']), cp: num(p['Snyder Cp']) };
+        el.transform = { method: p['Transform'], tc: num(p['Time of Concentration']), storage: num(p['Storage Coefficient']), lag: num(p['Lag']), uhName: p['Unit Hydrograph Name'], passes: num(p['Tabular Passes']) || 0, snyderMethod: p['Snyder Method'], modClarkMethod: p['Mod Clark Method'], uhType: p['Unitgraph Type'], tp: num(p['Snyder Tp']), cp: num(p['Snyder Cp']) };
         el.canopy = { method: p['Canopy'], initPct: num(p['Initial Canopy Storage Percent']), capacity: num(p['Canopy Storage Capacity']), crop: num(p['Crop Coefficient']), allowSim: p['Allow Simultaneous Precip Et'] };
         el.surface = { method: p['Surface'], initPct: num(p['Initial Surface Storage Percent']), capacity: num(p['Surface Storage Capacity']) };
         if (/soil moisture account/i.test(p['LossRate'] || '')) el.sma = {
           impervious: num(p['Percent Impervious Area']), soilInit: num(p['Initial Soil Storage Percent']), maxInf: num(p['Soil Maximum Infiltration']), soilCap: num(p['Soil Storage Capacity']), tension: num(p['Soil Tension Capacity']), maxPerc: num(p['Soil Maximum Percolation']),
           gw: [1, 2].map(j => ({ init: num(p[`Initial Gw${j} Storage Percent`]), cap: num(p[`Groundwater ${j} Storage Capacity`]), route: num(p[`Groundwater ${j} Routing Coefficient`]), perc: num(p[`Groundwater ${j} Maximum Percolation`]) })),
         };
-        el.baseflow = { method: p['Baseflow'], layers: [1, 2, 3].map(j => ({ reservoirs: num(p[`GW-${j} Number Reservoirs`]), route: num(p[`GW-${j} Routing Coefficient`]), initial: num(p[`GW-${j} Initial Baseflow`]), initialRatio: num(p[`GW-${j} Initial Flow/Area Ratio`]) })).filter(l => !isNaN(l.route)), recession: num(p['Recession Factor']), initialPerArea: num(p['Initial Flow/Area Ratio']), thresholdRatio: num(p['Threshold Flow To Peak Ratio'] ?? p['Threshold Flow to Peak Ratio']), thresholdFlow: num(p['Threshold Flow']), initialDischarge: num(p['Initial Baseflow'] ?? p['Initial Discharge']) };
+        el.baseflow = { method: p['Baseflow'], layers: [1, 2, 3].map(j => ({ reservoirs: num(p[`GW-${j} Number Reservoirs`]), route: num(p[`GW-${j} Routing Coefficient`]), initial: num(p[`GW-${j} Initial Baseflow`]), initialRatio: num(p[`GW-${j} Initial Flow/Area Ratio`]) })).filter(l => !isNaN(l.route)), recession: num(p['Recession Factor']), initialPerArea: num(p['Initial Flow/Area Ratio']), thresholdRatio: num(p['Threshold Flow To Peak Ratio'] ?? p['Threshold Flow to Peak Ratio']), thresholdFlow: num(p['Threshold Flow']), initialDischarge: num(p['Initial Baseflow'] ?? p['Initial Discharge']), monthly: b.lines.filter(([k]) => k === 'Monthly rate').map(([, v]) => num(v)) };
       } else if (b.kind === 'Reach') {
         el.route = { method: p['Route'], K: num(p['Muskingum K']), X: num(p['Muskingum x']), steps: num(p['Muskingum Steps'] || 1), lag: num(p['Lag']), table: p['Storage Outflow Table Name'], subreaches: num(p['Number of Reaches'] || 1), initial: p['Initial Variable'], initialOutflow: num(p['Initial Outflow']) };
       } else if (b.kind === 'Reservoir') {
@@ -1859,7 +1904,7 @@
       }
       if (dss) {
         const s = dssSeries(dss, rec.pathname);
-        if (s) { rec.values = Array.from(s.values); rec.interval = rec.duration || s.interval; }
+        if (s) { rec.values = Array.from(s.values); rec.interval = rec.duration || s.interval; rec.dataInterval = s.interval; }
       }
       if (!rec.values) rec.error = msg('needFile', rec.file);
       out[b.name] = rec;
@@ -1999,7 +2044,7 @@
           if (!sma) throw new Error(msg('unsupported', 'Baseflow', 'Linear Reservoir + ' + e.loss.method));
           base = linearReservoir(sma.gwOut, e.area, e.baseflow, dtH, u, e.sma.impervious);
           total = Float64Array.from(direct, (v, i) => v + base[i]);
-        } else ({ total, base } = baseflow(direct, e.area, e.baseflow, dtH));
+        } else ({ total, base } = baseflow(direct, e.area, e.baseflow, dtH, times));
         const sum = a => a.reduce((s, v) => s + v, 0);
         r = { kind: e.kind, area: e.area, precip: p, loss, excess, direct, base, outflow: total, sma, totals: { precip: sum(p), loss: sum(loss), excess: sum(excess) } };
       } else if (e.kind === 'Reach') {

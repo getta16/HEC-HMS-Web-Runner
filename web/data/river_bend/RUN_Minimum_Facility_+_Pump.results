@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RunResults>
+  <RunName>Minimum Facility + Pump</RunName>
+  <Description>Basin: Minimum Facility + Pump , Meteorology: Historic Precipitation , Control: 1951</Description>
+  <ExecutionTime>01Apr2021, 22:51:22</ExecutionTime>
+  <StartTime>01Jan1951, 01:00</StartTime>
+  <EndTime>31Dec1951, 23:00</EndTime>
+  <BasinElement name="Upper" type="Subbasin">
+    <ExecutionTime>01Apr2021, 22:51:22</ExecutionTime>
+    <SubbasinArea area="7.5" units="MI2" />
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="7.5" units="MI2" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Upper/FLOW//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Upper/FLOW-CUMULATIVE//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Incremental Precip" displayString="Precipitation" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Upper/PRECIP-INC//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Precip" displayString="Cumulative Precipitation" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Upper/PRECIP-CUM//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Infiltration" displayString="Soil Infiltration" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Upper/INFILTRATION//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Soil Percolation" displayString="Soil Percolation" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Upper/PERC-SOIL//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Moisture Deficit" displayString="Moisture Deficit" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Upper/MOISTURE DEFICIT//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Soil Saturation Fraction" displayString="Saturation Fraction" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Upper/SATURATION FRACTION//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Excess" displayString="Excess Precipitation" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Upper/PRECIP-EXCESS//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Excess" displayString="Cumulative Excess Precipitation" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Upper/PRECIP-EXCESS-CUM//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Loss" displayString="Precipitation Loss" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Upper/PRECIP-LOSS//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Loss" displayString="Cumulative Precipitation Loss" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Upper/PRECIP-LOSS-CUM//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Direct Runoff" displayString="Direct Runoff" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Upper/FLOW-DIRECT//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Baseflow" displayString="Baseflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Upper/FLOW-BASE//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="0.0000000" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.0000000" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="1185.1802593" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="21Sep1951, 22:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="12946.4002076" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="32.3660019" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="17.8846264" units="CFS" />
+      <StatisticMeasure type="Direct Flow Minimum" displayString="Minimum Direct Flow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Direct Flow Minimum Time" displayString="Time of Minimum Direct Flow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Direct Flow Maximum" displayString="Maximum Direct Flow" value="1185.1802593" units="CFS" />
+      <StatisticMeasure type="Direct Flow Maximum Time" displayString="Time of Maximum Direct Flow" value="21Sep1951, 22:00" />
+      <StatisticMeasure type="Direct Flow Volume" displayString="Direct Flow Volume" value="12946.4002076" units="AC-FT" />
+      <StatisticMeasure type="Direct Flow Depth" displayString="Direct Flow Depth" value="32.3660019" units="IN" />
+      <StatisticMeasure type="Direct Flow Average" displayString="Direct Flow Average" value="17.8846264" units="CFS" />
+      <StatisticMeasure type="Baseflow Minimum" displayString="Minimum Baseflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Baseflow Minimum Time" displayString="Time of Minimum Baseflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Baseflow Maximum" displayString="Maximum Baseflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Baseflow Maximum Time" displayString="Time of Maximum Baseflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Baseflow Volume" displayString="Baseflow Volume" value="0.0000000" units="AC-FT" />
+      <StatisticMeasure type="Baseflow Depth" displayString="Baseflow Depth" value="0.0000000" units="IN" />
+      <StatisticMeasure type="Baseflow Average" displayString="Baseflow Average" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Precipitation Maximum" displayString="Maximum Precipitation" value="1.0500001" units="IN" />
+      <StatisticMeasure type="Precipitation Maximum Time" displayString="Time of Maximum Precipitation" value="21Sep1951, 17:00" />
+      <StatisticMeasure type="Precipitation Total" displayString="Precipitation Total" value="42.2600020" units="IN" />
+      <StatisticMeasure type="Precipitation Volume" displayString="Precipitation Volume" value="16904.0000934" units="AC-FT" />
+      <StatisticMeasure type="Loss Maximum" displayString="Maximum Loss" value="0.0170000" units="IN" />
+      <StatisticMeasure type="Loss Maximum Time" displayString="Time of Maximum Loss" value="10May1951, 09:00" />
+      <StatisticMeasure type="Loss Total" displayString="Loss Total" value="9.8940001" units="IN" />
+      <StatisticMeasure type="Loss Volume" displayString="Loss Volume" value="3957.5998858" units="AC-FT" />
+      <StatisticMeasure type="Excess Maximum" displayString="Maximum Excess" value="1.0330001" units="IN" />
+      <StatisticMeasure type="Excess Maximum Time" displayString="Time of Maximum Excess" value="21Sep1951, 17:00" />
+      <StatisticMeasure type="Excess Total" displayString="Excess Total" value="32.3660019" units="IN" />
+      <StatisticMeasure type="Excess Volume" displayString="Excess Volume" value="12946.4002076" units="AC-FT" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="Local" type="Subbasin">
+    <ExecutionTime>01Apr2021, 22:51:22</ExecutionTime>
+    <SubbasinArea area="5" units="MI2" />
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="5" units="MI2" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local/FLOW//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local/FLOW-CUMULATIVE//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Incremental Precip" displayString="Precipitation" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local/PRECIP-INC//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Precip" displayString="Cumulative Precipitation" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local/PRECIP-CUM//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Infiltration" displayString="Soil Infiltration" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local/INFILTRATION//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Soil Percolation" displayString="Soil Percolation" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local/PERC-SOIL//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Moisture Deficit" displayString="Moisture Deficit" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local/MOISTURE DEFICIT//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Soil Saturation Fraction" displayString="Saturation Fraction" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local/SATURATION FRACTION//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Excess" displayString="Excess Precipitation" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local/PRECIP-EXCESS//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Excess" displayString="Cumulative Excess Precipitation" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local/PRECIP-EXCESS-CUM//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Precip Loss" displayString="Precipitation Loss" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local/PRECIP-LOSS//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Loss" displayString="Cumulative Precipitation Loss" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local/PRECIP-LOSS-CUM//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Direct Runoff" displayString="Direct Runoff" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local/FLOW-DIRECT//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Baseflow" displayString="Baseflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local/FLOW-BASE//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="0.0000000" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="0.0000000" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="1560.0268226" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="06Aug1951, 08:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="9568.5334165" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="35.8820018" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="13.2183188" units="CFS" />
+      <StatisticMeasure type="Direct Flow Minimum" displayString="Minimum Direct Flow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Direct Flow Minimum Time" displayString="Time of Minimum Direct Flow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Direct Flow Maximum" displayString="Maximum Direct Flow" value="1560.0268226" units="CFS" />
+      <StatisticMeasure type="Direct Flow Maximum Time" displayString="Time of Maximum Direct Flow" value="06Aug1951, 08:00" />
+      <StatisticMeasure type="Direct Flow Volume" displayString="Direct Flow Volume" value="9568.5334165" units="AC-FT" />
+      <StatisticMeasure type="Direct Flow Depth" displayString="Direct Flow Depth" value="35.8820018" units="IN" />
+      <StatisticMeasure type="Direct Flow Average" displayString="Direct Flow Average" value="13.2183188" units="CFS" />
+      <StatisticMeasure type="Baseflow Minimum" displayString="Minimum Baseflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Baseflow Minimum Time" displayString="Time of Minimum Baseflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Baseflow Maximum" displayString="Maximum Baseflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Baseflow Maximum Time" displayString="Time of Maximum Baseflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Baseflow Volume" displayString="Baseflow Volume" value="0.0000000" units="AC-FT" />
+      <StatisticMeasure type="Baseflow Depth" displayString="Baseflow Depth" value="0.0000000" units="IN" />
+      <StatisticMeasure type="Baseflow Average" displayString="Baseflow Average" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Precipitation Maximum" displayString="Maximum Precipitation" value="1.5400001" units="IN" />
+      <StatisticMeasure type="Precipitation Maximum Time" displayString="Time of Maximum Precipitation" value="06Aug1951, 04:00" />
+      <StatisticMeasure type="Precipitation Total" displayString="Precipitation Total" value="46.1700020" units="IN" />
+      <StatisticMeasure type="Precipitation Volume" displayString="Precipitation Volume" value="12312.0000079" units="AC-FT" />
+      <StatisticMeasure type="Loss Maximum" displayString="Maximum Loss" value="0.0160000" units="IN" />
+      <StatisticMeasure type="Loss Maximum Time" displayString="Time of Maximum Loss" value="02Jan1951, 03:00" />
+      <StatisticMeasure type="Loss Total" displayString="Loss Total" value="10.2880002" units="IN" />
+      <StatisticMeasure type="Loss Volume" displayString="Loss Volume" value="2743.4665915" units="AC-FT" />
+      <StatisticMeasure type="Excess Maximum" displayString="Maximum Excess" value="1.5240001" units="IN" />
+      <StatisticMeasure type="Excess Maximum Time" displayString="Time of Maximum Excess" value="06Aug1951, 04:00" />
+      <StatisticMeasure type="Excess Total" displayString="Excess Total" value="35.8820018" units="IN" />
+      <StatisticMeasure type="Excess Volume" displayString="Excess Volume" value="9568.5334165" units="AC-FT" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="Local Route" type="Reach">
+    <ExecutionTime>01Apr2021, 22:51:22</ExecutionTime>
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="7.5" units="MI2" />
+    <FlowLink upstreamName="J1" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local Route/FLOW//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local Route/FLOW-CUMULATIVE//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Combined Inflow" displayString="Combined Inflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Local Route/FLOW-COMBINE//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="1185.1802593" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="21Sep1951, 22:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="12946.4002076" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="32.3660019" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="17.8846264" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="1095.2618002" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="22Sep1951, 03:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="12946.4002076" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="32.3660019" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="17.8846264" units="CFS" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="J1" type="Junction">
+    <ExecutionTime>01Apr2021, 22:51:22</ExecutionTime>
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="7.5" units="MI2" />
+    <FlowLink upstreamName="Upper" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//J1/FLOW//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//J1/FLOW-CUMULATIVE//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Combined Inflow" displayString="Combined Inflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//J1/FLOW-COMBINE//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="1185.1802593" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="21Sep1951, 22:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="12946.4002076" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="32.3660019" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="17.8846264" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="1185.1802593" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="21Sep1951, 22:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="12946.4002076" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="32.3660019" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="17.8846264" units="CFS" />
+    </Statistics>
+  </BasinElement>
+  <BasinElement name="Detention Basin" type="Reservoir">
+    <ExecutionTime>01Apr2021, 22:51:22</ExecutionTime>
+    <UnitSystem>English</UnitSystem>
+    <IsComputationPoint>No</IsComputationPoint>
+    <DrainageArea area="12.5" units="MI2" />
+    <FlowLink upstreamName="Local" />
+    <FlowLink upstreamName="Local Route" />
+    <Hydrology>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Detention Basin/FLOW//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Cumulative Outflow" displayString="Cumulative Outflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Detention Basin/FLOW-CUMULATIVE//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Combined Inflow" displayString="Combined Inflow" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Detention Basin/FLOW-COMBINE//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Storage" displayString="Storage" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Detention Basin/STORAGE//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Reservoir Elevation" displayString="Pool Elevation" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Detention Basin/ELEVATION//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Tailwater Stage" displayString="Tailwater Stage" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Detention Basin/STAGE-TAILWATER//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Outlet 1" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Detention Basin-OUTLET-1/FLOW//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+      <TimeSeries>
+        <TimeSeriesType type="Outflow" displayString="Pump 1" />
+        <DssFileName>Minimum_Facility_+_Pump.dss</DssFileName>
+        <DssPathname>//Detention Basin-PUMP-1/FLOW//1HOUR/RUN:Minimum Facility + Pump/</DssPathname>
+      </TimeSeries>
+    </Hydrology>
+    <Sediment />
+    <WaterQuality />
+    <Statistics>
+      <StatisticMeasure type="Inflow Minimum" displayString="Minimum Inflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Inflow Minimum Time" displayString="Time of Minimum Inflow" value="01Jan1951, 01:00" />
+      <StatisticMeasure type="Inflow Maximum" displayString="Maximum Inflow" value="1777.7070133" units="CFS" />
+      <StatisticMeasure type="Inflow Maximum Time" displayString="Time of Maximum Inflow" value="06Aug1951, 08:00" />
+      <StatisticMeasure type="Inflow Volume" displayString="Inflow Volume" value="22514.9336241" units="AC-FT" />
+      <StatisticMeasure type="Inflow Depth" displayString="Inflow Depth" value="33.7724019" units="IN" />
+      <StatisticMeasure type="Inflow Average" displayString="Inflow Average" value="31.1029452" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum" displayString="Minimum Outflow" value="0.0000000" units="CFS" />
+      <StatisticMeasure type="Outflow Minimum Time" displayString="Time of Minimum Outflow" value="04Jan1951, 01:00" />
+      <StatisticMeasure type="Outflow Maximum" displayString="Maximum Outflow" value="372.7153834" units="CFS" />
+      <StatisticMeasure type="Outflow Maximum Time" displayString="Time of Maximum Outflow" value="13May1951, 01:00" />
+      <StatisticMeasure type="Outflow Volume" displayString="Outflow Volume" value="22574.7244529" units="AC-FT" />
+      <StatisticMeasure type="Outflow Depth" displayString="Outflow Depth" value="33.8620881" units="IN" />
+      <StatisticMeasure type="Outflow Average" displayString="Outflow Average" value="31.1902171" units="CFS" />
+      <StatisticMeasure type="Storage Minimum" displayString="Minimum Storage" value="0.0051142" units="AC-FT" />
+      <StatisticMeasure type="Storage Minimum Time" displayString="Time of Minimum Storage" value="20Jan1951, 11:00" />
+      <StatisticMeasure type="Storage Maximum" displayString="Maximum Storage" value="1770.7800360" units="AC-FT" />
+      <StatisticMeasure type="Storage Maximum Time" displayString="Time of Maximum Storage" value="11May1951, 09:00" />
+      <StatisticMeasure type="Pool Elevation Minimum" displayString="Minimum Pool Elevation" value="91.0025571" units="FT" />
+      <StatisticMeasure type="Pool Elevation Minimum Time" displayString="Time of Minimum Pool Elevation" value="20Jan1951, 11:00" />
+      <StatisticMeasure type="Pool Elevation Maximum" displayString="Maximum Pool Elevation" value="100.6518858" units="FT" />
+      <StatisticMeasure type="Pool Elevation Maximum Time" displayString="Time of Maximum Pool Elevation" value="11May1951, 09:00" />
+    </Statistics>
+  </BasinElement>
+</RunResults>
+

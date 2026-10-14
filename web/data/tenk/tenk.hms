@@ -1,0 +1,27 @@
+Project: tenk
+     Description: Illinois River Watershed above Tenkiller Lake
+     Version: 4.13
+     Filepath Separator: \
+     DSS File Name: tenk.dss
+     Time Zone ID: America/Los_Angeles
+End:
+
+Precipitation: Stage3-HRAP
+     Filename: Stage3_HRAP.met
+     Description: NWS Stage III radar rainfall data
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:37
+End:
+
+Basin: Tenk 1
+     Filename: Tenk_1.basin
+     Description: 4 ModClark Subbasins
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37
+End:
+
+Control: Jan 96
+     FileName: Jan_96.control
+     Description: Storm of 17 Jan. 1996
+End:
+

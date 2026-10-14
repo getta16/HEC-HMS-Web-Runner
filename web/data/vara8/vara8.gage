@@ -1,0 +1,21 @@
+Gage Manager: 
+     Gage Manager: 
+     Version: 4.13
+     Filepath Separator: \
+End: 
+
+Gage: Auto1
+     Gage: Auto1
+     Gage Type: Precipitation
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 03:57:13
+     Reference Height Units: Meters
+     Reference Height: 9.9999
+     Data Source Type: Manual Entry
+     Filename: vara8.dss
+     Pathname: //Auto1/PRECIP-INC//1HOUR/GAGE/
+     Variant: Variant-1
+       Start Time: 8 September 2026, 07:00
+       End Time: 9 September 2026, 07:00
+     End Variant: Variant-1
+End: 

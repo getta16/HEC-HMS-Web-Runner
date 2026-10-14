@@ -1,0 +1,474 @@
+Basin: Tenk 1
+     Description: 4 ModClark Subbasins
+     Last Modified Date: 28 March 2011
+     Last Modified Time: 16:58:25
+     Version: 4.13
+     Filepath Separator: \
+     Unit System: English
+     Missing Flow To Zero: No
+     Enable Flow Ratio: No
+     Compute Local Flow At Junctions: No
+     Unregulated Output Required: No
+
+     Enable Sediment Routing: No
+End:
+
+Subbasin: 86
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 03:04:30
+     Canvas X: 359.565
+     Canvas Y: 367.718
+     Label X: 16.0
+     Label Y: 0.0
+     Area: 635
+     Downstream: Watts
+
+     Discretization: File-Specified
+     File: regions\hrapcells
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: Initial+Constant
+     Percent Impervious Area: 0.0
+     Initial Loss: 1.0
+     Constant Loss Rate: 0.2
+
+     Transform: Modified Clark
+     Mod Clark Method: Specified
+     Time of Concentration: 24
+     Storage Coefficient: 11.6
+
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Baseflow: 290
+     Threshold Flow to Peak Ratio: 0.2
+End:
+
+Junction: Watts
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37:28
+     Canvas X: 249.20839721194494
+     Canvas Y: 358.3705480563026
+     Label X: 10.0
+     Label Y: -23.0
+     Computation Point: Yes
+     Observed Hydrograph Gage: WATT
+     Downstream: R-1
+End:
+
+Reach: R-1
+     Description: Watts to Flint Creek
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37:28
+     Canvas X: 172.09568990399248
+     Canvas Y: 376.87151682667917
+     From Canvas X: 249.20839721194494
+     From Canvas Y: 358.3705480563026
+     Label X: -14.0
+     Label Y: -19.0
+     Downstream: R-2
+
+     Route: Modified Puls
+     Initial Variable: Combined Inflow
+     Number of Reaches: 6
+     Storage Outflow Table Name: Table 4
+     Channel Loss: None
+End:
+
+Reach: R-2
+     Description: Flint Creek to Tahlequah
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37:32
+     Canvas X: 88.71341006957957
+     Canvas Y: 256.86831294464446
+     From Canvas X: 172.09568990399248
+     From Canvas Y: 376.87151682667917
+     Label X: -21.0
+     Label Y: 21.0
+     Downstream: Tahlequah
+
+     Route: Modified Puls
+     Initial Variable: Combined Inflow
+     Number of Reaches: 20
+     Storage Outflow Table Name: Table 3
+     Channel Loss: None
+End:
+
+Subbasin: 85
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37:25
+     Canvas X: 218.84448072555148
+     Canvas Y: 400.8800311372534
+     Label X: 16.0
+     Label Y: 0.0
+     Area: 324
+     Downstream: Tahlequah
+
+     Discretization: File-Specified
+     File: regions\hrapcells
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: Initial+Constant
+     Percent Impervious Area: 0.0
+     Initial Loss: 1.0
+     Constant Loss Rate: 0.2
+
+     Transform: Modified Clark
+     Mod Clark Method: Specified
+     Time of Concentration: 30
+     Storage Coefficient: 15.5
+
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Baseflow: 100
+     Threshold Flow to Peak Ratio: 0.15
+End:
+
+Junction: Tahlequah
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37:32
+     Canvas X: 88.71341006957957
+     Canvas Y: 256.86831294464446
+     Label X: -76.0
+     Label Y: -2.0
+     Computation Point: Yes
+     Observed Hydrograph Gage: TAHL
+     Downstream: R-3
+End:
+
+Reach: R-3
+     Description: Tahlequah to confluence with Barron Fork
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37:34
+     Canvas X: 91.316031482699
+     Canvas Y: 197.00802044289736
+     From Canvas X: 88.71341006957957
+     From Canvas Y: 256.86831294464446
+     Label X: -33.0
+     Label Y: -6.0
+     Downstream: conf
+
+     Route: Modified Puls
+     Initial Variable: Combined Inflow
+     Number of Reaches: 4
+     Storage Outflow Table Name: Table 1
+     Channel Loss: None
+End:
+
+Subbasin: 113
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37:48
+     Canvas X: 238.7979115594672
+     Canvas Y: 237.78242258176857
+     Label X: 16.0
+     Label Y: 0.0
+     Area: 307
+     Downstream: Eldon
+
+     Discretization: File-Specified
+     File: regions\hrapcells
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: Initial+Constant
+     Percent Impervious Area: 0.0
+     Initial Loss: 1.3
+     Constant Loss Rate: 0.04
+
+     Transform: Modified Clark
+     Mod Clark Method: Specified
+     Time of Concentration: 18
+     Storage Coefficient: 8.7
+
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Baseflow: 150
+     Threshold Flow to Peak Ratio: 0.15
+End:
+
+Junction: Eldon
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37:33
+     Canvas X: 135.56059550572945
+     Canvas Y: 256.86831294464446
+     Label X: 12.0
+     Label Y: 9.0
+     Computation Point: Yes
+     Observed Hydrograph Gage: ELDN
+     Downstream: R-4
+End:
+
+Reach: R-4
+     Description: Eldon to Illinois River confluence
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37:34
+     Canvas X: 91.316031482699
+     Canvas Y: 197.00802044289736
+     From Canvas X: 135.56059550572945
+     From Canvas Y: 256.86831294464446
+     Label X: 12.0
+     Label Y: -4.0
+     Downstream: conf
+
+     Route: Modified Puls
+     Initial Variable: Combined Inflow
+     Number of Reaches: 4
+     Storage Outflow Table Name: Table 2
+     Channel Loss: None
+End:
+
+Junction: conf
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37:34
+     Canvas X: 91.316031482699
+     Canvas Y: 197.00802044289736
+     Label X: 14.0
+     Label Y: -7.0
+     Downstream: R-5
+End:
+
+Reach: R-5
+     Description: Barron Fork confluence to dam
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37:43
+     Canvas X: 22.780334270553794
+     Canvas Y: 66.00940931588565
+     From Canvas X: 91.316031482699
+     From Canvas Y: 197.00802044289736
+     Label X: -29.0
+     Label Y: 6.0
+     Downstream: Tenkiller
+
+     Route: Lag
+     Initial Variable: Combined Inflow
+     Lag: 120
+     Channel Loss: None
+End:
+
+Subbasin: 127
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 03:04:30
+     Canvas X: 126.613
+     Canvas Y: 165.432
+     Label X: 16.0
+     Label Y: 0.0
+     Area: 345
+     Downstream: Tenkiller
+
+     Discretization: File-Specified
+     File: regions\hrapcells
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: Initial+Constant
+     Percent Impervious Area: 10
+     Initial Loss: 1.15
+     Constant Loss Rate: 0.15
+
+     Transform: Modified Clark
+     Mod Clark Method: Specified
+     Time of Concentration: 1
+     Storage Coefficient: 7
+
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Baseflow: 80
+     Threshold Flow to Peak Ratio: 0.15
+End:
+
+Junction: Tenkiller
+     Description: Inflow to Tenkiller Lake
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37:43
+     Canvas X: 22.780334270553794
+     Canvas Y: 66.00940931588565
+     Label X: 16.0
+     Label Y: 0.0
+     Computation Point: Yes
+     Observed Hydrograph Gage: TENK
+End:
+
+Basin Layer Properties:
+     Element Layer:
+          Name: Icons
+          Layer shown: Yes
+     End Layer:
+     Map Layer:
+          Filename: maps\rivers.shp
+          Layer:0
+          Display name: rivers
+          Minimum Scale: Undefined
+          Maximum Scale: Undefined
+          Layer shown: Yes
+     End Layer:
+     Map Layer:
+          Filename: maps\subbasins.shp
+          Layer:0
+          Display name: subbasins
+          Minimum Scale: Undefined
+          Maximum Scale: Undefined
+          Layer shown: Yes
+     End Layer:
+End:
+
+Basin Spatial Properties:
+End:
+
+Basin Schematic Properties:
+     Last View N: 500.0
+     Last View S: 0.0
+     Last View W: 0.0
+     Last View E: 460.634
+     Maximum View N: 500.0
+     Maximum View S: 0.0
+     Maximum View W: 0.0
+     Maximum View E: 460.634
+     Extent Method: Elements
+     Buffer: 0
+     Draw Icons: Yes
+     Draw Icon Labels: Name
+     Draw Map Objects: No
+     Draw Gridlines: Yes
+     Draw Flow Direction: No
+     Draw HillShade Layer: Yes
+     Draw Elevation Layer: Yes
+     Elevation Layer Color Palette: Default
+     Ignore Elevation Color Ramp Scale: No
+     Use Interpolated Color Ramp for Elevation Layer: Yes
+     Color Ramp Opacity Level for Elevation Layer: 33.0
+     Fix Element Locations: No
+     Fix Hydrologic Order: No
+End:
+
+Computation Point: Watts
+     Parameter Set: 1
+     End Parameter Set:
+     Parameter Set: 2
+     End Parameter Set:
+     Parameter Set: 3
+     End Parameter Set:
+     Parameter Set: 4
+     End Parameter Set:
+     Parameter Set: 5
+     End Parameter Set:
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+End Computation Point: 
+
+Computation Point: Tahlequah
+     Parameter Set: 1
+     End Parameter Set:
+     Parameter Set: 2
+     End Parameter Set:
+     Parameter Set: 3
+     End Parameter Set:
+     Parameter Set: 4
+     End Parameter Set:
+     Parameter Set: 5
+     End Parameter Set:
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+End Computation Point: 
+
+Computation Point: Eldon
+     Parameter Set: 1
+     End Parameter Set:
+     Parameter Set: 2
+     End Parameter Set:
+     Parameter Set: 3
+     End Parameter Set:
+     Parameter Set: 4
+     End Parameter Set:
+     Parameter Set: 5
+     End Parameter Set:
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+End Computation Point: 
+
+Computation Point: Tenkiller
+     Parameter Set: 1
+     End Parameter Set:
+     Parameter Set: 2
+     End Parameter Set:
+     Parameter Set: 3
+     End Parameter Set:
+     Parameter Set: 4
+     End Parameter Set:
+     Parameter Set: 5
+     End Parameter Set:
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+End Computation Point: 

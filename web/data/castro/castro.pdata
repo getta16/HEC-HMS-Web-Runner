@@ -1,0 +1,18 @@
+Paired Data Manager: castro
+     Version: 4.13
+     Filepath Separator: \
+End:
+
+Table: Table 1
+     Table Type: Storage-Outflow
+     Description: Reach-2 (Castro 1)
+     Last Modified Date: 23 June 2005
+     Last Modified Time: 14:50:35
+     X-Units: ACRE-FT
+     Y-Units: CFS
+     Use External DSS File: NO
+     DSS File: castro.dss
+     Pathname: //Table 1/STORAGE-FLOW///TABLE/
+     Interpolation: Linear Interpolation
+End:
+

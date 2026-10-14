@@ -1,0 +1,57 @@
+Gage Manager: river bend
+     Gage Manager: river bend
+     Version: 4.13
+     Filepath Separator: \
+End: 
+
+Gage: Local
+     Gage: Local
+     Gage Type: Precipitation
+     Last Modified Date: 23 October 2008
+     Last Modified Time: 16:41:20
+     Reference Height Units: Feet
+     Reference Height: 32.808
+     Data Source Type: External DSS
+     Filename: green_river.dss
+     Pathname: //GAGE2/PRECIP-INC/01OCT1950/1HOUR/OBS/
+     Variant: Variant-1
+       Start Time: 1 January 1951, 01:00
+       End Time: 1 January 1960, 00:00
+       Start Time: 1 January 2000, 00:00
+       End Time: 2 January 2000, 00:00
+     End Variant: Variant-1
+End: 
+
+Gage: Green River
+     Gage: Green River
+     Gage Type: Stage
+     Last Modified Date: 23 October 2008
+     Last Modified Time: 16:41:48
+     Reference Height Units: Feet
+     Reference Height: 32.808
+     Data Source Type: External DSS
+     Filename: green_river.dss
+     Pathname: //GREEN RIVER/STAGE/01JAN1951/1DAY/COMP/
+     Variant: Variant-1
+       Start Time: 1 January 2000, 00:00
+       End Time: 2 January 2000, 00:00
+     End Variant: Variant-1
+End: 
+
+Gage: Upper
+     Gage: Upper
+     Gage Type: Precipitation
+     Last Modified Date: 23 October 2008
+     Last Modified Time: 16:41:34
+     Reference Height Units: Feet
+     Reference Height: 32.808
+     Data Source Type: External DSS
+     Filename: green_river.dss
+     Pathname: //GAGE1/PRECIP-INC/01OCT1950/1HOUR/OBS/
+     Variant: Variant-1
+       Start Time: 1 January 1951, 01:00
+       End Time: 1 January 1960, 00:00
+       Start Time: 1 January 2000, 00:00
+       End Time: 2 January 2000, 00:00
+     End Variant: Variant-1
+End: 

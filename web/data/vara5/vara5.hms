@@ -1,0 +1,27 @@
+Project: vara5
+     Description: 
+     Version: 4.13
+     Filepath Separator: \
+     DSS File Name: vara5.dss
+     Time Zone ID: Asia/Bangkok
+End:
+
+Precipitation: Met 1
+     Filename: Met_1.met
+     Description: 
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 04:43
+End:
+
+Basin: SEP4
+     Filename: SEP4.basin
+     Description: 
+     Last Modified Date: 22 September 2026
+     Last Modified Time: 06:26
+End:
+
+Control: Control 1
+     FileName: Control_1.control
+     Description: 
+End:
+

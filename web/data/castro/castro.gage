@@ -1,0 +1,39 @@
+Gage Manager: castro
+     Gage Manager: castro
+     Version: 4.13
+     Filepath Separator: \
+End: 
+
+Gage: Fire Dept.
+     Gage: Fire Dept.
+     Gage Type: Precipitation
+     Description: Recording precipitation gage
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 02:54:56
+     Reference Height Units: Feet
+     Reference Height: 32.808
+     Data Source Type: External DSS
+     Filename: castro.dss
+     Pathname: /CASTRO VALLEY/FIRE DEPT./PRECIP-INC//10MIN/OBS/
+     Variant: Variant-1
+       Start Time: 16 January 1973, 03:10
+       End Time: 16 January 1973, 09:50
+     End Variant: Variant-1
+End: 
+
+Gage: Out
+     Gage: Out
+     Gage Type: Flow
+     Description: Recording gage at outlet
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:57:58
+     Reference Height Units: Feet
+     Reference Height: 32.808
+     Data Source Type: External DSS
+     Filename: castro.dss
+     Pathname: /CASTRO VALLEY/OUTLET/FLOW//10MIN/OBS/
+     Variant: Variant-1
+       Start Time: 16 January 1973, 03:00
+       End Time: 16 January 1973, 13:00
+     End Variant: Variant-1
+End: 

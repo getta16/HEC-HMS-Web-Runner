@@ -1,0 +1,214 @@
+Basin: Minimum Facility + Pump
+     Last Modified Date: 28 March 2011
+     Last Modified Time: 15:46:37
+     Version: 4.13
+     Filepath Separator: \
+     Unit System: English
+     Missing Flow To Zero: No
+     Enable Flow Ratio: No
+     Compute Local Flow At Junctions: No
+     Unregulated Output Required: No
+
+     Enable Sediment Routing: No
+End:
+
+Subbasin: Upper
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 03:02:56
+     Latitude Degrees:  35.725320804681814
+     Longitude Degrees: -83.97672309975268
+     Canvas X: 773463.2250120105
+     Canvas Y: 3957698.222415938
+     Area: 7.5
+     Downstream: J1
+
+     Discretization: None
+     File: Minimum_Facility_+_Pump.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: Simple
+
+     Surface: None
+
+     LossRate: Deficit Constant
+     Percent Impervious Area: 15
+     Initial Deficit: 0
+     Maximum Deficit: 0.5
+     Percolation Rate: 0.02
+     Recovery Factor: 1.0
+
+     Transform: SCS
+     Lag: 252
+     Unitgraph Type: STANDARD
+
+     Baseflow: None
+End:
+
+Subbasin: Local
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 03:02:56
+     Latitude Degrees:  35.723321521570924
+     Longitude Degrees: -83.98221588339209
+     Canvas X: 772973.0697776066
+     Canvas Y: 3957461.071712862
+     Area: 5
+     Downstream: Detention Basin
+
+     Discretization: None
+     File: Minimum_Facility_+_Pump.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: Simple
+
+     Surface: None
+
+     LossRate: Deficit Constant
+     Percent Impervious Area: 20
+     Initial Deficit: 0
+     Maximum Deficit: 0.5
+     Percolation Rate: 0.02
+     Recovery Factor: 1.0
+
+     Transform: SCS
+     Lag: 210
+     Unitgraph Type: STANDARD
+
+     Baseflow: None
+End:
+
+Reach: Local Route
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:38:23
+     Canvas X: 772762.9772785881
+     Canvas Y: 3957375.068063617
+     From Canvas X: 773135.2738277772
+     From Canvas Y: 3957609.685287374
+     Downstream: Detention Basin
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 5
+     Muskingum x: 0.4
+     Muskingum Steps: 5
+     Channel Loss: None
+End:
+
+Junction: J1
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:38:23
+     Canvas X: 773135.2738277772
+     Canvas Y: 3957609.685287374
+     Downstream: Local Route
+End:
+
+Reservoir: Detention Basin
+     Last Modified Date: 1 April 2021
+     Last Modified Time: 22:51:22
+     Canvas X: 772762.9772785881
+     Canvas Y: 3957375.068063617
+
+     Route: Controlled Outflow
+     Routing Curve: Elevation-Storage
+     Initial Elevation: 95
+     Elevation-Storage Table: Detention Basin Elev-Stor
+     Adaptive Control: Off
+     Main Tailwater Condition: Specified Stage
+     Main Tailwater Stage Gage Name: Green River
+     Auxiliary Tailwater Condition: None
+
+     Conduit: Culvert
+     Conduit Outlet: Main
+     Culvert Shape: Box
+     Chart Number: 8
+     Scale Number: 1
+     Solution Control: Automatic
+     Rise: 4
+     Span: 4
+     Number Barrels: 1
+     Culvert Length: 200
+     Entrance Loss Coefficient: 0.4
+     Exit Loss Coefficient: 1.0
+     Top Manning's n: 0.012
+     Inlet Invert Elevation: 91
+     Outlet Invert Elevation: 89
+     End Conduit:
+
+     Pump: Head-Discharge Pump
+     Pump Outlet: Main
+     Number Of Pumps: 1
+     Intake Elevation: 97
+     Discharge Elevation: 101.5
+     Switch-On Elevation: 100.0
+     Switch-Off Elevation: 98
+     Minimum Run Time: 
+     Minimum Rest Time: 
+     Head-Discharge Table Name: Pump Head-Discharge
+     Equipment Head Loss: 1.15
+     End Pump:
+
+     Evaporation Method: Zero Evaporation
+     End Evaporation:
+End:
+
+Basin Layer Properties:
+     Element Layer:
+          Name: Icons
+          Layer shown: Yes
+     End Layer:
+     Element Layer:
+          Name: Subbasins
+          Layer shown: Yes
+     End Layer:
+     Discretization Layer:
+          Layer shown: Yes
+     End Layer:
+     2D Connection Layer:
+          Layer shown: Yes
+     End Layer:
+     Map Layer:
+          Filename: maps\GreenRiver.shp
+          Layer:0
+          Display name: GreenRiver
+          Minimum Scale: Undefined
+          Maximum Scale: 2147483647
+          Layer shown: Yes
+     End Layer:
+End:
+
+Basin Spatial Properties:
+     Coordinate System: PROJCS["NAD83 / UTM zone 16N",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101,AUTHORITY["EPSG","7019"]],AUTHORITY["EPSG","6269"]],PRIMEM["Greenwich",0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-87],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["Easting",EAST],AXIS["Northing",NORTH]]
+End:
+
+Basin Schematic Properties:
+     Coordinate System: PROJCS["NAD83 / UTM zone 16N",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101,AUTHORITY["EPSG","7019"]],AUTHORITY["EPSG","6269"]],PRIMEM["Greenwich",0],UNIT["Degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-87],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AXIS["Easting",EAST],AXIS["Northing",NORTH]]
+     Last View N: 3958336.7529
+     Last View S: 3956894.0364
+     Last View W: 772403.0499
+     Last View E: 774044.4876
+     Maximum View N: 3957698.222415938
+     Maximum View S: 3957375.068063617
+     Maximum View W: 772762.9772785881
+     Maximum View E: 773463.2250120105
+     Extent Method: Elements
+     Buffer: 0
+     Draw Icons: Yes
+     Draw Icon Labels: Name
+     Draw Map Objects: Yes
+     Draw Gridlines: No
+     Draw Flow Direction: No
+     Draw HillShade Layer: Yes
+     Draw Elevation Layer: Yes
+     Elevation Layer Color Palette: Default
+     Ignore Elevation Color Ramp Scale: No
+     Use Interpolated Color Ramp for Elevation Layer: Yes
+     Color Ramp Opacity Level for Elevation Layer: 33.0
+     Fix Element Locations: No
+     Fix Hydrologic Order: No
+     Map: hec.map.aishape.AiShapeMap
+     Map File Name: maps\GreenRiver.shp
+     Minimum Scale: -2147483648
+     Maximum Scale: 2147483647
+     Map Shown: Yes
+End:

@@ -1,0 +1,81 @@
+Meteorology: Met 1
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 03:28:09
+     Version: 4.13
+     Unit System: Metric
+     Set Missing Data to Default: Yes
+     Precipitation Method: Weighted Gages
+     Air Temperature Method: None
+     Atmospheric Pressure Method: None
+     Dew Point Method: None
+     Wind Speed Method: None
+     Shortwave Radiation Method: None
+     Longwave Radiation Method: None
+     Snowmelt Method: None
+     Evapotranspiration Method: No Evapotranspiration
+     Use Basin Model: SEP4
+End:
+
+Gage: K01
+     Type: Total Storm
+     Total Precipitation: 150
+End:
+
+Gage: K02
+     Type: Total Storm
+     Total Precipitation: 250
+End:
+
+Gage: Auto1
+     Type: Recording
+End:
+
+Precip Method Parameters: Weighted Gages
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 03:23:20
+     Use HEC1 Weighting Scheme: Yes
+     Use Indexing: No
+     Allow Depth Override: No
+End:
+
+Subbasin: S3
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 03:26:19
+     Gage: Auto1
+     Volume Weight: 0.9
+     Temporal Distribution Weight: 1
+     Gage: K01
+     Volume Weight: 0.1
+End:
+
+Subbasin: S4
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 03:26:49
+     Gage: Auto1
+     Volume Weight: 0.92
+     Temporal Distribution Weight: 1
+     Gage: K02
+     Volume Weight: 0.08
+End:
+
+Subbasin: S1
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 03:24:48
+     Gage: Auto1
+     Volume Weight: 0
+     Temporal Distribution Weight: 1
+     Gage: K01
+     Volume Weight: 1
+End:
+
+Subbasin: S2
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 03:25:49
+     Gage: Auto1
+     Volume Weight: 0.04
+     Temporal Distribution Weight: 1
+     Gage: K01
+     Volume Weight: 0.16
+     Gage: K02
+     Volume Weight: 0.8
+End:

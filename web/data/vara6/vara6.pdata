@@ -1,0 +1,29 @@
+Paired Data Manager: vara6
+     Version: 4.13
+     Filepath Separator: \
+End:
+
+Table: Table 1
+     Table Type: Elevation-Storage
+     Last Modified Date: 22 September 2026
+     Last Modified Time: 07:06:20
+     X-Units: M
+     Y-Units: THOU M3
+     Use External DSS File: NO
+     DSS File: vara6.dss
+     Pathname: //Table 1/ELEVATION-STORAGE///TABLE/
+     Interpolation: Linear Interpolation
+End:
+
+Table: Table 1
+     Table Type: Inflow-Diversion
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 02:59:12
+     X-Units: M3/S
+     Y-Units: M3/S
+     Use External DSS File: NO
+     DSS File: vara6.dss
+     Pathname: //Table 1/FLOW-DIVERSION///TABLE/
+     Interpolation: Linear Interpolation
+End:
+

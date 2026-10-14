@@ -1,0 +1,29 @@
+Paired Data Manager: river bend
+     Version: 4.13
+     Filepath Separator: \
+End:
+
+Table: Pump Head-Discharge
+     Table Type: Stage-Flow
+     Last Modified Date: 28 March 2011
+     Last Modified Time: 15:47:21
+     X-Units: FT
+     Y-Units: CFS
+     Use External DSS File: NO
+     DSS File: river_bend.dss
+     Pathname: //Pump Head-Discharge/STAGE-FLOW///TABLE/
+     Interpolation: Linear Interpolation
+End:
+
+Table: Detention Basin Elev-Stor
+     Table Type: Elevation-Storage
+     Last Modified Date: 28 March 2011
+     Last Modified Time: 15:47:21
+     X-Units: FT
+     Y-Units: ACRE-FT
+     Use External DSS File: NO
+     DSS File: river_bend.dss
+     Pathname: //Detention Basin Elev-Stor/ELEVATION-STORAGE///TABLE/
+     Interpolation: Linear Interpolation
+End:
+

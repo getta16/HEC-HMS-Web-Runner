@@ -1,0 +1,57 @@
+Paired Data Manager: tenk
+     Version: 4.13
+     Filepath Separator: \
+End:
+
+Table: Table 1
+     Table Type: Storage-Outflow
+     Description: R-3 (Tenk 1)
+     Last Modified Date: 23 June 2005
+     Last Modified Time: 14:57:17
+     X-Units: ACRE-FT
+     Y-Units: CFS
+     Use External DSS File: NO
+     DSS File: tenk.dss
+     Pathname: //Table 1/STORAGE-FLOW///TABLE/
+     Interpolation: Linear Interpolation
+End:
+
+Table: Table 2
+     Table Type: Storage-Outflow
+     Description: R-4 (Tenk 1)
+     Last Modified Date: 23 June 2005
+     Last Modified Time: 14:57:17
+     X-Units: ACRE-FT
+     Y-Units: CFS
+     Use External DSS File: NO
+     DSS File: tenk.dss
+     Pathname: //Table 2/STORAGE-FLOW///TABLE/
+     Interpolation: Linear Interpolation
+End:
+
+Table: Table 3
+     Table Type: Storage-Outflow
+     Description: R-2 (Tenk 1)
+     Last Modified Date: 23 June 2005
+     Last Modified Time: 14:57:18
+     X-Units: ACRE-FT
+     Y-Units: CFS
+     Use External DSS File: NO
+     DSS File: tenk.dss
+     Pathname: //Table 3/STORAGE-FLOW///TABLE/
+     Interpolation: Linear Interpolation
+End:
+
+Table: Table 4
+     Table Type: Storage-Outflow
+     Description: R-1 (Tenk 1)
+     Last Modified Date: 23 June 2005
+     Last Modified Time: 14:57:51
+     X-Units: ACRE-FT
+     Y-Units: CFS
+     Use External DSS File: NO
+     DSS File: tenk.dss
+     Pathname: //Table 4/STORAGE-FLOW///TABLE/
+     Interpolation: Linear Interpolation
+End:
+

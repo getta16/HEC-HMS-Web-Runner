@@ -1,0 +1,91 @@
+Basin: SEP3
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 03:39:14
+     Version: 4.13
+     Filepath Separator: \
+     Unit System: Metric
+     Missing Flow To Zero: No
+     Enable Flow Ratio: No
+     Compute Local Flow At Junctions: No
+     Unregulated Output Required: No
+
+     Enable Sediment Routing: No
+End:
+
+Subbasin: Subbasin-1
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 03:40:16
+     Canvas X: 529.1262135922332
+     Canvas Y: 1504.8543689320388
+     From Canvas X: 529.1262135922332
+     From Canvas Y: 1504.8543689320388
+     Area: 150
+
+     Discretization: None
+     File: SEP3.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 15
+     Curve Number: 60
+     Initial Abstraction: 2
+
+     Transform: SCS
+     Lag: 150
+     Unitgraph Type: PRF100
+
+     Baseflow: Monthly Constant
+     Monthly rate: 0.5
+     Monthly rate: 0.5
+     Monthly rate: 0.5
+     Monthly rate: 0.5
+     Monthly rate: 0.5
+     Monthly rate: 0.5
+     Monthly rate: 0.5
+     Monthly rate: 0.5
+     Monthly rate: 0.5
+     Monthly rate: 0.5
+     Monthly rate: 0.5
+     Monthly rate: 0.5
+End:
+
+Basin Layer Properties:
+     Element Layer:
+          Name: Icons
+          Layer shown: Yes
+     End Layer:
+End:
+
+Basin Spatial Properties:
+End:
+
+Basin Schematic Properties:
+     Last View N: 1529.8543689320388
+     Last View S: 1479.8543689320388
+     Last View W: 504.12621359223317
+     Last View E: 554.1262135922332
+     Maximum View N: 1529.8543689320388
+     Maximum View S: 1479.8543689320388
+     Maximum View W: 504.12621359223317
+     Maximum View E: 554.1262135922332
+     Extent Method: Manual
+     Buffer: 0
+     Draw Icons: Yes
+     Draw Icon Labels: Name
+     Draw Map Objects: No
+     Draw Gridlines: No
+     Draw Flow Direction: No
+     Draw HillShade Layer: Yes
+     Draw Elevation Layer: Yes
+     Elevation Layer Color Palette: Gray Scale
+     Ignore Elevation Color Ramp Scale: No
+     Use Interpolated Color Ramp for Elevation Layer: Yes
+     Color Ramp Opacity Level for Elevation Layer: 33.0
+     Fix Element Locations: No
+     Fix Hydrologic Order: No
+End:

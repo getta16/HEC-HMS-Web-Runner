@@ -1,0 +1,125 @@
+Gage Manager: KSM_004_Desktop_V2
+     Gage Manager: KSM_004_Desktop_V2
+     Version: 4.13
+     Filepath Separator: \
+End: 
+
+Gage: RID-KU-WL006
+     Gage: RID-KU-WL006
+     Gage Type: Flow
+     Last Modified Date: 3 October 2026
+     Last Modified Time: 07:39:43
+     Reference Height Units: Meters
+     Reference Height: 10.0
+     Data Source Type: Manual Entry
+     Filename: KSM_004_Desktop_V2.dss
+     Pathname: //RID-KU-WL006/FLOW//15MIN/GAGE/
+     Variant: Variant-1
+       Start Time: 18 September 2023, 00:00
+       End Time: 30 September 2026, 23:45
+     End Variant: Variant-1
+End: 
+
+Gage: RID-KU 003
+     Gage: RID-KU 003
+     Gage Type: Precipitation
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:28:26
+     Latitude Degrees: 13.449914
+     Longitude Degrees: 99.422856
+     Reference Height Units: Meters
+     Reference Height: 10.0
+     Data Source Type: Manual Entry
+     Filename: KSM_004_Desktop_V2.dss
+     Pathname: //RID-KU 003/PRECIP-INC//5MIN/GAGE/
+     Variant: Variant-1
+       Start Time: 18 September 2023, 00:00
+       End Time: 30 September 2026, 23:55
+     End Variant: Variant-1
+End: 
+
+Gage: RID-KU 004
+     Gage: RID-KU 004
+     Gage Type: Precipitation
+     Last Modified Date: 2 October 2026
+     Last Modified Time: 11:29:27
+     Latitude Degrees: 16.417057
+     Longitude Degrees: 99.377149
+     Reference Height Units: Meters
+     Reference Height: 10.0
+     Data Source Type: Manual Entry
+     Filename: KSM_004_Desktop_V2.dss
+     Pathname: //RID-KU 004/PRECIP-INC//5MIN/GAGE/
+     Variant: Variant-1
+       Start Time: 18 September 2023, 00:00
+       End Time: 30 September 2026, 23:55
+     End Variant: Variant-1
+End: 
+
+Gage: RID-KU-WL001
+     Gage: RID-KU-WL001
+     Gage Type: Flow
+     Last Modified Date: 7 October 2569
+     Last Modified Time: 00:35:59
+     Reference Height Units: Meters
+     Reference Height: 10.0
+     Data Source Type: Manual Entry
+     Filename: KSM_004_Desktop_V2.dss
+     Pathname: //RID-KU-WL001/FLOW//15MIN/GAGE/
+     Variant: Variant-1
+       Start Time: 18 September 2023, 00:00
+       End Time: 30 September 2026, 23:45
+     End Variant: Variant-1
+End: 
+
+Gage: RID-KU 001
+     Gage: RID-KU 001
+     Gage Type: Precipitation
+     Last Modified Date: 9 October 2026
+     Last Modified Time: 08:01:04
+     Latitude Degrees: 16.330833333333334
+     Longitude Degrees: 99.26416666666667
+     Reference Height Units: Meters
+     Reference Height: 10.0
+     Data Source Type: Manual Entry
+     Filename: KSM_004_Desktop_V2.dss
+     Pathname: //RID-KU 001/PRECIP-INC//5MIN/GAGE/
+     Variant: Variant-1
+       Start Time: 18 September 2023, 00:00
+       End Time: 30 September 2026, 23:55
+     End Variant: Variant-1
+End: 
+
+Gage: RID-KU 002
+     Gage: RID-KU 002
+     Gage Type: Precipitation
+     Last Modified Date: 9 October 2026
+     Last Modified Time: 08:01:10
+     Latitude Degrees: 16.489444444444445
+     Longitude Degrees: 99.23472222222222
+     Reference Height Units: Meters
+     Reference Height: 10.0
+     Data Source Type: Manual Entry
+     Filename: KSM_004_Desktop_V2.dss
+     Pathname: //RID-KU 002/PRECIP-INC//5MIN/GAGE/
+     Variant: Variant-1
+       Start Time: 18 September 2023, 00:00
+       End Time: 30 September 2026, 23:55
+     End Variant: Variant-1
+End: 
+
+Gage: RID-KU-WL008
+     Gage: RID-KU-WL008
+     Gage Type: Flow
+     Last Modified Date: 3 October 2026
+     Last Modified Time: 07:12:07
+     Reference Height Units: Meters
+     Reference Height: 10.0
+     Data Source Type: Manual Entry
+     Filename: KSM_004_Desktop_V2.dss
+     Pathname: //RID-KU-WL008/FLOW//15MIN/GAGE/
+     Variant: Variant-1
+       Start Time: 18 September 2023, 00:00
+       End Time: 30 September 2026, 23:45
+     End Variant: Variant-1
+End: 

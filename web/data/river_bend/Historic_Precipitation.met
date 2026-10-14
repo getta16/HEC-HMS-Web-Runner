@@ -1,0 +1,96 @@
+Meteorology: Historic Precipitation
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:38:23
+     Version: 4.13
+     Unit System: English
+     Set Missing Data to Default: Yes
+     Precipitation Method: Specified Average
+     Air Temperature Method: None
+     Atmospheric Pressure Method: None
+     Dew Point Method: None
+     Wind Speed Method: None
+     Shortwave Radiation Method: None
+     Longwave Radiation Method: None
+     Snowmelt Method: None
+     Evapotranspiration Method: Monthly Evaporation
+     Use Basin Model: Minimum Facility
+     Use Basin Model: Minimum Facility + Pump
+     Use Basin Model: Minimum Facility + 4Pumps
+End:
+
+Precip Method Parameters: Specified Average
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:38:23
+     Allow Depth Override: No
+End:
+
+Evapotranspiration Method Parameters: Monthly Evaporation
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:38:23
+End:
+
+Subbasin: Upper
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:38:23
+     Gage: Upper
+
+     Begin Et: Monthly Evaporation
+     Pan Evaporation: 3.1
+     Pan Evaporation: 2.8
+     Pan Evaporation: 3.1
+     Pan Evaporation: 3.0
+     Pan Evaporation: 3.1
+     Pan Evaporation: 3.0
+     Pan Evaporation: 3.1
+     Pan Evaporation: 3.1
+     Pan Evaporation: 3.0
+     Pan Evaporation: 3.1
+     Pan Evaporation: 3.0
+     Pan Evaporation: 3.1
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     End Et:
+End:
+
+Subbasin: Local
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:38:23
+     Gage: Local
+
+     Begin Et: Monthly Evaporation
+     Pan Evaporation: 3.1
+     Pan Evaporation: 2.8
+     Pan Evaporation: 3.1
+     Pan Evaporation: 3.0
+     Pan Evaporation: 3.1
+     Pan Evaporation: 3.0
+     Pan Evaporation: 3.1
+     Pan Evaporation: 3.1
+     Pan Evaporation: 3.0
+     Pan Evaporation: 3.1
+     Pan Evaporation: 3.0
+     Pan Evaporation: 3.1
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     Evapotranspiration Coefficient: 1.0
+     End Et:
+End:

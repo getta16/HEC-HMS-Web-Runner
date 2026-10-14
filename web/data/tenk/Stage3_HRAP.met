@@ -1,0 +1,45 @@
+Meteorology: Stage3-HRAP
+     Description: NWS Stage III radar rainfall data
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:37:59
+     Version: 4.13
+     Unit System: English
+     Set Missing Data to Default: Yes
+     Precipitation Method: Gridded Precipitation
+     Air Temperature Method: None
+     Atmospheric Pressure Method: None
+     Dew Point Method: None
+     Wind Speed Method: None
+     Shortwave Radiation Method: None
+     Longwave Radiation Method: None
+     Snowmelt Method: None
+     Evapotranspiration Method: No Evapotranspiration
+     Use Basin Model: Tenk 1
+End:
+
+Precip Method Parameters: Gridded Precipitation
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:37:58
+     Precip Grid Name: Grid 1
+     Time Shift Method: NONE
+End:
+
+Subbasin: 113
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37:48
+End:
+
+Subbasin: 127
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 03:04:30
+End:
+
+Subbasin: 85
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:37:25
+End:
+
+Subbasin: 86
+     Last Modified Date: 11 September 2018
+     Last Modified Time: 03:04:30
+End:

@@ -85,7 +85,7 @@ header.top { padding-block: 20px 0; display: grid; gap: 10px; }
 .btn:focus-visible, input:focus-visible, select:focus-visible, .tab:focus-visible, tr[tabindex]:focus-visible, .node:focus-visible, .seg button:focus-visible, .switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .runlog { font: 12.5px var(--font-mono); color: var(--muted); }
 .runlog .ok { color: var(--good); } .runlog .bad { color: var(--bad); } .runlog .pend { color: var(--warn); }
-.proj { font: 600 13px var(--font-mono); padding: 4px 10px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--line); }
+.proj { font: 600 13px var(--font-mono); padding: 4px 10px; border-radius: 6px; background: var(--surface-2); color: var(--ink); border: 1px solid var(--line); max-width: 100%; }
 
 .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
 .kpi { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; display: grid; gap: 4px; align-content: start; }
@@ -210,7 +210,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
 
   <div class="runbar">
     <div class="runbar-inner">
-      <span class="proj" id="proj-name">—</span>
+      <select class="proj" id="sel-proj" data-i18n-title="projTip"></select>
       <button class="btn ghost" id="up-files" data-i18n="upFiles" data-i18n-title="upFilesTip"></button>
       <button class="btn ghost" id="up-folder" data-i18n="upFolder" data-i18n-title="upFolderTip"></button>
       <input type="file" id="in-files" multiple hidden>
@@ -316,8 +316,8 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   const I18N = {
     th: {
       darkMode: 'โหมดมืด',
-      lede: 'อ่านไฟล์โปรเจกต์ HEC-HMS (.hms, .basin, .met, .gage, .control, .run, .pdata และ .dss) แล้วคำนวณน้ำท่าในเบราว์เซอร์ ไฟล์ทั้งหมดอ่านในเครื่องของคุณ ไม่มีการส่งขึ้นเซิร์ฟเวอร์ เริ่มต้นเปิดโปรเจกต์ <b>Vara1</b> ไว้ให้ ถ้าจะใช้โปรเจกต์อื่นให้อัปโหลดทั้งโฟลเดอร์หรือลากไฟล์มาวางในหน้านี้',
-      notice: '<b>ผลเป็นค่าประมาณ ไม่ใช่ HEC-HMS ตัวจริง</b> ตัวคำนวณเขียนขึ้นใหม่ด้วย JavaScript ตามวิธีของ HEC-HMS เมื่อ time interval เท่ากับช่วงของ Unit Hydrograph ผลตรงกับ HEC-HMS แต่ถ้า interval ละเอียดกว่านั้น (เช่น 1 นาที) peak จะต่างราว 1% เพราะวิธีแปลง UH ต่างกัน ถ้ามีไฟล์ RUN_*.results หน้านี้จะเทียบผลกับ HEC-HMS ให้ดู',
+      lede: 'อ่านไฟล์โปรเจกต์ HEC-HMS (.hms, .basin, .met, .gage, .control, .run, .pdata และ .dss) แล้วคำนวณน้ำท่าในเบราว์เซอร์ ไฟล์ทั้งหมดอ่านในเครื่องของคุณ ไม่มีการส่งขึ้นเซิร์ฟเวอร์ เลือกโปรเจกต์ตัวอย่าง (Vara1–8, KSM, castro, river_bend, tenk, tifton) จากเมนูด้านล่าง หรืออัปโหลดโปรเจกต์ของคุณเองทั้งโฟลเดอร์ หรือลากไฟล์มาวางในหน้านี้',
+      notice: '<b>ผลเป็นค่าประมาณ ไม่ใช่ HEC-HMS ตัวจริง</b> ตัวคำนวณเขียนขึ้นใหม่ด้วย JavaScript ตามวิธีของ HEC-HMS 4.13 และตรวจแล้วว่าโปรเจกต์ตัวอย่างทุกอันได้ผลตรงกับ HEC-HMS ส่วนวิธีคำนวณที่ยังไม่รองรับจะแจ้งเป็นข้อผิดพลาด ถ้ามีไฟล์ RUN_*.results หน้านี้จะเทียบผลกับ HEC-HMS ให้ดู',
       upFiles: '⭱ อัปโหลดไฟล์', upFilesTip: 'เลือกไฟล์ .hms .basin .met .gage .control .run .pdata .dss .results',
       upFolder: '⭱ อัปโหลดโฟลเดอร์', upFolderTip: 'เลือกโฟลเดอร์โปรเจกต์ HEC-HMS ทั้งโฟลเดอร์',
       run: '▶ รันแบบจำลอง', reset: 'คืนค่าตามไฟล์',
@@ -381,15 +381,15 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       unreadable: (e) => 'อ่านไม่ได้: ' + e,
       fDss: 'ไฟล์ไบนารี แสดงรายการ record ที่อ่านได้', fEdited: 'มีค่าที่แก้ในหน้านี้', fAsLoaded: 'ตามไฟล์ที่โหลด',
       resetDone: 'คืนค่าตามไฟล์แล้ว',
-      loadingDefault: 'กำลังโหลดโปรเจกต์ Vara1…',
+      loadingDefault: (n) => `กำลังโหลดโปรเจกต์ ${n}…`, projTip: 'เลือกโปรเจกต์ตัวอย่าง', uploaded: (n) => `${n} (อัปโหลด)`,
       defaultFail: (e) => `โหลดโปรเจกต์ตัวอย่างไม่ได้ (${e}) ถ้าเปิดไฟล์จากเครื่องโดยตรง ให้ใช้ปุ่มอัปโหลดโฟลเดอร์แทน`,
       loadFail: (n, s) => `โหลด ${n} ไม่ได้ (${s})`,
       project: 'โปรเจกต์',
     },
     en: {
       darkMode: 'Dark mode',
-      lede: 'Reads HEC-HMS project files (.hms, .basin, .met, .gage, .control, .run, .pdata and .dss) and computes runoff in the browser. Files are read on your computer and never uploaded to a server. The <b>Vara1</b> project opens by default. To use another project, upload its whole folder or drag the files onto this page.',
-      notice: '<b>Results are approximate, not HEC-HMS itself.</b> The engine is a JavaScript re-implementation of HEC-HMS methods. When the time interval equals the unit hydrograph duration the results match HEC-HMS; at a finer interval (for example 1 minute) the peak differs by about 1% because the UH is resampled differently. When RUN_*.results files are present, this page compares against HEC-HMS.',
+      lede: 'Reads HEC-HMS project files (.hms, .basin, .met, .gage, .control, .run, .pdata and .dss) and computes runoff in the browser. Files are read on your computer and never uploaded to a server. Pick a sample project (Vara1–8, KSM, castro, river_bend, tenk, tifton) from the menu below, or upload your own project folder or drag its files onto this page.',
+      notice: '<b>Results are approximate, not HEC-HMS itself.</b> The engine is a JavaScript re-implementation of HEC-HMS 4.13 methods, checked to give the same results as HEC-HMS on every sample project. Methods it does not support are reported as errors. When RUN_*.results files are present, this page compares against HEC-HMS.',
       upFiles: '⭱ Upload files', upFilesTip: 'Choose .hms .basin .met .gage .control .run .pdata .dss .results files',
       upFolder: '⭱ Upload folder', upFolderTip: 'Choose a whole HEC-HMS project folder',
       run: '▶ Run model', reset: 'Reset to files',
@@ -453,7 +453,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       unreadable: (e) => 'Unreadable: ' + e,
       fDss: 'Binary file; showing the records that can be read', fEdited: 'Edited on this page', fAsLoaded: 'As loaded',
       resetDone: 'reset to files',
-      loadingDefault: 'Loading the Vara1 project…',
+      loadingDefault: (n) => `Loading the ${n} project…`, projTip: 'Choose a sample project', uploaded: (n) => `${n} (uploaded)`,
       defaultFail: (e) => `Could not load the sample project (${e}). If you opened this page from disk, use Upload folder instead.`,
       loadFail: (n, s) => `Could not load ${n} (${s})`,
       project: 'Project',
@@ -600,7 +600,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   const INTERVALS = [1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60, 120, 180, 240, 360, 480, 720, 1440];
   function opts(sel, list, cur, labelFn) { sel.innerHTML = list.map(v => `<option value="${esc(v)}"${v === cur ? ' selected' : ''}>${esc(labelFn ? labelFn(v) : v)}</option>`).join(''); }
   function renderSetup() {
-    $('proj-name').textContent = P.name || t('project');
+    renderProjects();
     $('eyebrow').textContent = `HEC-HMS 4.x · ${P.hmsName || t('noHms')} · ${t('files', Object.keys(P.texts).length + P.dssNames.length)}`;
     const runNames = P.runs.map(r => r.name);
     $('sel-run').innerHTML = (runNames.length ? '' : `<option value="">${esc(t('noRunFile'))}</option>`) + runNames.map(n => `<option${n === S.runName ? ' selected' : ''}>${esc(n)}</option>`).join('') + (runNames.length && !S.runName ? `<option selected value="">${esc(t('custom'))}</option>` : '');
@@ -1163,20 +1163,47 @@ pre.file .b { color: var(--ink); font-weight: 600; }
 
   // ---------- default project ----------
   applyStatic();
-  const DEFAULT = { dir: 'data/vara1/', files: ['Vara1.hms', 'SEP.basin', 'Met_1.met', 'Vara1.gage', 'Control_1.control', 'Control_30.control', 'Vara1.run', 'Vara1.pdata', 'Vara1.dss', 'RUN_Run_1.results', 'RUN_Run_30.results'] };
-  (async function boot() {
-    $('runlog').textContent = t('loadingDefault');
+  // sample projects in data/<id>/, listed in data/projects.json
+  let SAMPLES = [];
+  function renderProjects() {
+    const sel = $('sel-proj'), cur = P && P.sample;
+    let h = SAMPLES.map(x => `<option value="${esc(x.id)}"${x.id === cur ? ' selected' : ''}>${esc(x.name)}</option>`).join('');
+    if (P && !cur) h = `<option value="" selected>${esc(t('uploaded', P.name || t('project')))}</option>` + h;
+    sel.innerHTML = h || `<option>${esc(P && P.name || '—')}</option>`;
+  }
+  async function loadSample(id) {
+    const x = SAMPLES.find(s => s.id === id) || SAMPLES[0];
+    if (!x) return;
+    $('runlog').textContent = t('loadingDefault', x.name);
     try {
-      const files = await Promise.all(DEFAULT.files.map(async (n) => {
-        const r = await fetch(DEFAULT.dir + n);
+      const files = await Promise.all(x.files.map(async (n) => {
+        const r = await fetch(`data/${x.id}/${encodeURIComponent(n)}`);
         if (!r.ok) throw new Error(t('loadFail', n, r.status));
-        return /\.dss$/i.test(n) ? { name: n, buf: await r.arrayBuffer() } : { name: n, text: await r.text() };
+        return /.dss$/i.test(n) ? { name: n, buf: await r.arrayBuffer() } : { name: n, text: await r.text() };
       }));
       openProject(files);
+      if (P) { P.sample = x.id; renderProjects(); }
+      store.set('hms-project', x.id);
     } catch (e) {
       $('runlog').textContent = '';
       showError(t('defaultFail', e.message));
     }
+  }
+  $('sel-proj').addEventListener('change', (e) => { if (e.target.value) loadSample(e.target.value); });
+  (async function boot() {
+    $('runlog').textContent = t('loadingDefault', '…');
+    try {
+      const r = await fetch('data/projects.json');
+      if (!r.ok) throw new Error(t('loadFail', 'projects.json', r.status));
+      SAMPLES = await r.json();
+    } catch (e) {
+      $('runlog').textContent = '';
+      showError(t('defaultFail', e.message));
+      return;
+    }
+    renderProjects();
+    const want = (location.hash.match(/^#p=([w-]+)/) || [])[1] || store.get('hms-project');
+    loadSample(SAMPLES.some(x => x.id === want) ? want : 'vara1');
   })();
 })();
 </script>

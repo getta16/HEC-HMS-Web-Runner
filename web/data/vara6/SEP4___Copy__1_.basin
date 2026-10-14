@@ -1,0 +1,328 @@
+Basin: SEP4 - Copy (1)
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 02:45:12
+     Version: 4.13
+     Filepath Separator: \
+     Unit System: Metric
+     Missing Flow To Zero: No
+     Enable Flow Ratio: No
+     Compute Local Flow At Junctions: No
+     Unregulated Output Required: No
+
+     Enable Sediment Routing: No
+End:
+
+Subbasin: S3
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 02:10:22
+     Canvas X: -4293.28958970677
+     Canvas Y: 768.4598432184648
+     From Canvas X: -4868.852459016394
+     From Canvas Y: 1539.8907103825127
+     Area: 8
+     Downstream: Stream B
+
+     Discretization: None
+     File: SEP4___Copy__1_.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 15
+     Curve Number: 70
+     Initial Abstraction: 1.4
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.5986
+     Snyder Cp: 0.45
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Flow/Area Ratio: 0.35
+     Threshold Flow: 0.7
+End:
+
+Subbasin: S4
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 04:39:10
+     Canvas X: -5021.8579234972685
+     Canvas Y: -1148.6338797814215
+     From Canvas X: -4715.84699453552
+     From Canvas Y: -820.7650273224053
+     Area: 6
+     Downstream: Junction-2
+
+     Discretization: None
+     File: SEP4___Copy__1_.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 20
+     Curve Number: 75
+     Initial Abstraction: 2
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.6550
+     Snyder Cp: 0.45
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Flow/Area Ratio: 0.4
+     Threshold Flow: 0.8
+End:
+
+Reach: Stream B
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 04:40:57
+     Canvas X: -2693.9890710382524
+     Canvas Y: -1837.158469945356
+     From Canvas X: -4289.617486338799
+     From Canvas Y: 1310.3825136612013
+     Downstream: Junction-2
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2
+     Muskingum x: 0.35
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Subbasin: S2
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 04:39:10
+     Canvas X: 2464.4808743169397
+     Canvas Y: -1356.2841530054657
+     From Canvas X: -945.355191256831
+     From Canvas Y: -503.825136612023
+     Area: 10
+     Downstream: Junction-1
+
+     Discretization: None
+     File: SEP4___Copy__1_.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 10
+     Curve Number: 65
+     Initial Abstraction: 1.2
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.5378
+     Snyder Cp: 0.45
+
+     Baseflow: Recession
+     Recession Factor: 0.65
+     Initial Flow/Area Ratio: 0.3
+     Threshold Flow: 0.6
+End:
+
+Subbasin: S1
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 02:10:34
+     Canvas X: 280.09812745481577
+     Canvas Y: 235.8448140459186
+     From Canvas X: 1234.9726775956285
+     From Canvas Y: 1709.2896174863388
+     Area: 5
+     Downstream: S1-Reservoir
+
+     Discretization: None
+     File: SEP4___Copy__1_.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 45
+     Curve Number: 80
+     Initial Abstraction: 1
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.3533
+     Snyder Cp: 0.6
+
+     Baseflow: Recession
+     Recession Factor: 0.6
+     Initial Flow/Area Ratio: 0.25
+     Threshold Flow: 0.5
+End:
+
+Reservoir: S1-Reservoir
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 02:09:47
+     Canvas X: 315.6057960663193
+     Canvas Y: -1077.938924579692
+     From Canvas X: -536.7895253604838
+     From Canvas Y: 1806.7005859828187
+     Downstream: Stream A
+
+     Route: Controlled Outflow
+     Routing Curve: Elevation-Storage
+     Initial Elevation: 130
+     Elevation-Storage Table: Table 1
+     Adaptive Control: On
+     Main Tailwater Condition: None
+     Auxiliary Tailwater Condition: None
+
+     Conduit: Orifice
+     Conduit Outlet: Main
+     Orifice Coefficient: 0.7
+     Orifice Area: 0.7854
+     Centerline Elevation: 121
+     Number Barrels: 1
+     End Conduit:
+
+     Spillway: Ogee Spillway
+     Spillway Outlet: Main
+     Spillway Crest Length: 30
+     Spillway Crest Elevation: 129
+     Spillway Design Head: 2
+     Spillway Apron Elevation: 118.53
+     Spillway Apron Width: 15
+     Spillway Approach Depth: 2
+     Spillway Approach Loss: 0.2
+     Number of Spillway Abutments: 2
+     Spillway Abutment Type: Concrete Abutment
+     End Spillway:
+
+     Dam Top: Level Dam
+     Dam Top Outlet: Main
+     Overflow Coefficient: 1.2
+     Top Length: 90
+     Top Elevation: 134.5
+     End Dam Top:
+
+     Evaporation Method: Zero Evaporation
+     End Evaporation:
+End:
+
+Reach: Stream A
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 02:43:29
+     Canvas X: 792.9014502263526
+     Canvas Y: -2977.9405142004616
+     From Canvas X: 315.6057960663193
+     From Canvas Y: -1077.938924579692
+     Downstream: Junction-1
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 1.5
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Junction: Junction-1
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 02:44:43
+     Canvas X: 792.9014502263526
+     Canvas Y: -2977.9405142004616
+     From Canvas X: -311.4754098360663
+     From Canvas Y: -1880.8743169398913
+     Downstream: Diversion-1
+End:
+
+Junction: Junction-2
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 02:44:37
+     Canvas X: -2693.9890710382524
+     Canvas Y: -1837.158469945356
+     From Canvas X: -2278.688524590165
+     From Canvas Y: -1771.5846994535532
+     Downstream: Diversion-1
+End:
+
+Diversion: Diversion-1
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 02:59:34
+     Canvas X: -1315.2638715673456
+     Canvas Y: -4013.663227268745
+     From Canvas X: -1315.2638715673456
+     From Canvas Y: -4013.663227268745
+     Downstream: SEP4 Outlet
+     Divert To: Junction-3
+
+     Diverter: Inflow-Diversion Table
+     Maximum Diversion Volume: 5000
+     Maximum Diversion Flow: 100
+     Inflow Diversion Table Name: Table 1
+     End Diverter:
+End:
+
+Junction: SEP4 Outlet
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 02:46:43
+     Canvas X: -1430.3459222646688
+     Canvas Y: -5486.713476194488
+     From Canvas X: -1382.513661202187
+     From Canvas Y: -3487.4316939890723
+     Downstream: Junction-3
+End:
+
+Junction: Junction-3
+     Last Modified Date: 23 September 2026
+     Last Modified Time: 02:47:20
+     Canvas X: 2597.5258521416617
+     Canvas Y: -8685.99448558009
+     From Canvas X: -1660.510023659317
+     From Canvas Y: -8893.14217683527
+End:
+
+Basin Layer Properties:
+     Element Layer:
+          Name: Icons
+          Layer shown: Yes
+     End Layer:
+End:
+
+Basin Spatial Properties:
+End:
+
+Basin Schematic Properties:
+     Last View N: 1955.1912568306002
+     Last View S: -3487.4316939890723
+     Last View W: -5021.8579234972685
+     Last View E: 2464.4808743169397
+     Maximum View N: 1955.1912568306002
+     Maximum View S: -3487.4316939890723
+     Maximum View W: -5021.8579234972685
+     Maximum View E: 2464.4808743169397
+     Extent Method: Manual
+     Buffer: 0
+     Draw Icons: Yes
+     Draw Icon Labels: Name
+     Draw Map Objects: No
+     Draw Gridlines: No
+     Draw Flow Direction: Yes
+     Draw HillShade Layer: Yes
+     Draw Elevation Layer: Yes
+     Elevation Layer Color Palette: Gray Scale
+     Ignore Elevation Color Ramp Scale: No
+     Use Interpolated Color Ramp for Elevation Layer: Yes
+     Color Ramp Opacity Level for Elevation Layer: 33.0
+     Fix Element Locations: No
+     Fix Hydrologic Order: No
+End:

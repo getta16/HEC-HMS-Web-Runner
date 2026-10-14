@@ -1,0 +1,204 @@
+[
+ {
+  "id": "vara1",
+  "name": "Vara1",
+  "files": [
+   "Control_1.control",
+   "Control_30.control",
+   "Met_1.met",
+   "RUN_Run_1.results",
+   "RUN_Run_30.results",
+   "SEP.basin",
+   "Vara1.dss",
+   "Vara1.gage",
+   "Vara1.hms",
+   "Vara1.pdata",
+   "Vara1.run"
+  ]
+ },
+ {
+  "id": "vara2",
+  "name": "Vara2",
+  "files": [
+   "Control_1.control",
+   "Met_1.met",
+   "RUN_Run_1.results",
+   "SEP.basin",
+   "Vara2.dss",
+   "Vara2.gage",
+   "Vara2.hms",
+   "Vara2.pdata",
+   "Vara2.run"
+  ]
+ },
+ {
+  "id": "vara3",
+  "name": "Vara3",
+  "files": [
+   "Control_1.control",
+   "Met_1.met",
+   "RUN_Run_1.results",
+   "SEP3.basin",
+   "Vara3.dss",
+   "Vara3.gage",
+   "Vara3.hms",
+   "Vara3.run"
+  ]
+ },
+ {
+  "id": "vara4",
+  "name": "Vara4",
+  "files": [
+   "Control_1.control",
+   "Met_1.met",
+   "RUN_Run_1.results",
+   "SEP4.basin",
+   "Vara4.dss",
+   "Vara4.gage",
+   "Vara4.hms",
+   "Vara4.run"
+  ]
+ },
+ {
+  "id": "vara5",
+  "name": "vara5",
+  "files": [
+   "Control_1.control",
+   "Met_1.met",
+   "RUN_Run_1.results",
+   "SEP4.basin",
+   "vara5.hms",
+   "vara5.run"
+  ]
+ },
+ {
+  "id": "vara6",
+  "name": "vara6",
+  "files": [
+   "Control_1.control",
+   "Met_1.met",
+   "RUN_Run_1.results",
+   "RUN_Run_2.results",
+   "SEP4.basin",
+   "SEP4___Copy__1_.basin",
+   "vara6.dss",
+   "vara6.hms",
+   "vara6.pdata",
+   "vara6.run"
+  ]
+ },
+ {
+  "id": "vara7",
+  "name": "vara7",
+  "files": [
+   "Control_1.control",
+   "Met_1.met",
+   "RUN_Run_1.results",
+   "SEP4.basin",
+   "vara7.hms",
+   "vara7.run"
+  ]
+ },
+ {
+  "id": "vara8",
+  "name": "vara8",
+  "files": [
+   "Control_1.control",
+   "Met_1.met",
+   "RUN_Run_1.results",
+   "SEP4.basin",
+   "vara8.dss",
+   "vara8.gage",
+   "vara8.hms",
+   "vara8.run"
+  ]
+ },
+ {
+  "id": "ksm",
+  "name": "KSM (Sep 2026)",
+  "files": [
+   "Control_1_sep2023.control",
+   "Control_2_sep2026.control",
+   "KSM.basin",
+   "KSM_004_Desktop_V2.dss",
+   "KSM_004_Desktop_V2.gage",
+   "KSM_004_Desktop_V2.grid",
+   "KSM_004_Desktop_V2.hms",
+   "KSM_004_Desktop_V2.pdata",
+   "KSM_004_Desktop_V2.run",
+   "Met_1_sep2023.met",
+   "Met_2_Sep2026.met",
+   "RUN_Run_1.results",
+   "RUN_Run_sep2026.results"
+  ]
+ },
+ {
+  "id": "castro",
+  "name": "castro",
+  "files": [
+   "Castro_1.basin",
+   "Castro_2.basin",
+   "GageWts.met",
+   "Jan73.control",
+   "RUN_Current.results",
+   "RUN_Future.results",
+   "castro.dss",
+   "castro.gage",
+   "castro.hms",
+   "castro.pdata",
+   "castro.run"
+  ]
+ },
+ {
+  "id": "river_bend",
+  "name": "river_bend",
+  "files": [
+   "1951.control",
+   "Historic_Precipitation.met",
+   "Minimum_Facility.basin",
+   "Minimum_Facility_+_4Pumps.basin",
+   "Minimum_Facility_+_Pump.basin",
+   "RUN_Minimum_Facility.results",
+   "RUN_Minimum_Facility_+_4Pumps.results",
+   "RUN_Minimum_Facility_+_Pump.results",
+   "green_river.dss",
+   "river_bend.dss",
+   "river_bend.gage",
+   "river_bend.hms",
+   "river_bend.pdata",
+   "river_bend.run"
+  ]
+ },
+ {
+  "id": "tenk",
+  "name": "tenk",
+  "files": [
+   "Jan_96.control",
+   "RUN_Jan_96_storm.results",
+   "Stage3_HRAP.met",
+   "Tenk_1.basin",
+   "hrap.dss",
+   "hrapcells",
+   "tenk.dss",
+   "tenk.gage",
+   "tenk.grid",
+   "tenk.hms",
+   "tenk.pdata",
+   "tenk.run"
+  ]
+ },
+ {
+  "id": "tifton",
+  "name": "tifton",
+  "files": [
+   "Jan1_Jun30_1970.control",
+   "RUN_1970_simulation.results",
+   "Tifton.basin",
+   "Tifton_Hyetograph.met",
+   "tifton.dss",
+   "tifton.gage",
+   "tifton.hms",
+   "tifton.run"
+  ]
+ }
+]

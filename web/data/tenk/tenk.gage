@@ -1,0 +1,81 @@
+Gage Manager: tenk
+     Gage Manager: tenk
+     Version: 4.13
+     Filepath Separator: \
+End: 
+
+Gage: TAHL
+     Gage: TAHL
+     Gage Type: Flow
+     Description: Gage on Illinois River near Tahlequah
+     Last Modified Date: 23 June 2005
+     Last Modified Time: 14:55:20
+     Reference Height Units: Feet
+     Reference Height: 32.808
+     Data Source Type: External DSS
+     Filename: tenk.dss
+     Pathname: /ILLINOIS/TAHL/FLOW-LOC CUM//1HOUR/OBS/
+     Variant: Variant-1
+       Start Time: 17 January 1996, 00:00
+       End Time: 21 January 1996, 23:00
+       Start Time: 17 January 1996, 01:00
+       End Time: 21 January 1996, 23:00
+     End Variant: Variant-1
+End: 
+
+Gage: TENK
+     Gage: TENK
+     Gage Type: Flow
+     Description: Computed inflow to Lake Tenkiller
+     Last Modified Date: 23 June 2005
+     Last Modified Time: 14:55:20
+     Reference Height Units: Feet
+     Reference Height: 32.808
+     Data Source Type: External DSS
+     Filename: tenk.dss
+     Pathname: /ILLINOIS/TENK/FLOW-RES IN//1HOUR/OBS/
+     Variant: Variant-1
+       Start Time: 17 January 1996, 00:00
+       End Time: 21 January 1996, 23:00
+       Start Time: 17 January 1996, 01:00
+       End Time: 21 January 1996, 23:00
+     End Variant: Variant-1
+End: 
+
+Gage: ELDN
+     Gage: ELDN
+     Gage Type: Flow
+     Description: Gage on Baron Fork near Eldon
+     Last Modified Date: 23 June 2005
+     Last Modified Time: 14:55:20
+     Reference Height Units: Feet
+     Reference Height: 32.808
+     Data Source Type: External DSS
+     Filename: tenk.dss
+     Pathname: /ILLINOIS/ELDN/FLOW-LOC CUM//1HOUR/OBS/
+     Variant: Variant-1
+       Start Time: 17 January 1996, 00:00
+       End Time: 21 January 1996, 23:00
+       Start Time: 17 January 1996, 01:00
+       End Time: 21 January 1996, 23:00
+     End Variant: Variant-1
+End: 
+
+Gage: WATT
+     Gage: WATT
+     Gage Type: Flow
+     Description: Gage on Illinois River near Watts
+     Last Modified Date: 23 June 2005
+     Last Modified Time: 14:55:20
+     Reference Height Units: Feet
+     Reference Height: 32.808
+     Data Source Type: External DSS
+     Filename: tenk.dss
+     Pathname: /ILLINOIS/WATT/FLOW-LOC CUM//1HOUR/OBS/
+     Variant: Variant-1
+       Start Time: 17 January 1996, 00:00
+       End Time: 21 January 1996, 23:00
+       Start Time: 17 January 1996, 01:00
+       End Time: 21 January 1996, 23:00
+     End Variant: Variant-1
+End: 

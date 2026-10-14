@@ -1,0 +1,252 @@
+Basin: SEP4
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 04:20:35
+     Version: 4.13
+     Filepath Separator: \
+     Unit System: Metric
+     Missing Flow To Zero: No
+     Enable Flow Ratio: No
+     Compute Local Flow At Junctions: No
+     Unregulated Output Required: No
+
+     Enable Sediment Routing: No
+End:
+
+Subbasin: S1
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 04:39:10
+     Canvas X: 1234.9726775956285
+     Canvas Y: 1709.2896174863388
+     From Canvas X: 1234.9726775956285
+     From Canvas Y: 1709.2896174863388
+     Area: 5
+     Downstream: Stream A
+
+     Discretization: None
+     File: SEP4.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 5
+     Curve Number: 60
+     Initial Abstraction: 1
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.4711
+     Snyder Cp: 0.45
+
+     Baseflow: Recession
+     Recession Factor: 0.6
+     Initial Flow/Area Ratio: 0.25
+     Threshold Flow: 0.5
+End:
+
+Subbasin: S2
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 04:39:10
+     Canvas X: 2464.4808743169397
+     Canvas Y: -1356.2841530054657
+     From Canvas X: -945.355191256831
+     From Canvas Y: -503.825136612023
+     Area: 10
+     Downstream: Junction-1
+
+     Discretization: None
+     File: SEP4.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 10
+     Curve Number: 65
+     Initial Abstraction: 1.2
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.5378
+     Snyder Cp: 0.45
+
+     Baseflow: Recession
+     Recession Factor: 0.65
+     Initial Flow/Area Ratio: 0.3
+     Threshold Flow: 0.6
+End:
+
+Subbasin: S3
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 04:39:10
+     Canvas X: -4245.9016393442635
+     Canvas Y: 1955.1912568306002
+     From Canvas X: -4868.852459016394
+     From Canvas Y: 1539.8907103825127
+     Area: 8
+     Downstream: Stream B
+
+     Discretization: None
+     File: SEP4.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 15
+     Curve Number: 70
+     Initial Abstraction: 1.4
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.5986
+     Snyder Cp: 0.45
+
+     Baseflow: Recession
+     Recession Factor: 0.7
+     Initial Flow/Area Ratio: 0.35
+     Threshold Flow: 0.7
+End:
+
+Subbasin: S4
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 04:39:10
+     Canvas X: -5021.8579234972685
+     Canvas Y: -1148.6338797814215
+     From Canvas X: -4715.84699453552
+     From Canvas Y: -820.7650273224053
+     Area: 6
+     Downstream: Junction-2
+
+     Discretization: None
+     File: SEP4.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: SCS
+     Percent Impervious Area: 20
+     Curve Number: 75
+     Initial Abstraction: 2
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.6550
+     Snyder Cp: 0.45
+
+     Baseflow: Recession
+     Recession Factor: 0.75
+     Initial Flow/Area Ratio: 0.4
+     Threshold Flow: 0.8
+End:
+
+Reach: Stream A
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 04:40:57
+     Canvas X: -267.75956284152926
+     Canvas Y: -2110.382513661202
+     From Canvas X: 672.131147540982
+     From Canvas Y: 993.442622950819
+     Downstream: Junction-1
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 1.5
+     Muskingum x: 0.3
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Reach: Stream B
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 04:40:57
+     Canvas X: -2693.9890710382524
+     Canvas Y: -1837.158469945356
+     From Canvas X: -4289.617486338799
+     From Canvas Y: 1310.3825136612013
+     Downstream: Junction-2
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 2
+     Muskingum x: 0.35
+     Muskingum Steps: 1
+     Channel Loss: None
+End:
+
+Junction: Junction-1
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 04:34:55
+     Canvas X: -267.75956284152926
+     Canvas Y: -2110.382513661202
+     From Canvas X: -311.4754098360663
+     From Canvas Y: -1880.8743169398913
+     Downstream: SEP4 Outlet
+End:
+
+Junction: Junction-2
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 04:34:55
+     Canvas X: -2693.9890710382524
+     Canvas Y: -1837.158469945356
+     From Canvas X: -2278.688524590165
+     From Canvas Y: -1771.5846994535532
+     Downstream: SEP4 Outlet
+End:
+
+Junction: SEP4 Outlet
+     Last Modified Date: 9 September 2026
+     Last Modified Time: 04:34:55
+     Canvas X: -1382.513661202187
+     Canvas Y: -3487.4316939890723
+     From Canvas X: -1382.513661202187
+     From Canvas Y: -3487.4316939890723
+End:
+
+Basin Layer Properties:
+     Element Layer:
+          Name: Icons
+          Layer shown: Yes
+     End Layer:
+End:
+
+Basin Spatial Properties:
+End:
+
+Basin Schematic Properties:
+     Last View N: 1955.1912568306002
+     Last View S: -3487.4316939890723
+     Last View W: -5021.8579234972685
+     Last View E: 2464.4808743169397
+     Maximum View N: 1955.1912568306002
+     Maximum View S: -3487.4316939890723
+     Maximum View W: -5021.8579234972685
+     Maximum View E: 2464.4808743169397
+     Extent Method: Manual
+     Buffer: 0
+     Draw Icons: Yes
+     Draw Icon Labels: Name
+     Draw Map Objects: No
+     Draw Gridlines: No
+     Draw Flow Direction: Yes
+     Draw HillShade Layer: Yes
+     Draw Elevation Layer: Yes
+     Elevation Layer Color Palette: Gray Scale
+     Ignore Elevation Color Ramp Scale: No
+     Use Interpolated Color Ramp for Elevation Layer: Yes
+     Color Ramp Opacity Level for Elevation Layer: 33.0
+     Fix Element Locations: No
+     Fix Hydrologic Order: No
+End:

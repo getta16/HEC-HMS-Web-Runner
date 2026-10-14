@@ -1,0 +1,307 @@
+Basin: Castro 1
+     Description: Existing conditions
+     Last Modified Date: 28 March 2011
+     Last Modified Time: 17:03:54
+     Version: 4.13
+     Filepath Separator: \
+     Unit System: English
+     Missing Flow To Zero: No
+     Enable Flow Ratio: No
+     Compute Local Flow At Junctions: No
+     Unregulated Output Required: No
+
+     Enable Sediment Routing: No
+End:
+
+Subbasin: Subbasin-3
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:37:42
+     Canvas X: 580938.285
+     Canvas Y: 4173933.423
+     Label X: 16.0
+     Label Y: 0.0
+     Area: 2.17
+     Downstream: Reach-2
+
+     Discretization: None
+     File: Castro_1.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: Initial+Constant
+     Percent Impervious Area: 10
+     Initial Loss: 0.02
+     Constant Loss Rate: 0.14
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.2
+     Snyder Cp: 0.16
+
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Flow/Area Ratio: 0.54
+     Threshold Flow to Peak Ratio: 0.1
+End:
+
+Reach: Reach-2
+     Description: Sub 2 to Outlet
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 05:06:52
+     Canvas X: 580929.720234528
+     Canvas Y: 4170688.685628573
+     From Canvas X: 580443.5133975411
+     From Canvas Y: 4172395.1217018445
+     Label X: -62.0
+     Label Y: 4.0
+     Downstream: West Branch
+
+     Route: Modified Puls
+     Initial Variable: Combined Inflow
+     Number of Reaches: 4
+     Storage Outflow Table Name: Table 1
+     Channel Loss: None
+End:
+
+Subbasin: Subbasin-4
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:37:42
+     Canvas X: 581178.567
+     Canvas Y: 4172251.452
+     Label X: 16.0
+     Label Y: 0.0
+     Area: 0.96
+     Downstream: West Branch
+
+     Discretization: None
+     File: Castro_1.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: Initial+Constant
+     Percent Impervious Area: 15
+     Initial Loss: 0.02
+     Constant Loss Rate: 0.14
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.17
+     Snyder Cp: 0.16
+
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Flow/Area Ratio: 0.54
+     Threshold Flow to Peak Ratio: 0.1
+End:
+
+Junction: West Branch
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 05:06:41
+     Canvas X: 580929.720234528
+     Canvas Y: 4170688.685628573
+     Label X: -92.0
+     Label Y: -4.0
+     Downstream: Outlet
+End:
+
+Subbasin: Subbasin-1
+     Last Modified Date: 20 July 2015
+     Last Modified Time: 17:37:42
+     Canvas X: 582604.093
+     Canvas Y: 4175726.213
+     Label X: 16.0
+     Label Y: 0.0
+     Area: 0.86
+     Downstream: Reach-1
+
+     Discretization: None
+     File: Castro_1.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: Initial+Constant
+     Percent Impervious Area: 2
+     Initial Loss: 0.02
+     Constant Loss Rate: 0.14
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.2
+     Snyder Cp: 0.16
+
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Flow/Area Ratio: 0.54
+     Threshold Flow to Peak Ratio: 0.1
+End:
+
+Reach: Reach-1
+     Description: Sub 4 to Outlet
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 05:06:48
+     Canvas X: 581209.3232160857
+     Canvas Y: 4170670.0454298025
+     From Canvas X: 582535.9181987706
+     From Canvas Y: 4173767.594316598
+     Label X: -45.0
+     Label Y: 29.0
+     Downstream: East Branch
+
+     Route: Muskingum
+     Initial Variable: Combined Inflow
+     Muskingum K: 0.6
+     Muskingum x: 0.2
+     Muskingum Steps: 7
+     Channel Loss: None
+End:
+
+Subbasin: Subbasin-2
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 05:06:51
+     Canvas X: 582831.0205091203
+     Canvas Y: 4172795.028089641
+     Label X: 16.0
+     Label Y: 0.0
+     Area: 1.52
+     Downstream: East Branch
+
+     Discretization: None
+     File: Castro_1.sqlite
+
+     Canopy: None
+     Allow Simultaneous Precip Et: No
+     Plant Uptake Method: None
+
+     Surface: None
+
+     LossRate: Initial+Constant
+     Percent Impervious Area: 8
+     Initial Loss: 0.02
+     Constant Loss Rate: 0.14
+
+     Transform: Snyder
+     Snyder Method: Standard
+     Snyder Tp: 0.28
+     Snyder Cp: 0.16
+
+     Baseflow: Recession
+     Recession Factor: 0.79
+     Initial Flow/Area Ratio: 0.54
+     Threshold Flow to Peak Ratio: 0.1
+End:
+
+Junction: East Branch
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 05:06:44
+     Canvas X: 581209.3232160857
+     Canvas Y: 4170670.0454298025
+     Label X: 16.0
+     Label Y: 0.0
+     Downstream: Outlet
+End:
+
+Junction: Outlet
+     Last Modified Date: 16 September 2018
+     Last Modified Time: 13:58:07
+     Canvas X: 581044.1758509001
+     Canvas Y: 4170374.3830520827
+     Label X: 16.0
+     Label Y: 0.0
+     Computation Point: Yes
+     Observed Hydrograph Gage: Out
+End:
+
+Basin Layer Properties:
+     Element Layer:
+          Name: Icons
+          Layer shown: Yes
+     End Layer:
+     Map Layer:
+          Filename: maps\Rivers.shp
+          Layer:0
+          Display name: Rivers
+          Minimum Scale: Undefined
+          Maximum Scale: Undefined
+          Layer shown: Yes
+          Properties Filename: maps\Rivers4535152372020.gdr
+     End Layer:
+     Map Layer:
+          Filename: maps\Subbasins.shp
+          Layer:0
+          Display name: Subbasins
+          Minimum Scale: Undefined
+          Maximum Scale: Undefined
+          Layer shown: Yes
+          Properties Filename: maps\Subbasins4535152372020.gdr
+     End Layer:
+End:
+
+Basin Spatial Properties:
+End:
+
+Basin Schematic Properties:
+     Last View N: 4175726.213
+     Last View S: 4170346.363
+     Last View W: 580406.233
+     Last View E: 582604.093
+     Maximum View N: 4177382.75
+     Maximum View S: 4170346.363
+     Maximum View W: 578967.875
+     Maximum View E: 583183.1875
+     Extent Method: Elements
+     Buffer: 0
+     Draw Icons: Yes
+     Draw Icon Labels: Name
+     Draw Map Objects: No
+     Draw Gridlines: Yes
+     Draw Flow Direction: No
+     Draw HillShade Layer: Yes
+     Draw Elevation Layer: Yes
+     Elevation Layer Color Palette: Default
+     Ignore Elevation Color Ramp Scale: No
+     Use Interpolated Color Ramp for Elevation Layer: Yes
+     Color Ramp Opacity Level for Elevation Layer: 33.0
+     Fix Element Locations: No
+     Fix Hydrologic Order: No
+End:
+
+Computation Point: Outlet
+     Parameter Set: 1
+     End Parameter Set:
+     Parameter Set: 2
+     End Parameter Set:
+     Parameter Set: 3
+     End Parameter Set:
+     Parameter Set: 4
+     End Parameter Set:
+     Parameter Set: 5
+     End Parameter Set:
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+     Graph Definition: 
+     End Graph Definition: 
+
+End Computation Point: 
