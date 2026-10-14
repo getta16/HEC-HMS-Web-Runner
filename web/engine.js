@@ -1546,10 +1546,19 @@
         barrels: num(p['Number Barrels'] || 1), rise: (shape === 1 ? num(p['Diameter'] ?? p['Rise']) : rise) * ft, span: num(p['Span'] ?? p['Diameter'] ?? p['Rise']) * ft, length: num(p['Culvert Length']) * ft,
         inletInv: inv * ft, outletInv: outv * ft, ke: num(p['Entrance Loss Coefficient']), kx: num(p['Exit Loss Coefficient']), n: num(p["Top Manning's n"] ?? p["Manning's n"]),
       });
+      // flow() resets its state on every call, so equal inputs give equal results: cache them
+      // (the reservoir solver asks for the same pool/tailwater pair several times per step)
+      const memo = new Map();
+      const cached = (hw, tw) => {
+        const k = hw + ',' + tw;
+        let q = memo.get(k);
+        if (q === undefined) { if (memo.size >= 200000) memo.clear(); q = flow(hw, tw); memo.set(k, q); }
+        return q;
+      };
       return { low: inv, q: (e, tw) => {
-        if (tw === undefined) { if (e * ft < outv * ft || e <= inv) return 0; return flow(e * ft, outv * ft) * cfs; }
+        if (tw === undefined) { if (e * ft < outv * ft || e <= inv) return 0; return cached(e * ft, outv * ft) * cfs; }
         if (e <= inv || e < tw) return 0;
-        return flow(e * ft, tw * ft) * cfs;
+        return cached(e * ft, tw * ft) * cfs;
       } };
     }
     if (st.type === 'Pump' && st.method === 'Head-Discharge Pump') {
