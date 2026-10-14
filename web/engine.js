@@ -2016,6 +2016,11 @@
   }
   function run(basin, met, gages, control, pdata, ext) {
     const u = basin.units, dtMin = control.dtMin, dtH = dtMin / 60, times = control.times, n = times.length;
+    // not computed yet: fail instead of silently giving zero flow / ignoring snow
+    const snow = met.header && met.header.props['Snowmelt Method'];
+    if (snow && !/^none$/i.test(snow)) throw new Error(msg('unsupported', 'Snowmelt Method', snow));
+    const source = basin.elements.find(e => e.kind === 'Source');
+    if (source) throw new Error(msg('unsupported', 'Source', `${source.name} (${source.block.props['Flow Method'] || '?'})`));
     const res = {};
     const byName = Object.fromEntries(basin.elements.map(e => [e.name, e]));
     const upstream = {};
