@@ -152,6 +152,15 @@ header.top { padding-block: 20px 0; display: grid; gap: 10px; }
 .swatch { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex: none; }
 .lkey { width: 16px; height: 0; border-top: 2px solid; display: inline-block; }
 .lkey.dash { border-top-style: dashed; }
+.fit { display: grid; gap: 8px; border-top: 1px solid var(--line); padding-top: 12px; }
+.fit-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.fit-head h3 { font-size: 15px; font-weight: 600; }
+.fit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.fit-grid > div { background: var(--surface-2); border-radius: 8px; padding: 8px 10px; display: grid; gap: 1px; align-content: start; }
+.fit-grid .k { font-size: 12px; color: var(--ink-2); }
+.fit-grid .v { font: 600 17px/1.3 var(--font-mono); font-variant-numeric: tabular-nums; }
+.fit-grid .v small { font: 500 11.5px var(--font-body); color: var(--muted); margin-left: 3px; }
+.fit-grid .h { font: 11.5px var(--font-mono); color: var(--s-ref); }
 .tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font-size: 12.5px; box-shadow: 0 6px 20px rgba(0,0,0,.12); min-width: 190px; display: grid; gap: 3px; z-index: 3; }
 .tip .t { font: 600 12px var(--font-mono); color: var(--ink); }
 .tip .r { display: flex; justify-content: space-between; gap: 14px; color: var(--ink-2); }
@@ -275,6 +284,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
         <div class="empty" id="chart-empty" hidden></div>
         <div class="tip" id="tip" hidden></div>
       </div>
+      <div class="fit" id="fit" hidden></div>
     </div>
   </section>
 
@@ -367,6 +377,9 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       cArea: (a, u) => `พื้นที่รับน้ำ ${a} ${u}`, cFrom: (l) => `รับน้ำจาก ${l}`, cTo: (n) => `ไหลไป ${n}`,
       cRain: (v, u) => `ฝน ${v} ${u}`, cExcess: (v, u) => `ส่วนเกิน ${v} ${u}`,
       c0neg: 'Δt < 2KX (C0 ติดลบ)', c2neg: 'Δt > 2K(1−x)',
+      observed: (g) => `น้ำท่าตรวจวัด (${g})`, cObs: (g) => `สถานีวัดน้ำ ${g}`, cObsErr: (g, e) => `สถานีวัดน้ำ ${g}: ${e}`,
+      fitTitle: 'เทียบกับน้ำท่าตรวจวัด', fitHint: (n, g) => `คำนวณจาก ${n} time step ที่สถานี ${g} มีค่ามากกว่า 0 (แบบเดียวกับ HEC-HMS)`, fitNone: (g) => `สถานี ${g} ไม่มีข้อมูลในช่วงเวลาที่รัน`,
+      fObsPeak: 'peak ตรวจวัด', fObsVol: 'ปริมาตรตรวจวัด', fHms: (v) => `HEC-HMS ${v}`,
       outflow: 'น้ำไหลออก', inflow: 'น้ำไหลเข้า', baseflow: 'Baseflow', rain: 'ฝน', excess: 'ฝนส่วนเกิน',
       rainPer: (d, u) => `ฝนราย ${d} (${u})`, rainExcess: 'ฝน / ส่วนเกิน',
       params: 'พารามิเตอร์', paramsOf: (n) => `พารามิเตอร์ · ${n}`, paramsHint: (f) => `แก้ค่าในไฟล์ ${f} แล้วกด “รันแบบจำลอง”`,
@@ -439,6 +452,9 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       cArea: (a, u) => `Drainage area ${a} ${u}`, cFrom: (l) => `Inflow from ${l}`, cTo: (n) => `Flows to ${n}`,
       cRain: (v, u) => `Rain ${v} ${u}`, cExcess: (v, u) => `Excess ${v} ${u}`,
       c0neg: 'Δt < 2KX (negative C0)', c2neg: 'Δt > 2K(1−x)',
+      observed: (g) => `Observed (${g})`, cObs: (g) => `Observed gage ${g}`, cObsErr: (g, e) => `Observed gage ${g}: ${e}`,
+      fitTitle: 'Fit to observed flow', fitHint: (n, g) => `Over the ${n} time steps where gage ${g} is above 0, as HEC-HMS computes it`, fitNone: (g) => `Gage ${g} has no data in the run window`,
+      fObsPeak: 'Observed peak', fObsVol: 'Observed volume', fHms: (v) => `HEC-HMS ${v}`,
       outflow: 'Outflow', inflow: 'Inflow', baseflow: 'Baseflow', rain: 'Rainfall', excess: 'Excess rainfall',
       rainPer: (d, u) => `Rainfall per ${d} (${u})`, rainExcess: 'Rain / excess',
       params: 'Parameters', paramsOf: (n) => `Parameters · ${n}`, paramsHint: (f) => `Edits ${f}; press “Run model” to apply`,
@@ -890,7 +906,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     const r = OUT && el ? OUT.results[selected] : null;
     const empty = $('chart-empty');
     if (!r) {
-      $('el-chips').innerHTML = ''; $('legend').innerHTML = ''; $('hyeto').innerHTML = ''; $('hydro').innerHTML = ''; $('hyeto').hidden = true; $('hydro').hidden = true; chart = null;
+      $('el-chips').innerHTML = ''; $('legend').innerHTML = ''; $('fit').hidden = true; $('hyeto').innerHTML = ''; $('hydro').innerHTML = ''; $('hyeto').hidden = true; $('hydro').hidden = true; chart = null;
       empty.textContent = t('emptyRun'); empty.hidden = !S; return;
     }
     empty.hidden = true; $('hydro').hidden = false;
@@ -907,18 +923,44 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       if (dt < 2 * K * X) html += `<span class="chip warn">${esc(t('c0neg'))}</span>`;
       if (dt > 2 * K * (1 - X)) html += `<span class="chip warn">${esc(t('c2neg'))}</span>`;
     }
+    const ob = r.observed;
+    if (ob) html += ob.error ? `<span class="chip warn">${esc(t('cObsErr', ob.gage, ob.error))}</span>` : `<span class="chip">${esc(t('cObs', ob.gage))}</span>`;
     $('el-chips').innerHTML = html;
     const series = [{ key: 'out', label: t('outflow'), color: 'var(--s-out)', data: r.outflow, stats: r.stats }];
     if (r.inflow && ['Reach', 'Reservoir', 'Diversion'].includes(oel.kind)) series.push({ key: 'in', label: t('inflow'), color: 'var(--s-inflow)', data: r.inflow, dash: true });
     if (oel.kind === 'Diversion') series.push({ key: 'div', label: t('diverted'), color: 'var(--s-base)', data: r.diverted, dash: true });
     if (oel.kind === 'Reservoir' && r.structures.length > 1) r.structures.forEach((st, j) => { if (st.flow.some(v => v > 0)) series.push({ key: 'st' + j, label: t('structFlow', st.method || st.type), color: j ? 'var(--s-ref)' : 'var(--s-base)', data: st.flow, dash: true }); });
     if (oel.kind === 'Subbasin' && r.base.some(v => v > 0)) series.push({ key: 'base', label: t('baseflow'), color: 'var(--s-base)', data: r.base, dash: true });
+    if (ob && ob.stats) series.push({ key: 'obs', label: t('observed', ob.gage), color: 'var(--ink)', data: ob.values, thin: true });
     const isSub = oel.kind === 'Subbasin';
     $('legend').innerHTML = series.map(s => `<span><span class="lkey${s.dash ? ' dash' : ''}" style="border-color:${s.color}"></span>${esc(s.label)}</span>`).join('')
       + (isSub ? `<span><span class="swatch" style="background:var(--precip)"></span>${esc(t('rain'))}</span><span><span class="swatch" style="background:var(--excess)"></span>${esc(t('excess'))}</span>` : '');
     const ref = refFor(); const rr = ref && ref.match && ref.r.elements[selected];
     chart = { series, isSub, r, rr };
+    renderFit(ob, rr && rr.obs);
     drawCharts();
+  }
+  function renderFit(ob, hr) {
+    const box = $('fit');
+    if (!ob || ob.error) { box.hidden = true; return; }
+    box.hidden = false;
+    if (!ob.stats) { box.innerHTML = `<div class="fit-head"><h3>${esc(t('fitTitle'))}</h3><span class="hint">${esc(t('fitNone', ob.gage))}</span></div>`; return; }
+    const st = ob.stats, u = OUT.u, f = (v, d) => isFinite(v) ? v.toFixed(d) : '—', hf = (k, d) => hr && isFinite(hr[k]) ? (d == null ? fAuto(hr[k]) : hr[k].toFixed(d)) : null;
+    const cell = (k, v, unit, h, sub) => `<div><span class="k">${esc(k)}</span><span class="v">${v}${unit ? `<small>${esc(unit)}</small>` : ''}</span>${sub ? `<span class="k">${esc(sub)}</span>` : ''}${h != null ? `<span class="h">${esc(t('fHms', h))}</span>` : ''}</div>`;
+    // decimals as the HEC-HMS results table shows them
+    const rows = [
+      [t('fObsPeak'), fAuto(st.max), u.flow, hf('max'), H.fmtDateTime(st.maxTime)],
+      [t('fObsVol'), fAuto(st.vol), u.vol, null],
+      ['Nash-Sutcliffe (NSE)', f(st.nse, 3), '', hf('nse', 3)],
+      ['RMSE Std Dev (RSR)', f(st.rsr, 3), '', hf('rsr', 3)],
+      ['Percent Bias', f(st.pbias, 2), '%', hf('pbias', 2)],
+      ['R²', f(st.r2, 3), '', hf('r2', 3)],
+      ['Modified KGE', f(st.kge, 3), '', hf('kge', 3)],
+      ['r', f(st.r, 3), '', hf('r', 3)],
+      ['Bias ratio β', f(st.beta, 3), '', hf('beta', 3)],
+      ['Variability ratio γ', f(st.gamma, 3), '', hf('gamma', 3)],
+    ];
+    box.innerHTML = `<div class="fit-head"><h3>${esc(t('fitTitle'))}</h3><span class="hint">${esc(t('fitHint', st.n.toLocaleString('en-US'), ob.gage))}</span></div><div class="fit-grid">${rows.map(r => cell(...r)).join('')}</div>`;
   }
   function timeTicks(T) {
     const span = (T[T.length - 1] - T[0]) / 3600000;
@@ -955,7 +997,8 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       hy.setAttribute('viewBox', `0 0 ${W} ${hh + 12}`); hy.innerHTML = s; hy.hidden = false;
     } else { hy.hidden = true; hy.innerHTML = ''; }
     const hh = 300, mt = 12, mb = 40;
-    const ymax = niceMax(Math.max(...series.map(s => Math.max(...s.data)), rr ? rr.peak : 0) * 1.08);
+    const smax = (a) => { let m = 0; for (const v of a) if (v > m) m = v; return m; }; // NaN-safe (observed gaps)
+    const ymax = niceMax(Math.max(...series.map(s => smax(s.data)), rr ? rr.peak : 0) * 1.08);
     const y = (v) => mt + (1 - v / ymax) * (hh - mt - mb);
     let s = '<g class="axis">';
     for (let k = 0; k <= 5; k++) {
@@ -973,13 +1016,14 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     s += `<text class="ttl" x="${ml}" y="${hh - 1}">${u.flow}</text></g>`;
     const stride = Math.max(1, Math.floor(N / 1600)); // keep peaks when thinning long series
     for (const se of series) {
-      let d = '';
+      let d = '', pen = false;
       for (let i = 0; i < N; i += stride) {
         let v = se.data[i], vi = i;
-        if (stride > 1) for (let j = i; j < Math.min(N, i + stride); j++) if (se.data[j] > v) { v = se.data[j]; vi = j; }
-        d += (d ? 'L' : 'M') + x(vi).toFixed(1) + ',' + y(v).toFixed(1);
+        if (stride > 1) for (let j = i; j < Math.min(N, i + stride); j++) if (se.data[j] > v || (isNaN(v) && !isNaN(se.data[j]))) { v = se.data[j]; vi = j; }
+        if (isNaN(v)) { pen = false; continue; } // gap in observed data
+        d += (pen ? 'L' : 'M') + x(vi).toFixed(1) + ',' + y(v).toFixed(1); pen = true;
       }
-      s += `<path d="${d}" fill="none" stroke="${se.color}" stroke-width="2" stroke-linejoin="round" ${se.dash ? 'stroke-dasharray="5 4"' : ''}/>`;
+      s += `<path d="${d}" fill="none" stroke="${se.color}" stroke-width="${se.thin ? 1.5 : 2}" stroke-linejoin="round" ${se.dash ? 'stroke-dasharray="5 4"' : ''}/>`;
     }
     const o = series[0], pi = o.stats.peakIndex, px = x(pi), py = y(o.data[pi]);
     const anchor = px > W - 200 ? 'end' : 'start';
@@ -1003,9 +1047,9 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     const i = Math.max(0, Math.min(N - 1, Math.round((sx - ml) / pw * (N - 1))));
     const xx = x(i);
     for (const id of ['cx', 'hx']) { const l = $(id); if (l) { l.setAttribute('x1', xx); l.setAttribute('x2', xx); l.setAttribute('visibility', 'visible'); } }
-    $('dots').innerHTML = chart.series.map(se => `<circle cx="${xx}" cy="${y(se.data[i])}" r="4" fill="${se.color}" stroke="var(--surface)" stroke-width="2"/>`).join('');
+    $('dots').innerHTML = chart.series.filter(se => !isNaN(se.data[i])).map(se => `<circle cx="${xx}" cy="${y(se.data[i])}" r="4" fill="${se.color}" stroke="var(--surface)" stroke-width="2"/>`).join('');
     let h = `<span class="t">${esc(t('at', H.fmtDateTime(T[i])))}</span>`;
-    for (const se of chart.series) h += `<span class="r"><span><span class="lkey${se.dash ? ' dash' : ''}" style="border-color:${se.color};margin-right:6px"></span>${esc(se.label)}</span><b>${fAuto(se.data[i])} ${u.flow}</b></span>`;
+    for (const se of chart.series) h += `<span class="r"><span><span class="lkey${se.dash ? ' dash' : ''}" style="border-color:${se.color};margin-right:6px"></span>${esc(se.label)}</span><b>${isNaN(se.data[i]) ? '—' : fAuto(se.data[i]) + ' ' + u.flow}</b></span>`;
     if (chart.isSub) h += `<span class="r"><span>${esc(t('rainExcess'))}</span><b>${chart.r.precip[i].toFixed(3)} / ${chart.r.excess[i].toFixed(3)} ${u.depth}</b></span>`;
     const tip = $('tip'); tip.innerHTML = h; tip.hidden = false;
     const box = $('chart-box').getBoundingClientRect(), px = ev.clientX - box.left, tw = tip.offsetWidth;

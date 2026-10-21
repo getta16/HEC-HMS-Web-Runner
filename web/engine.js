@@ -441,8 +441,8 @@
   const upEq = (a, b) => a.trim().toUpperCase() === b.trim().toUpperCase();
 
   // Merge every live block of a regular time series (D part ignored) into {start, interval, values}
-  // where values[i] is the value for the period ending at start + (i+1)*interval.
-  function dssSeries(dss, pathname) {
+  // where values[i] is the value for the period ending at start + (i+1)*interval; gaps hold `missing`.
+  function dssSeries(dss, pathname, missing = 0) {
     const want = pathParts(pathname), dtw = intervalMinutes(want.E);
     const recs = dss.records.filter(r => {
       const p = pathParts(r.path);
@@ -468,7 +468,7 @@
     if (!times.length) return null;
     const step = dtw * 60000, start = times[0] - step;
     const n = Math.round((times[times.length - 1] - start) / step);
-    const values = new Float64Array(n);
+    const values = new Float64Array(n).fill(missing);
     for (const [t, v] of pts) values[Math.round((t - start) / step) - 1] = v;
     return { start, interval: dtw, values, units: units == null ? recs[0].units : units };
   }
@@ -1797,7 +1797,7 @@
       const p = b.props;
       if (b.kind === 'Basin') { header = b; continue; }
       if (!['Subbasin', 'Reach', 'Junction', 'Sink', 'Source', 'Reservoir', 'Diversion'].includes(b.kind)) { other.push(b); continue; }
-      const el = { kind: b.kind, name: b.name, downstream: p['Downstream'] || null, block: b };
+      const el = { kind: b.kind, name: b.name, downstream: p['Downstream'] || null, observed: p['Observed Hydrograph Gage'] || null, block: b };
       if (b.kind === 'Subbasin') {
         el.area = num(p['Area']);
         el.loss = { method: p['LossRate'], initialLoss: num(p['Initial Loss']), constantRate: num(p['Constant Loss Rate'] ?? p['Percolation Rate']), initialDeficit: num(p['Initial Deficit']), maxDeficit: num(p['Maximum Deficit']), impervious: num(p['Percent Impervious Area'] || 0), cn: num(p['Curve Number']), ia: num(p['Initial Abstraction']) };
@@ -1873,7 +1873,7 @@
     for (const b of parseHms(text)) {
       if (b.kind !== 'Gage') continue;
       const p = b.props;
-      const g = { name: b.name, total: num(p['Total Storm Depth']), source: p['Data Source Type'] || '', file: p['Filename'], pathname: p['Pathname'] };
+      const g = { name: b.name, type: p['Gage Type'] || '', total: num(p['Total Storm Depth']), source: p['Data Source Type'] || '', file: p['Filename'], pathname: p['Pathname'] };
       if (p['Data Values']) {
         g.values = p['Data Values'].split(/[\s,]+/).filter(Boolean).map(Number);
         g.interval = num(p['Data Interval']);
@@ -1882,12 +1882,12 @@
         const dss = getDss(g.file);
         if (!dss) g.error = msg('needFile', g.file);
         else {
-          const s = dssSeries(dss, g.pathname);
+          const flow = /^flow$/i.test(g.type), s = dssSeries(dss, g.pathname, flow ? NaN : 0); // observed flow keeps its gaps
           if (!s) g.error = msg('noPath', g.pathname, g.file);
           else {
             g.values = Array.from(s.values); g.interval = s.interval; g.start = s.start; g.units = s.units;
             // cumulative gage (…/PRECIP-CUM/…): difference, restarting when the total resets
-            if (/CUM/i.test(pathParts(g.pathname).C)) { let last = 0; g.values = g.values.map(v => { if (isNaN(v)) return 0; const d = v >= last ? v - last : 0; last = v; return d; }); }
+            if (!flow && /CUM/i.test(pathParts(g.pathname).C)) { let last = 0; g.values = g.values.map(v => { if (isNaN(v)) return 0; const d = v >= last ? v - last : 0; last = v; return d; }); }
           }
         }
       }
@@ -1959,7 +1959,7 @@
   function readRuns(text) {
     return parseHms(text).filter(b => b.kind === 'Run').map(b => ({ name: b.name, basin: b.props['Basin'], met: b.props['Precip'] || b.props['Meteorology'], control: b.props['Control'] }));
   }
-  // RUN_x.results (XML) -> { element: {peak, peakTime, volume, precip} }
+  // RUN_x.results (XML) -> { element: {peak, peakTime, volume, precip, obs?} }
   function readResults(text) {
     const tag = (t) => (new RegExp(`<${t}>(.*?)</${t}>`).exec(text) || [])[1];
     const when = (s) => { if (!s) return null; const [d, t] = s.split(','); try { return parseDateTime(d, (t || '').trim()); } catch (_) { return null; } };
@@ -1970,6 +1970,10 @@
     while ((m = re.exec(text))) {
       const st = (t) => { const r = new RegExp(`type="${t}"[^>]*value="([^"]*)"`).exec(m[0]); return r ? r[1] : null; };
       out.elements[m[1]] = { peak: parseFloat(st('Outflow Maximum')), peakTime: when(st('Outflow Maximum Time')), volume: parseFloat(st('Outflow Volume')), precip: parseFloat(st('Precipitation Total')) };
+      if (st('Observed Flow Maximum') != null) {
+        const ob = (t) => parseFloat(st('Observed Flow ' + t));
+        out.elements[m[1]].obs = { max: ob('Maximum'), maxTime: when(st('Observed Flow Maximum Time')), nse: ob('Nash Sutcliffe'), rsr: ob('RMSE Stdev'), pbias: ob('Percent Bias'), r2: ob('Coefficient of Determination'), kge: ob('Modified Kling-Gupta'), r: ob('Correlation Coefficient'), beta: ob('Bias Ratio'), gamma: ob('Variability Ratio') };
+      }
     }
     return out;
   }
@@ -2014,6 +2018,42 @@
     });
     return { p, excess, loss, direct: modClark ? direct : transform(excess, e.area, e.transform, dtMin, u) };
   }
+  // Observed hydrograph (element "Observed Hydrograph Gage" → a Flow gage): sampled at the run
+  // times (linear between gage values, missing outside the record or across gaps), with the
+  // goodness-of-fit statistics HEC-HMS writes to RUN_*.results over the times with observed flow > 0.
+  function observedFlow(r, g, times, dtH, u) {
+    const n = times.length, step = g.interval * 60000, obs = new Float64Array(n).fill(NaN);
+    const k = /^cfs$/i.test(g.units || '') && u.metric ? 0.3048 ** 3 : /^m3\/?s$/i.test((g.units || '').replace(/[³]/g, '3')) && !u.metric ? 1 / 0.3048 ** 3 : 1;
+    for (let i = 0; i < n; i++) {
+      const x = (times[i] - g.start) / step - 1, j = Math.floor(x + 1e-9), f = x - j;
+      if (j < 0 || j >= g.values.length) continue;
+      const v = f < 1e-9 ? g.values[j] : j + 1 < g.values.length ? g.values[j] + f * (g.values[j + 1] - g.values[j]) : NaN;
+      obs[i] = v * k;
+    }
+    const idx = []; for (let i = 0; i < n; i++) if (obs[i] > 0) idx.push(i); // as HMS: zero flow counts as missing
+    if (!idx.length) return { gage: g.name, values: obs, stats: null };
+    let mn = Infinity, mnI = 0, mx = -Infinity, mxI = 0, so = 0, ss = 0, vol = 0;
+    for (const i of idx) {
+      const o = obs[i], s = r.outflow[i];
+      if (o < mn) { mn = o; mnI = i; }
+      if (o > mx) { mx = o; mxI = i; }
+      so += o; ss += s;
+    }
+    for (let i = 1; i < n; i++) vol += ((obs[i] > 0 ? obs[i] : 0) + (obs[i - 1] > 0 ? obs[i - 1] : 0)) / 2 * dtH * 3600; // trapezoids, missing as 0
+    const m = idx.length, mo = so / m, ms = ss / m;
+    let sse = 0, vo = 0, vs = 0, cov = 0;
+    for (const i of idx) { const o = obs[i] - mo, s = r.outflow[i] - ms; sse += (r.outflow[i] - obs[i]) ** 2; vo += o * o; vs += s * s; cov += o * s; }
+    const cc = cov / Math.sqrt(vo * vs), beta = ms / mo, gamma = (Math.sqrt(vo / m) / mo) / (Math.sqrt(vs / m) / ms); // HMS: CV observed / CV simulated
+    return {
+      gage: g.name, values: obs, stats: {
+        n: m, min: mn, minTime: times[mnI], max: mx, maxTime: times[mxI], peakIndex: mxI, vol: vol * u.volFactor, volRaw: vol,
+        depth: r.area ? vol / (r.area * (u.metric ? 1e6 : 5280 * 5280)) * (u.metric ? 1000 : 12) : null,
+        mean: mo, rsr: Math.sqrt(sse / vo), nse: 1 - sse / vo, pbias: (ss - so) / so * 100, r2: cc * cc,
+        kge: 1 - Math.sqrt((cc - 1) ** 2 + (beta - 1) ** 2 + (gamma - 1) ** 2), r: cc, gamma, beta,
+      },
+    };
+  }
+
   function run(basin, met, gages, control, pdata, ext) {
     const u = basin.units, dtMin = control.dtMin, dtH = dtMin / 60, times = control.times, n = times.length;
     // not computed yet: fail instead of silently giving zero flow / ignoring snow
@@ -2077,6 +2117,11 @@
       return r;
     };
     for (const e of basin.elements) compute(e.name);
+    for (const e of basin.elements) {
+      const g = e.observed && gages[e.observed];
+      if (g && g.values) res[e.name].observed = observedFlow(res[e.name], g, times, dtH, u);
+      else if (e.observed) res[e.name].observed = { gage: e.observed, error: g ? g.error : msg('noGage', e.observed) };
+    }
     const outlets = basin.elements.filter(e => !e.downstream).map(e => e.name);
     const outlet = outlets.sort((a, b) => res[b].area - res[a].area)[0];
     return { times, dtH, results: res, order: basin.elements.map(e => e.name), outlet };
