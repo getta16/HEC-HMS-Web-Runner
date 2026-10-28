@@ -114,6 +114,12 @@ header.top { padding-block: 20px 0; display: grid; gap: 10px; }
 .field input[aria-invalid="true"] { border-color: var(--bad); }
 .field .note { font-size: 11.5px; color: var(--muted); }
 .row-actions { display: flex; flex-wrap: wrap; gap: 8px; grid-column: 1 / -1; align-items: center; }
+.rain { display: grid; gap: 8px; border-top: 1px solid var(--grid); padding-top: 12px; }
+.rain h3 { font-size: 15px; font-weight: 600; }
+.rain .row-actions { align-items: end; }
+.rain-scale { width: 150px; }
+.chip.csv { background: var(--accent-soft); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
+.rain code { font: 12px var(--font-mono); background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
 
 .drop { border: 1.5px dashed var(--line); border-radius: 10px; padding: 14px; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; font-size: 13.5px; color: var(--ink-2); }
 .drop.over { border-color: var(--accent); background: var(--accent-soft); }
@@ -248,6 +254,18 @@ pre.file .b { color: var(--ink); font-weight: 600; }
         <button class="btn ghost" id="c-revert" data-i18n="revertCtl"></button>
         <span class="hint" data-i18n="ctlHint"></span>
       </div>
+    </div>
+    <div class="rain">
+      <div class="panel-head"><h3 data-i18n="rainTitle"></h3><span class="hint" id="rain-hint"></span></div>
+      <div class="chips" id="rain-gages"></div>
+      <div class="row-actions">
+        <div class="field rain-scale"><label for="rain-scale" data-i18n="rainScale"></label><input id="rain-scale" inputmode="decimal" value="100"></div>
+        <button class="btn ghost" id="rain-import" data-i18n="rainImport" data-i18n-title="rainImportTip"></button>
+        <input type="file" id="rain-file" accept=".csv,.txt,text/csv" hidden>
+        <button class="btn ghost" id="rain-export" data-i18n="rainExport" data-i18n-title="rainExportTip"></button>
+        <button class="btn ghost" id="rain-clear" data-i18n="rainClear"></button>
+      </div>
+      <p class="hint" data-i18n-html="rainFormat"></p>
     </div>
     <div class="drop" id="drop">
       <span data-i18n="dropHere"></span>
@@ -400,6 +418,24 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       defaultFail: (e) => `โหลดโปรเจกต์ตัวอย่างไม่ได้ (${e}) ถ้าเปิดไฟล์จากเครื่องโดยตรง ให้ใช้ปุ่มอัปโหลดโฟลเดอร์แทน`,
       loadFail: (n, s) => `โหลด ${n} ไม่ได้ (${s})`,
       project: 'โปรเจกต์',
+      rainTitle: 'ข้อมูลฝน', rainScale: 'ตัวคูณฝน (%)',
+      rainImport: '⭱ นำเข้าฝน CSV', rainImportTip: 'แทนฝนของสถานีด้วยข้อมูลจากไฟล์ CSV (ไฟล์ .dss เดิมไม่ถูกแก้)',
+      rainExport: '⭳ ส่งออกฝนเป็น CSV', rainExportTip: 'บันทึกฝนที่ใช้อยู่ในช่วงเวลาที่รัน เพื่อแก้ใน Excel แล้วนำเข้ากลับ',
+      rainClear: 'ใช้ฝนตามไฟล์',
+      rainFormat: 'รูปแบบ CSV: คอลัมน์แรกเป็นวันเวลา (<code>2023-09-01 07:00</code> หรือ <code>01/09/2023 07:00</code> วัน/เดือน/ปี ปี พ.ศ. ได้) คอลัมน์ถัดไปเป็นฝนรายช่วงของแต่ละสถานี หัวคอลัมน์เป็นชื่อสถานีตามไฟล์ .gage ใส่หน่วยในวงเล็บได้ เช่น <code>Gage1 (mm)</code> ค่าในแถวคือฝนที่ตกในช่วงก่อนถึงเวลานั้น ถ้ามีคอลัมน์ฝนเดียวที่ชื่อไม่ตรงสถานีใด จะใช้กับทุกสถานี วิธีที่ง่ายที่สุดคือกด “ส่งออกฝนเป็น CSV” แล้วแก้ไฟล์นั้น',
+      rainNone: (m) => `วิธีฝน ${m} ไม่ได้ใช้สถานีวัดฝน จึงนำเข้า CSV ไม่ได้`,
+      rainSrcDss: 'จากไฟล์', rainSrcCsv: 'CSV',
+      rainGage: (g, s, v, u) => `${g} · ${s} · ${v} ${u}`,
+      rainWin: 'ตัวเลข = ฝนรวมในช่วงเวลาที่รัน',
+      rainLoaded: (n, g, a, b) => `นำเข้า ${n} แถว ให้สถานี ${g} (${a} ถึง ${b})`,
+      rainAllGages: (c) => `คอลัมน์ "${c}" ไม่ตรงชื่อสถานี จึงใช้กับทุกสถานี`,
+      rainErrRows: 'ไฟล์ CSV ต้องมีหัวคอลัมน์และข้อมูลอย่างน้อย 2 แถว',
+      rainErrDate: (r, s) => `แถว ${r}: อ่านวันเวลา "${s}" ไม่ได้`,
+      rainErrOrder: (r) => `แถว ${r}: วันเวลาต้องเรียงจากเก่าไปใหม่และไม่ซ้ำ`,
+      rainErrStep: (r) => `แถว ${r}: ช่วงเวลาไม่สม่ำเสมอ (ต้องเป็นจำนวนเท่าของช่วงที่สั้นที่สุด)`,
+      rainErrCols: (want) => `หัวคอลัมน์ไม่ตรงชื่อสถานีฝน ต้องเป็น: ${want}`,
+      rainErrScale: 'ตัวคูณฝนต้องเป็นตัวเลข 0 ขึ้นไป',
+      rainNoData: 'ไม่มีข้อมูลฝนให้ส่งออก',
     },
     en: {
       darkMode: 'Dark mode',
@@ -475,6 +511,24 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       defaultFail: (e) => `Could not load the sample project (${e}). If you opened this page from disk, use Upload folder instead.`,
       loadFail: (n, s) => `Could not load ${n} (${s})`,
       project: 'Project',
+      rainTitle: 'Rainfall', rainScale: 'Rainfall factor (%)',
+      rainImport: '⭱ Import rainfall CSV', rainImportTip: 'Replace gage rainfall with data from a CSV file (the .dss file is not changed)',
+      rainExport: '⭳ Export rainfall CSV', rainExportTip: 'Save the rainfall in the run window, edit it in Excel and import it back',
+      rainClear: 'Use rainfall from files',
+      rainFormat: 'CSV format: first column is the date/time (<code>2023-09-01 07:00</code> or <code>01/09/2023 07:00</code> day/month/year; Buddhist years are accepted), then one column of incremental rainfall per gage. Headers are the gage names from the .gage file, optionally with units such as <code>Gage1 (mm)</code>. Each value is the rain that fell in the interval ending at that time. A single rainfall column whose name matches no gage is used for every gage. The easiest start is “Export rainfall CSV” and editing that file.',
+      rainNone: (m) => `Precipitation method ${m} does not use gages, so CSV rainfall cannot be imported`,
+      rainSrcDss: 'from file', rainSrcCsv: 'CSV',
+      rainGage: (g, s, v, u) => `${g} · ${s} · ${v} ${u}`,
+      rainWin: 'Numbers = total rainfall in the run window',
+      rainLoaded: (n, g, a, b) => `Imported ${n} rows for gage ${g} (${a} to ${b})`,
+      rainAllGages: (c) => `Column "${c}" matches no gage, so it is used for every gage`,
+      rainErrRows: 'The CSV needs a header row and at least 2 data rows',
+      rainErrDate: (r, s) => `Row ${r}: cannot read date/time "${s}"`,
+      rainErrOrder: (r) => `Row ${r}: times must increase with no duplicates`,
+      rainErrStep: (r) => `Row ${r}: uneven time step (must be a multiple of the shortest step)`,
+      rainErrCols: (want) => `Column headers match no rain gage. Expected: ${want}`,
+      rainErrScale: 'Rainfall factor must be a number of 0 or more',
+      rainNoData: 'No rainfall data to export',
     },
   };
   let LANG = store.get('hms-lang') === 'en' ? 'en' : 'th';
@@ -562,10 +616,17 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   function markChanged() { if (status !== 'pending') { status = 'pending'; renderStatus(); } renderKpis(); renderFile(); }
 
   function gageFiles() { return Object.keys(P.texts).filter(n => /\.gage$/i.test(n)); }
-  function loadInputs() {
+  function loadInputs(k = P.rainScale ?? 1) {
     const met = H.readMet(P.texts[S.metFile]);
     const gages = {}, pdata = {};
     for (const g of gageFiles()) Object.assign(gages, H.readGages(P.texts[g], getDss));
+    // rainfall imported from CSV replaces the gage record; the factor scales every precip gage
+    for (const [name, r] of Object.entries(P.rain || {})) gages[name] = { name, type: 'Precipitation', source: 'CSV', start: r.start, interval: r.interval, values: r.values.slice(), units: r.units, total: NaN };
+    for (const g of Object.values(gages)) {
+      if (!g.values || /^flow$/i.test(g.type)) continue;
+      if (k !== 1) { g.values = g.values.map(v => v * k); g.total *= k; }
+      if (isNaN(g.total)) g.total = g.values.reduce((a, v) => a + (v > 0 ? v : 0), 0);
+    }
     for (const n of Object.keys(P.texts).filter(n => /\.pdata$/i.test(n))) Object.assign(pdata, H.readPairedData(P.texts[n], getDss));
     const grids = {}, cells = {};
     for (const n of Object.keys(P.texts).filter(n => /\.grid$/i.test(n))) Object.assign(grids, H.readGrids(P.texts[n]));
@@ -628,6 +689,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     renderControlFields();
   }
   function renderControlFields() {
+    renderRain();
     const p = S && S.ctlBlocks ? S.ctlBlocks[0].props : null;
     for (const id of ['c-start', 'c-end', 'c-dt', 'c-fit', 'c-revert']) $(id).disabled = !p;
     if (!p) { $('c-info').textContent = ''; $('s-hint').textContent = ''; return; }
@@ -674,6 +736,137 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   const custom = () => setScenario($('sel-basin').value, $('sel-met').value, $('sel-control').value, null);
   for (const id of ['sel-basin', 'sel-met', 'sel-control']) $(id).addEventListener('change', custom);
 
+  // ---------- rainfall import ----------
+  function rainGages(met) {
+    const s = new Set();
+    for (const sb of Object.values(met.subbasins)) {
+      if (met.method === 'Specified Average') { if (sb.gage) s.add(sb.gage); }
+      else if (met.method === 'Gage Weights') for (const g of [...Object.keys(sb.depth), ...Object.keys(sb.time)]) s.add(g);
+      else if (met.method === 'Weighted Gages') for (const w of sb.weights) s.add(w.gage);
+    }
+    return [...s];
+  }
+  const metricMet = (met) => /metric|si/i.test(met.header.props['Unit System'] || '');
+  const ctlWindow = () => { try { const c = H.readControl(H.writeHms(S.ctlBlocks)); return [c.start, c.end]; } catch (_) { return null; } };
+  function renderRain() {
+    const box = $('rain-gages');
+    const k = (P && P.rainScale) ?? 1;
+    $('rain-scale').value = String(+(k * 100).toFixed(4));
+    $('rain-scale').classList.toggle('changed', k !== 1);
+    $('rain-clear').disabled = !P || (!Object.keys(P.rain || {}).length && (P.rainScale ?? 1) === 1);
+    let inp = null;
+    try { if (S && S.metFile) inp = loadInputs(); } catch (_) {}
+    const names = inp ? rainGages(inp.met) : [];
+    for (const id of ['rain-import', 'rain-export']) $(id).disabled = !names.length;
+    if (!inp) { box.innerHTML = ''; $('rain-hint').textContent = ''; return; }
+    if (!names.length) { box.innerHTML = ''; $('rain-hint').textContent = t('rainNone', inp.met.method || '?'); return; }
+    const win = ctlWindow(), unit = metricMet(inp.met) ? 'mm' : 'in';
+    $('rain-hint').textContent = t('rainWin');
+    box.innerHTML = names.map(n => {
+      const g = inp.gages[n], csv = !!(P.rain && P.rain[n]);
+      let v = '—';
+      if (g && g.values && win) {
+        const f = /^mm$/i.test(g.units || '') && unit === 'in' ? 1 / 25.4 : /^in/i.test(g.units || '') && unit === 'mm' ? 25.4 : 1;
+        let s = 0; g.values.forEach((x, i) => { const tEnd = g.start + (i + 1) * g.interval * 60000; if (tEnd > win[0] && tEnd <= win[1] && x > 0) s += x; });
+        v = fAuto(s * f);
+      }
+      return `<span class="chip mono${csv ? ' csv' : ''}${g && g.error ? ' missing' : ''}">${esc(t('rainGage', n, csv ? t('rainSrcCsv') : t('rainSrcDss'), v, unit))}</span>`;
+    }).join('');
+  }
+  // "2023-09-01 07:00", "01/09/2023 07:00" (d/m/y, or m/d/y when dayFirst is false), "01Sep2023 0700"; B.E. years accepted
+  function parseWhen(s, dayFirst) {
+    s = s.trim().replace(/^"|"$/g, '');
+    const mk = (y, mo, d, h, mi) => { if (y > 2400) y -= 543; return mo >= 1 && mo <= 12 && d >= 1 && d <= 31 && h <= 24 && mi < 60 ? Date.UTC(y, mo - 1, d, h, mi) : NaN; };
+    let m = /^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})(?:[ T]+(\d{1,2}):(\d{2})(?::\d{2}(?:\.\d+)?)?)?$/.exec(s);
+    if (m) return mk(+m[1], +m[2], +m[3], +(m[4] || 0), +(m[5] || 0));
+    m = /^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})(?:[ T,]+(\d{1,2}):(\d{2})(?::\d{2})?)?$/.exec(s);
+    if (m) return dayFirst ? mk(+m[3], +m[2], +m[1], +(m[4] || 0), +(m[5] || 0)) : mk(+m[3], +m[1], +m[2], +(m[4] || 0), +(m[5] || 0));
+    m = /^(\d{1,2}\s*[A-Za-z]+\s*\d{4}),?\s+(\d{1,2}):?(\d{2})$/.exec(s);
+    if (m) { try { return H.parseDateTime(m[1], `${m[2]}:${m[3]}`); } catch (_) { return NaN; } }
+    return NaN;
+  }
+  function parseRainCsv(text, names, metric) {
+    const lines = text.replace(/^﻿/, '').split(/\r?\n/).filter(l => l.trim());
+    if (lines.length < 3) throw new Error(t('rainErrRows'));
+    const sep = [',', ';', '\t'].map(c => [c, lines[0].split(c).length]).sort((a, b) => b[1] - a[1])[0][0];
+    const split = (l) => l.split(sep).map(c => c.trim().replace(/^"|"$/g, ''));
+    const head = split(lines[0]).slice(1).map(h => { const m = /^(.*?)\s*[\(\[]\s*(mm|in|inch|inches)\s*[\)\]]\s*$/i.exec(h); return { name: (m ? m[1] : h).trim(), units: m ? (/^mm$/i.test(m[2]) ? 'MM' : 'IN') : (metric ? 'MM' : 'IN') }; });
+    const rows = lines.slice(1).map(split);
+    // d/m/y unless some row only makes sense as m/d/y
+    const dayFirst = !rows.some(r => { const m = /^(\d{1,2})[-\/.](\d{1,2})[-\/.]\d{4}/.exec(r[0] || ''); return m && +m[2] > 12; });
+    const times = rows.map((r, i) => { const v = parseWhen(r[0] || '', dayFirst); if (isNaN(v)) throw new Error(t('rainErrDate', i + 2, r[0] || '')); return v; });
+    let dt = Infinity;
+    for (let i = 1; i < times.length; i++) { const d = times[i] - times[i - 1]; if (d <= 0) throw new Error(t('rainErrOrder', i + 2)); dt = Math.min(dt, d); }
+    for (let i = 1; i < times.length; i++) if ((times[i] - times[0]) % dt) throw new Error(t('rainErrStep', i + 2));
+    const n = (times[times.length - 1] - times[0]) / dt + 1;
+    let cols = head.map((h, j) => ({ ...h, j })).filter(h => names.includes(h.name));
+    let note = '';
+    if (!cols.length) {
+      const data = head.map((h, j) => ({ ...h, j })).filter(h => h.name);
+      if (data.length !== 1) throw new Error(t('rainErrCols', names.join(', ')));
+      note = t('rainAllGages', data[0].name);
+      cols = names.map(name => ({ ...data[0], name }));
+    }
+    const out = {};
+    for (const c of cols) {
+      const values = new Array(n).fill(0);
+      rows.forEach((r, i) => { const v = parseFloat(String(r[c.j + 1] ?? '').replace(/,/g, '')); values[(times[i] - times[0]) / dt] = v > 0 ? v : 0; });
+      out[c.name] = { start: times[0] - dt, interval: dt / 60000, values, units: c.units };
+    }
+    return { out, rows: rows.length, note, a: times[0], b: times[times.length - 1] };
+  }
+  async function importRain(file) {
+    if (!file || !S) return;
+    try {
+      const { met } = loadInputs(), names = rainGages(met);
+      const r = parseRainCsv(await file.text(), names, metricMet(met));
+      P.rain = { ...(P.rain || {}), ...r.out };
+      // move the run window onto the imported rain when they do not overlap
+      const win = ctlWindow(), s0 = Object.values(r.out)[0].start;
+      if (win && (r.b <= win[0] || s0 >= win[1])) applyControl(s0, r.b, +$('c-dt').value);
+      showError(null);
+      renderRain(); renderControlFields(); markChanged();
+      $('runlog').innerHTML = `<span class="pend">● ${esc(t('rainLoaded', r.rows.toLocaleString(), Object.keys(r.out).join(', '), H.fmtDateTime(r.a), H.fmtDateTime(r.b)))}${r.note ? ' · ' + esc(r.note) : ''}</span>`;
+    } catch (e) { showError(e.message); }
+  }
+  function exportRain() {
+    const { met, gages } = loadInputs(1), names = rainGages(met).filter(n => gages[n] && gages[n].values);
+    if (!names.length) { showError(t('rainNoData')); return; }
+    const win = ctlWindow();
+    const ends = new Map(); // end time -> {gage: raw value}
+    for (const n of names) {
+      const g = gages[n];
+      g.values.forEach((v, i) => {
+        const te = g.start + (i + 1) * g.interval * 60000;
+        if (win && (te <= win[0] || te > win[1])) return;
+        if (!ends.has(te)) ends.set(te, {});
+        ends.get(te)[n] = v;
+      });
+    }
+    if (!ends.size) { showError(t('rainNoData')); return; }
+    const iso = (ms) => new Date(ms).toISOString().slice(0, 16).replace('T', ' ');
+    const unitOf = (g) => /^in/i.test(g.units || '') ? 'in' : /^mm$/i.test(g.units || '') ? 'mm' : metricMet(met) ? 'mm' : 'in';
+    const cell = (s) => /[",;\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    let csv = ['Date Time', ...names.map(n => `${n} (${unitOf(gages[n])})`)].map(cell).join(',') + '\r\n';
+    for (const te of [...ends.keys()].sort((a, b) => a - b)) csv += [iso(te), ...names.map(n => { const v = ends.get(te)[n]; return v == null ? '' : String(+v.toFixed(4)); })].join(',') + '\r\n';
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' }));
+    a.download = `rain_${(S.metName || P.name || 'met').replace(/[^\w฀-๿-]+/g, '_')}.csv`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+  $('rain-import').addEventListener('click', () => $('rain-file').click());
+  $('rain-file').addEventListener('change', (e) => { importRain(e.target.files[0]); e.target.value = ''; });
+  $('rain-export').addEventListener('click', () => { try { exportRain(); } catch (e) { showError(e.message); } });
+  $('rain-clear').addEventListener('click', () => { P.rain = {}; P.rainScale = 1; renderRain(); renderControlFields(); markChanged(); });
+  $('rain-scale').addEventListener('change', (e) => {
+    const v = parseFloat(e.target.value);
+    if (e.target.value.trim() === '' || isNaN(v) || v < 0) { e.target.setAttribute('aria-invalid', 'true'); $('runlog').innerHTML = `<span class="bad">${esc(t('rainErrScale'))}</span>`; return; }
+    e.target.setAttribute('aria-invalid', 'false');
+    P.rainScale = v / 100;
+    renderRain(); markChanged();
+  });
+
   // ---------- file loading ----------
   function renderFilesList() {
     if (!P) return;
@@ -702,6 +895,8 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   async function loadUploads(list) {
     if (!list || !list.length) return;
     $('runlog').textContent = t('reading');
+    const csv = list.find(f => /\.(csv|txt)$/i.test(f.name));
+    if (csv && S && !list.some(f => TEXT_EXT.test(f.name) || /\.dss$/i.test(f.name))) { importRain(csv); return; }
     try {
       const files = await readFileList(list);
       if (!files.length) throw new Error(t('noReadable'));
@@ -1210,6 +1405,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     if (!S) return;
     S.blocks = H.parseHms(P.texts[S.basinFile]);
     if (S.controlFile) S.ctlBlocks = H.parseHms(P.texts[S.controlFile]);
+    P.rain = {}; P.rainScale = 1;
     renderControlFields(); renderParams(); renderNet(); markChanged();
     $('runlog').innerHTML += ` · ${esc(t('resetDone'))}`;
   });
