@@ -130,7 +130,13 @@
    "Met_2_Sep2026.met",
    "RUN_Run_1.results",
    "RUN_Run_sep2026.results"
-  ]
+  ],
+  "gageDerive": {
+   "RID-KU-WL006": {
+    "from": "RID-KU-WL008",
+    "factor": 0.8
+   }
+  }
  },
  {
   "id": "castro",

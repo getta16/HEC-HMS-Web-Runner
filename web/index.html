@@ -438,6 +438,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       rainErrScale: 'ตัวคูณฝนต้องเป็นตัวเลข 0 ขึ้นไป',
       rainNoData: 'ไม่มีข้อมูลฝนให้ส่งออก',
       obsTitle: 'น้ำท่าตรวจวัด', obsGage: 'สถานีวัดน้ำ', obsNone: '(ไม่เทียบ)',
+      obsFrom: (g) => `${g} ใช้ข้อมูลจากสถานี`, obsFactor: 'ตัวคูณ', obsErrFactor: 'ตัวคูณต้องเป็นตัวเลข 0 ขึ้นไป', obsDerived: (g, k) => `${g} × ${k}`,
       obsImport: '⭱ นำเข้าน้ำท่า CSV', obsExport: '⭳ ส่งออกน้ำท่าเป็น CSV', obsClear: 'ลบน้ำท่าที่นำเข้า',
       obsNoRun: 'กดรันแบบจำลองก่อน',
       obsHint: 'เลือกสถานีวัดน้ำ (Flow gage) จากไฟล์ .gage หรือนำเข้า CSV: คอลัมน์แรกเป็นวันเวลา คอลัมน์ถัดไปเป็นน้ำท่า เช่น <code>Date Time,Q (m3/s)</code> หน่วย m3/s หรือ cfs ช่องว่างหรือค่าติดลบนับเป็นไม่มีข้อมูล ถ้ามีหลายคอลัมน์ ให้ตั้งหัวคอลัมน์เป็นชื่อ element นี้ เมื่อรันแล้วจะได้กราฟเทียบและค่า NSE, KGE, PBIAS · ไฟล์ที่ส่งออกมีน้ำท่าจากแบบจำลองและน้ำท่าตรวจวัด',
@@ -537,6 +538,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       rainErrScale: 'Rainfall factor must be a number of 0 or more',
       rainNoData: 'No rainfall data to export',
       obsTitle: 'Observed flow', obsGage: 'Flow gage', obsNone: '(no comparison)',
+      obsFrom: (g) => `${g} takes data from gage`, obsFactor: 'Factor', obsErrFactor: 'Factor must be a number of 0 or more', obsDerived: (g, k) => `${g} × ${k}`,
       obsImport: '⭱ Import flow CSV', obsExport: '⭳ Export flow CSV', obsClear: 'Remove imported flow',
       obsNoRun: 'Run the model first',
       obsHint: 'Pick a Flow gage from the .gage files, or import a CSV: date/time in the first column, then flow, e.g. <code>Date Time,Q (m3/s)</code>, in m3/s or cfs. Blank or negative values count as missing. With several columns, name the column after this element. After a run you get the comparison graph and NSE, KGE and PBIAS. The export holds simulated and observed flow.',
@@ -637,6 +639,13 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     for (const [name, r] of Object.entries(P.rain || {})) gages[name] = { name, type: 'Precipitation', source: 'CSV', start: r.start, interval: r.interval, values: r.values.slice(), units: r.units, total: NaN };
     // observed flow imported from CSV (missing values stay NaN, as gaps in a DSS record)
     for (const [name, r] of Object.entries(P.flow || {})) gages[name] = { name, type: 'Flow', source: 'CSV', start: r.start, interval: r.interval, values: r.values.slice(), units: r.units };
+    // a flow gage can take another gage's record × factor (P.derive, defaults from projects.json)
+    const src = { ...gages };
+    for (const [name, d] of Object.entries(P.derive || {})) {
+      const g = src[d.from || name];
+      if (g && g.values) gages[name] = { ...g, name, source: 'derived', values: g.values.map(v => v * d.factor) };
+      else if (g) gages[name] = { name, type: 'Flow', error: g.error };
+    }
     for (const g of Object.values(gages)) {
       if (!g.values || /^flow$/i.test(g.type)) continue;
       if (k !== 1) { g.values = g.values.map(v => v * k); g.total *= k; }
@@ -930,11 +939,13 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       openProject(merged);
     } catch (e) { showError(e.message); $('runlog').innerHTML = `<span class="bad">✕ ${esc(t('readFail'))}</span>`; }
   }
-  function openProject(files) {
+  function openProject(files, derive) {
     const byName = new Map(); for (const f of files) byName.set(lc(f.name), f); // later files replace earlier ones
     const list = [...byName.values()];
     P = buildProject(list);
     P.dssBufs = Object.fromEntries(list.filter(f => f.buf).map(f => [lc(f.name), f.buf]));
+    P.deriveDefault = derive || {};
+    P.derive = JSON.parse(JSON.stringify(P.deriveDefault));
     if (!Object.keys(P.pr.basins).length) { showError(t('noBasin')); return; }
     const complete = (r) => P.fileOf(P.pr.basins[r.basin]) && P.fileOf(P.pr.mets[r.met]) && P.fileOf(P.pr.controls[r.control]);
     const r = P.runs.find(complete) || P.runs[0];
@@ -1143,7 +1154,8 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       if (dt > 2 * K * (1 - X)) html += `<span class="chip warn">${esc(t('c2neg'))}</span>`;
     }
     const ob = r.observed;
-    if (ob) html += ob.error ? `<span class="chip warn">${esc(t('cObsErr', ob.gage, ob.error))}</span>` : `<span class="chip">${esc(t('cObs', ob.gage))}</span>`;
+    const dv = ob && deriveOf(ob.gage);
+    if (ob) html += ob.error ? `<span class="chip warn">${esc(t('cObsErr', ob.gage, ob.error))}</span>` : `<span class="chip${dv ? ' csv' : ''}">${esc(t('cObs', ob.gage + (dv ? ' = ' + t('obsDerived', dv.from || ob.gage, dv.factor) : '')))}</span>`;
     $('el-chips').innerHTML = html;
     const series = [{ key: 'out', label: t('outflow'), color: 'var(--s-out)', data: r.outflow, stats: r.stats }];
     if (r.inflow && ['Reach', 'Reservoir', 'Diversion'].includes(oel.kind)) series.push({ key: 'in', label: t('inflow'), color: 'var(--s-inflow)', data: r.inflow, dash: true });
@@ -1156,7 +1168,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       + (isSub ? `<span><span class="swatch" style="background:var(--precip)"></span>${esc(t('rain'))}</span><span><span class="swatch" style="background:var(--excess)"></span>${esc(t('excess'))}</span>` : '');
     const ref = refFor(); const rr = ref && ref.match && ref.r.elements[selected];
     chart = { series, isSub, r, rr };
-    renderFit(ob, rr && rr.obs);
+    renderFit(ob, dv ? null : rr && rr.obs); // HEC-HMS fit stats are for the gage's own record
     drawCharts();
   }
   function renderFit(ob, hr) {
@@ -1360,6 +1372,12 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     const csv = !!(P.flow && P.flow[cur]), hasOut = !!(OUT && OUT.results[selected]);
     return `<div class="group-title">${esc(t('obsTitle'))}</div>`
       + `<div class="field"><label for="obs-gage">${esc(t('obsGage'))}<span class="u">${esc(u.flow)}</span></label><select id="obs-gage" class="${cur !== orig ? 'changed' : ''}"><option value="">${esc(t('obsNone'))}</option>${names.map(n => `<option${n === cur ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select></div>`
+      + (cur ? (() => {
+        const d = P.derive && P.derive[cur], dd = P.deriveDefault && P.deriveDefault[cur], from = (d && d.from) || cur, k = d ? d.factor : 1;
+        const ch = JSON.stringify(d || null) !== JSON.stringify(dd || null) ? ' changed' : '';
+        return `<div class="field"><label for="obs-from">${esc(t('obsFrom', cur))}</label><select id="obs-from" class="${ch}">${names.map(n => `<option${n === from ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select></div>`
+          + `<div class="field"><label for="obs-factor">${esc(t('obsFactor'))}</label><input id="obs-factor" class="${ch}" inputmode="decimal" value="${esc(String(k))}"></div>`;
+      })() : '')
       + `<div class="row-actions" style="align-self:end"><button class="btn ghost" id="obs-import">${esc(t('obsImport'))}</button><button class="btn ghost" id="obs-export"${hasOut ? '' : ` disabled title="${esc(t('obsNoRun'))}"`}>${esc(t('obsExport'))}</button>${csv ? `<button class="btn ghost" id="obs-clear">${esc(t('obsClear'))}</button>` : ''}</div>`
       + `<p class="hint" style="grid-column:1/-1">${t('obsHint')}</p>`;
   }
@@ -1396,9 +1414,15 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }
+  function deriveOf(name) { const d = P && P.derive && P.derive[name]; return d && ((d.from && d.from !== name) || d.factor !== 1) ? d : null; }
   $('params').addEventListener('change', (ev) => {
-    if (ev.target.id !== 'obs-gage') return;
-    setObserved(selBlock(), ev.target.value);
+    const id = ev.target.id;
+    if (id === 'obs-gage') { setObserved(selBlock(), ev.target.value); renderParams(); markChanged(); return; }
+    if (id !== 'obs-from' && id !== 'obs-factor') return;
+    const cur = selBlock().props['Observed Hydrograph Gage'], from = $('obs-from').value, k = parseFloat($('obs-factor').value);
+    if ($('obs-factor').value.trim() === '' || !(k >= 0)) { $('obs-factor').setAttribute('aria-invalid', 'true'); $('runlog').innerHTML = `<span class="bad">${esc(t('obsErrFactor'))}</span>`; return; }
+    P.derive = { ...(P.derive || {}) };
+    if (from === cur && k === 1) delete P.derive[cur]; else P.derive[cur] = { from, factor: k };
     renderParams(); markChanged();
   });
   $('params').addEventListener('click', (ev) => {
@@ -1495,7 +1519,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     if (!S) return;
     S.blocks = H.parseHms(P.texts[S.basinFile]);
     if (S.controlFile) S.ctlBlocks = H.parseHms(P.texts[S.controlFile]);
-    P.rain = {}; P.rainScale = 1; P.flow = {};
+    P.rain = {}; P.rainScale = 1; P.flow = {}; P.derive = JSON.parse(JSON.stringify(P.deriveDefault || {}));
     renderControlFields(); renderParams(); renderNet(); markChanged();
     $('runlog').innerHTML += ` · ${esc(t('resetDone'))}`;
   });
@@ -1520,7 +1544,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
         if (!r.ok) throw new Error(t('loadFail', n, r.status));
         return /\.dss$/i.test(n) ? { name: n, buf: await r.arrayBuffer() } : { name: n, text: await r.text() };
       }));
-      openProject(files);
+      openProject(files, x.gageDerive);
       if (P) { P.sample = x.id; renderProjects(); }
       store.set('hms-project', x.id);
     } catch (e) {
