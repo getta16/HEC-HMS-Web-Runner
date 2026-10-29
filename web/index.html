@@ -119,7 +119,7 @@ header.top { padding-block: 20px 0; display: grid; gap: 10px; }
 .rain .row-actions { align-items: end; }
 .rain-scale { width: 150px; }
 .chip.csv { background: var(--accent-soft); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 35%, transparent); }
-.rain code { font: 12px var(--font-mono); background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+.rain code, .params code { font: 12px var(--font-mono); background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
 
 .drop { border: 1.5px dashed var(--line); border-radius: 10px; padding: 14px; display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; font-size: 13.5px; color: var(--ink-2); }
 .drop.over { border-color: var(--accent); background: var(--accent-soft); }
@@ -309,6 +309,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
   <section class="panel" aria-labelledby="p-title">
     <div class="panel-head"><h2 id="p-title"></h2><span class="hint" id="p-hint"></span></div>
     <div class="params" id="params"></div>
+    <input type="file" id="obs-file" accept=".csv,.txt,text/csv" hidden>
   </section>
 
   <section class="panel" aria-labelledby="t-title">
@@ -436,6 +437,12 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       rainErrCols: (want) => `หัวคอลัมน์ไม่ตรงชื่อสถานีฝน ต้องเป็น: ${want}`,
       rainErrScale: 'ตัวคูณฝนต้องเป็นตัวเลข 0 ขึ้นไป',
       rainNoData: 'ไม่มีข้อมูลฝนให้ส่งออก',
+      obsTitle: 'น้ำท่าตรวจวัด', obsGage: 'สถานีวัดน้ำ', obsNone: '(ไม่เทียบ)',
+      obsImport: '⭱ นำเข้าน้ำท่า CSV', obsExport: '⭳ ส่งออกน้ำท่าเป็น CSV', obsClear: 'ลบน้ำท่าที่นำเข้า',
+      obsNoRun: 'กดรันแบบจำลองก่อน',
+      obsHint: 'เลือกสถานีวัดน้ำ (Flow gage) จากไฟล์ .gage หรือนำเข้า CSV: คอลัมน์แรกเป็นวันเวลา คอลัมน์ถัดไปเป็นน้ำท่า เช่น <code>Date Time,Q (m3/s)</code> หน่วย m3/s หรือ cfs ช่องว่างหรือค่าติดลบนับเป็นไม่มีข้อมูล ถ้ามีหลายคอลัมน์ ให้ตั้งหัวคอลัมน์เป็นชื่อ element นี้ เมื่อรันแล้วจะได้กราฟเทียบและค่า NSE, KGE, PBIAS · ไฟล์ที่ส่งออกมีน้ำท่าจากแบบจำลองและน้ำท่าตรวจวัด',
+      obsErrCols: (n) => `ไม่พบคอลัมน์น้ำท่า ถ้ามีหลายคอลัมน์ ให้ตั้งหัวคอลัมน์เป็น ${n}`,
+      obsLoaded: (n, c, a, b) => `นำเข้าน้ำท่า ${n} แถว จากคอลัมน์ "${c}" (${a} ถึง ${b}) กด “รันแบบจำลอง” เพื่อเทียบ`,
     },
     en: {
       darkMode: 'Dark mode',
@@ -529,6 +536,12 @@ pre.file .b { color: var(--ink); font-weight: 600; }
       rainErrCols: (want) => `Column headers match no rain gage. Expected: ${want}`,
       rainErrScale: 'Rainfall factor must be a number of 0 or more',
       rainNoData: 'No rainfall data to export',
+      obsTitle: 'Observed flow', obsGage: 'Flow gage', obsNone: '(no comparison)',
+      obsImport: '⭱ Import flow CSV', obsExport: '⭳ Export flow CSV', obsClear: 'Remove imported flow',
+      obsNoRun: 'Run the model first',
+      obsHint: 'Pick a Flow gage from the .gage files, or import a CSV: date/time in the first column, then flow, e.g. <code>Date Time,Q (m3/s)</code>, in m3/s or cfs. Blank or negative values count as missing. With several columns, name the column after this element. After a run you get the comparison graph and NSE, KGE and PBIAS. The export holds simulated and observed flow.',
+      obsErrCols: (n) => `No flow column found. With several columns, name the column ${n}`,
+      obsLoaded: (n, c, a, b) => `Imported ${n} flow rows from column "${c}" (${a} to ${b}). Press “Run model” to compare.`,
     },
   };
   let LANG = store.get('hms-lang') === 'en' ? 'en' : 'th';
@@ -622,6 +635,8 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     for (const g of gageFiles()) Object.assign(gages, H.readGages(P.texts[g], getDss));
     // rainfall imported from CSV replaces the gage record; the factor scales every precip gage
     for (const [name, r] of Object.entries(P.rain || {})) gages[name] = { name, type: 'Precipitation', source: 'CSV', start: r.start, interval: r.interval, values: r.values.slice(), units: r.units, total: NaN };
+    // observed flow imported from CSV (missing values stay NaN, as gaps in a DSS record)
+    for (const [name, r] of Object.entries(P.flow || {})) gages[name] = { name, type: 'Flow', source: 'CSV', start: r.start, interval: r.interval, values: r.values.slice(), units: r.units };
     for (const g of Object.values(gages)) {
       if (!g.values || /^flow$/i.test(g.type)) continue;
       if (k !== 1) { g.values = g.values.map(v => v * k); g.total *= k; }
@@ -785,12 +800,14 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     if (m) { try { return H.parseDateTime(m[1], `${m[2]}:${m[3]}`); } catch (_) { return NaN; } }
     return NaN;
   }
-  function parseRainCsv(text, names, metric) {
+  // Time-series CSV: date/time column, then one value column per series; "Name (unit)" headers.
+  // unitOf(text) maps a unit in brackets to HMS units (or null when it is not a unit).
+  function readCsv(text, unitOf, defUnits) {
     const lines = text.replace(/^﻿/, '').split(/\r?\n/).filter(l => l.trim());
     if (lines.length < 3) throw new Error(t('rainErrRows'));
     const sep = [',', ';', '\t'].map(c => [c, lines[0].split(c).length]).sort((a, b) => b[1] - a[1])[0][0];
     const split = (l) => l.split(sep).map(c => c.trim().replace(/^"|"$/g, ''));
-    const head = split(lines[0]).slice(1).map(h => { const m = /^(.*?)\s*[\(\[]\s*(mm|in|inch|inches)\s*[\)\]]\s*$/i.exec(h); return { name: (m ? m[1] : h).trim(), units: m ? (/^mm$/i.test(m[2]) ? 'MM' : 'IN') : (metric ? 'MM' : 'IN') }; });
+    const head = split(lines[0]).slice(1).map((h, j) => { const m = /^(.*?)\s*[\(\[]\s*([^\)\]]+?)\s*[\)\]]\s*$/.exec(h), un = m && unitOf(m[2]); return { name: (un ? m[1] : h).trim(), units: un || defUnits, j }; });
     const rows = lines.slice(1).map(split);
     // d/m/y unless some row only makes sense as m/d/y
     const dayFirst = !rows.some(r => { const m = /^(\d{1,2})[-\/.](\d{1,2})[-\/.]\d{4}/.exec(r[0] || ''); return m && +m[2] > 12; });
@@ -799,21 +816,28 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     for (let i = 1; i < times.length; i++) { const d = times[i] - times[i - 1]; if (d <= 0) throw new Error(t('rainErrOrder', i + 2)); dt = Math.min(dt, d); }
     for (let i = 1; i < times.length; i++) if ((times[i] - times[0]) % dt) throw new Error(t('rainErrStep', i + 2));
     const n = (times[times.length - 1] - times[0]) / dt + 1;
-    let cols = head.map((h, j) => ({ ...h, j })).filter(h => names.includes(h.name));
+    // a value covers the interval ending at its time; rows left out of the file get `missing`
+    const series = (c, missing, keep) => {
+      const values = new Array(n).fill(missing);
+      rows.forEach((r, i) => { const s = String(r[c.j + 1] ?? '').replace(/,/g, ''), v = s.trim() === '' ? NaN : +s; values[(times[i] - times[0]) / dt] = keep(v); });
+      return { start: times[0] - dt, interval: dt / 60000, values, units: c.units };
+    };
+    return { head: head.filter(h => h.name), series, rows: rows.length, a: times[0], b: times[times.length - 1] };
+  }
+  const depthUnit = (s) => /^mm$/i.test(s) ? 'MM' : /^in(ch(es)?)?$/i.test(s) ? 'IN' : null;
+  const flowUnit = (s) => /^(m3\/?s|m³\/?s|cms|cumecs?)$/i.test(s.replace(/\s/g, '')) ? 'M3/S' : /^cfs$/i.test(s.trim()) ? 'CFS' : null;
+  function parseRainCsv(text, names, metric) {
+    const c = readCsv(text, depthUnit, metric ? 'MM' : 'IN');
+    let cols = c.head.filter(h => names.includes(h.name));
     let note = '';
     if (!cols.length) {
-      const data = head.map((h, j) => ({ ...h, j })).filter(h => h.name);
-      if (data.length !== 1) throw new Error(t('rainErrCols', names.join(', ')));
-      note = t('rainAllGages', data[0].name);
-      cols = names.map(name => ({ ...data[0], name }));
+      if (c.head.length !== 1) throw new Error(t('rainErrCols', names.join(', ')));
+      note = t('rainAllGages', c.head[0].name);
+      cols = names.map(name => ({ ...c.head[0], name }));
     }
     const out = {};
-    for (const c of cols) {
-      const values = new Array(n).fill(0);
-      rows.forEach((r, i) => { const v = parseFloat(String(r[c.j + 1] ?? '').replace(/,/g, '')); values[(times[i] - times[0]) / dt] = v > 0 ? v : 0; });
-      out[c.name] = { start: times[0] - dt, interval: dt / 60000, values, units: c.units };
-    }
-    return { out, rows: rows.length, note, a: times[0], b: times[times.length - 1] };
+    for (const h of cols) out[h.name] = c.series(h, 0, v => v > 0 ? v : 0);
+    return { out, rows: c.rows, note, a: c.a, b: c.b };
   }
   async function importRain(file) {
     if (!file || !S) return;
@@ -1276,7 +1300,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     },
     reservoir: [['Initial Elevation', L('ระดับน้ำเริ่มต้น', 'Initial elevation'), 'elev', null, null]],
     diversion: [['Maximum Diversion Flow', L('อัตราผันสูงสุด', 'Maximum diversion flow'), 'flow', 0, null], ['Maximum Diversion Volume', L('ปริมาตรผันสูงสุด', 'Maximum diversion volume'), 'kvol', 0, null]],
-    baseflow: { 'Recession': [['Initial Flow/Area Ratio', L('น้ำท่าเริ่มต้นต่อพื้นที่', 'Initial flow per area'), 'fpa', 0, null], ['Recession Factor', L('ค่าคงที่การลดลง', 'Recession constant'), 'perday', 0.01, 1], ['Threshold Flow To Peak Ratio', L('threshold ต่อ peak', 'Threshold ratio to peak'), '', 0.01, 1], ['Threshold Flow', L('threshold flow', 'Threshold flow'), 'flow', 0, null]] },
+    baseflow: { 'Recession': [['Initial Discharge', L('น้ำท่าเริ่มต้น', 'Initial discharge'), 'flow', 0, null], ['Initial Baseflow', L('น้ำท่าเริ่มต้น', 'Initial discharge'), 'flow', 0, null], ['Initial Flow/Area Ratio', L('น้ำท่าเริ่มต้นต่อพื้นที่', 'Initial flow per area'), 'fpa', 0, null], ['Recession Factor', L('ค่าคงที่การลดลง', 'Recession constant'), 'perday', 0.01, 1], ['Threshold Flow To Peak Ratio', L('threshold ต่อ peak', 'Threshold ratio to peak'), '', 0.01, 1], ['Threshold Flow', L('threshold flow', 'Threshold flow'), 'flow', 0, null]] },
     route: {
       'Muskingum': [['Muskingum K', L('เวลาเดินทาง K', 'Travel time K'), 'hr', 0.01, null], ['Muskingum x', L('ค่าถ่วง x', 'Weighting x'), '', 0, 0.5], ['Muskingum Steps', L('จำนวน subreach', 'Subreaches'), '', 1, 50]],
       'Lag': [['Lag', L('Lag time', 'Lag time'), 'min', 0, null]],
@@ -1301,7 +1325,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     } else if (blk.kind === 'Reach') groups.push([`Routing · ${p['Route'] || 'None'}`, PARAM_DEFS.route[p['Route']] || [], p['Route']]);
     else if (blk.kind === 'Reservoir') groups.push([`Reservoir · ${p['Route'] || ''}`, PARAM_DEFS.reservoir, 'reservoir']);
     else if (blk.kind === 'Diversion') groups.push([`Diversion · ${p['Diverter'] || ''}`, PARAM_DEFS.diversion, 'diversion']);
-    if (!groups.length) { $('params').innerHTML = `<p class="hint" style="grid-column:1/-1">${esc(t('noParams', blk.kind))}</p>`; return; }
+    if (!groups.length) { $('params').innerHTML = `<p class="hint" style="grid-column:1/-1">${esc(t('noParams', blk.kind))}</p>` + obsHtml(blk, u); return; }
     let pdata = null;
     try { pdata = loadInputs().pdata; } catch (_) {}
     let h = '';
@@ -1321,8 +1345,74 @@ pre.file .b { color: var(--ink); font-weight: 600; }
           : `<div class="uh">${esc(t('uhMissing', p['Unit Hydrograph Name'] || ''))}</div>`;
       }
     }
-    $('params').innerHTML = h;
+    $('params').innerHTML = h + obsHtml(blk, u);
   }
+  // observed flow: pick a Flow gage from the .gage files, or import one from CSV
+  function flowGageNames() {
+    const s = new Set();
+    for (const g of gageFiles()) for (const b of H.parseHms(P.texts[g])) if (b.kind === 'Gage' && /^flow$/i.test(b.props['Gage Type'] || '')) s.add(b.name);
+    for (const n of Object.keys(P.flow || {})) s.add(n);
+    return [...s];
+  }
+  function obsHtml(blk, u) {
+    const cur = blk.props['Observed Hydrograph Gage'] || '', orig = JSON.parse(S.original)[S.blocks.indexOf(blk)]['Observed Hydrograph Gage'] || '';
+    const names = flowGageNames(); if (cur && !names.includes(cur)) names.push(cur);
+    const csv = !!(P.flow && P.flow[cur]), hasOut = !!(OUT && OUT.results[selected]);
+    return `<div class="group-title">${esc(t('obsTitle'))}</div>`
+      + `<div class="field"><label for="obs-gage">${esc(t('obsGage'))}<span class="u">${esc(u.flow)}</span></label><select id="obs-gage" class="${cur !== orig ? 'changed' : ''}"><option value="">${esc(t('obsNone'))}</option>${names.map(n => `<option${n === cur ? ' selected' : ''}>${esc(n)}</option>`).join('')}</select></div>`
+      + `<div class="row-actions" style="align-self:end"><button class="btn ghost" id="obs-import">${esc(t('obsImport'))}</button><button class="btn ghost" id="obs-export"${hasOut ? '' : ` disabled title="${esc(t('obsNoRun'))}"`}>${esc(t('obsExport'))}</button>${csv ? `<button class="btn ghost" id="obs-clear">${esc(t('obsClear'))}</button>` : ''}</div>`
+      + `<p class="hint" style="grid-column:1/-1">${t('obsHint')}</p>`;
+  }
+  function setObserved(blk, name) {
+    const k = 'Observed Hydrograph Gage';
+    if (name) { if (!(k in blk.props)) blk.order.push(k); blk.props[k] = name; }
+    else { delete blk.props[k]; blk.order = blk.order.filter(x => x !== k); }
+  }
+  const selBlock = () => S.blocks.find(b => b.name === selected && b.kind !== 'Basin');
+  async function importFlow(file) {
+    if (!file || !S || !selected) return;
+    try {
+      const blk = selBlock(), cur = blk.props['Observed Hydrograph Gage'] || '';
+      const c = readCsv(await file.text(), flowUnit, curBasin().units.metric ? 'M3/S' : 'CFS');
+      const col = c.head.find(h => h.name === selected || (cur && h.name === cur)) || (c.head.length === 1 ? c.head[0] : null);
+      if (!col) throw new Error(t('obsErrCols', [selected, cur].filter(Boolean).join(' / ')));
+      const name = `${selected} (CSV)`;
+      P.flow = { ...(P.flow || {}), [name]: c.series(col, NaN, v => v >= 0 ? v : NaN) };
+      setObserved(blk, name);
+      showError(null);
+      renderParams(); markChanged();
+      $('runlog').innerHTML = `<span class="pend">● ${esc(t('obsLoaded', c.rows.toLocaleString(), col.name, H.fmtDateTime(c.a), H.fmtDateTime(c.b)))}</span>`;
+    } catch (e) { showError(e.message); }
+  }
+  function exportFlow() {
+    const r = OUT && OUT.results[selected]; if (!r) return;
+    const unit = OUT.u.metric ? 'm3/s' : 'cfs', ob = r.observed && r.observed.values ? r.observed : null;
+    const cell = (s) => /[",;\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s, num = (v) => isFinite(v) ? String(+v.toFixed(4)) : '';
+    let csv = ['Date Time', `${selected} simulated (${unit})`, ...(ob ? [`${ob.gage} (${unit})`] : [])].map(cell).join(',') + '\r\n';
+    OUT.times.forEach((tm, i) => { csv += [new Date(tm).toISOString().slice(0, 16).replace('T', ' '), num(r.outflow[i]), ...(ob ? [num(ob.values[i])] : [])].join(',') + '\r\n'; });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' }));
+    a.download = `flow_${selected.replace(/[^\w฀-๿-]+/g, '_')}.csv`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+  $('params').addEventListener('change', (ev) => {
+    if (ev.target.id !== 'obs-gage') return;
+    setObserved(selBlock(), ev.target.value);
+    renderParams(); markChanged();
+  });
+  $('params').addEventListener('click', (ev) => {
+    const id = ev.target.id;
+    if (id === 'obs-import') $('obs-file').click();
+    else if (id === 'obs-export') exportFlow();
+    else if (id === 'obs-clear') {
+      const blk = selBlock(), cur = blk.props['Observed Hydrograph Gage'];
+      delete P.flow[cur];
+      setObserved(blk, JSON.parse(S.original)[S.blocks.indexOf(blk)]['Observed Hydrograph Gage'] || '');
+      renderParams(); markChanged();
+    }
+  });
+  $('obs-file').addEventListener('change', (e) => { importFlow(e.target.files[0]); e.target.value = ''; });
   $('params').addEventListener('input', (ev) => {
     const inp = ev.target; if (!inp.dataset.key) return;
     const v = parseFloat(inp.value), min = parseFloat(inp.dataset.min), max = inp.dataset.max === '' ? Infinity : parseFloat(inp.dataset.max);
@@ -1405,7 +1495,7 @@ pre.file .b { color: var(--ink); font-weight: 600; }
     if (!S) return;
     S.blocks = H.parseHms(P.texts[S.basinFile]);
     if (S.controlFile) S.ctlBlocks = H.parseHms(P.texts[S.controlFile]);
-    P.rain = {}; P.rainScale = 1;
+    P.rain = {}; P.rainScale = 1; P.flow = {};
     renderControlFields(); renderParams(); renderNet(); markChanged();
     $('runlog').innerHTML += ` · ${esc(t('resetDone'))}`;
   });
