@@ -1,0 +1,23 @@
+{
+  "project": "ksm",
+  "run": "Run sep2026",
+  "start": "control",
+  "refreshMinutes": 15,
+  "rainStep": 5,
+  "priority": ["drop", "dss", "csv", "api"],
+  "fill": { "idwPower": 2, "flowInterpHours": 6, "rainMaxPerHour": 150, "resetHour": 7, "rainShiftMinutes": 0 },
+  "gages": {
+    "RID-KU 001": { "kind": "rain", "station": "RID-KU030", "label": "คลองน้ำไหล", "csv": ["live/RID-KU030.csv"] },
+    "RID-KU 002": { "kind": "rain", "station": "RID-KU033", "label": "หินชะโงก", "csv": ["live/RID-KU033.csv"] },
+    "RID-KU 003": { "kind": "rain", "station": "RID-KU040", "label": "เทพนคร", "csv": ["live/RID-KU040.csv"] },
+    "RID-KU 004": { "kind": "rain", "station": "RID-KU045", "label": "อบต.เนินสว่าง", "csv": ["live/RID-KU045.csv"] },
+    "RID-KU-WL001": { "kind": "flow", "station": "RID-KU-WL001", "csv": ["live/RID-KU-WL001.csv"] },
+    "RID-KU-WL008": { "kind": "flow", "station": "RID-KU-WL008", "csv": ["live/RID-KU-WL008.csv"] }
+  },
+  "api": {
+    "enabled": false,
+    "_help": "Set enabled to true and fill in each url. {station} = the gage's station (or apiStation), {from}/{to} = YYYY-MM-DD, {fromT}/{toT} = YYYY-MM-DDTHH:mm, local time. The reply may be CSV or JSON rows; columns are found as in the telemetry CSV files (datetime or date + time; 'rainfall from 7am' or Q). Optional per kind: jsonPath (e.g. data.items), column (regex for the value column), cumulative (true/false). The server must allow cross-origin requests (CORS) from the page's site, and keys placed here are public.",
+    "rain": { "url": "" },
+    "flow": { "url": "" }
+  }
+}

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>iWASAM Project</title>
+<script>
+// apply saved theme before first paint
+try { const t = localStorage.getItem('hms-theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t; } catch (_) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="toprow">
+      <span class="eyebrow" id="eyebrow">iWASAM · KSM (Sep 2026) · HEC-HMS 4.13</span>
+      <div class="prefs">
+        <div class="seg" role="group" aria-label="Language / ภาษา">
+          <button id="lang-th" aria-pressed="true" lang="th">ไทย</button>
+          <button id="lang-en" aria-pressed="false" lang="en">EN</button>
+        </div>
+        <button class="switch" id="theme" role="switch" aria-checked="false"><span class="track"></span><span data-i18n="darkMode"></span></button>
+      </div>
+    </div>
+    <h1>iWASAM Project</h1>
+    <p class="lede" data-live="lede"></p>
+    <div class="notice" role="note"><span>⚠</span><span data-live-html="notice"></span></div>
+    <div class="notice err" role="alert" id="err" hidden></div>
+  </header>
+
+  <div class="runbar">
+    <div class="runbar-inner">
+      <select class="proj" id="sel-proj" hidden></select>
+      <button class="btn ghost" id="up-files" hidden></button>
+      <button class="btn ghost" id="up-folder" hidden></button>
+      <input type="file" id="in-files" multiple hidden>
+      <input type="file" id="in-folder" webkitdirectory multiple hidden>
+      <button class="btn" id="run" data-i18n="run"></button>
+      <button class="btn ghost" id="reset" data-i18n="reset"></button>
+      <span class="runlog" id="runlog" aria-live="polite"></span>
+    </div>
+  </div>
+
+  <section class="panel" aria-labelledby="live-title">
+    <div class="panel-head"><h2 id="live-title" data-live="liveTitle"></h2><span class="hint" id="live-hint"></span></div>
+    <div class="live-bar">
+      <span class="note" id="live-window"></span>
+      <button class="btn ghost" id="live-update" data-live="updateNow"></button>
+      <button class="btn ghost" id="live-import" data-live="importTele" data-live-title="importTip"></button>
+      <input type="file" id="live-file" accept=".csv,.txt,.json,text/csv" multiple hidden>
+      <button class="switch" id="live-auto" role="switch" aria-checked="true"><span class="track"></span><span data-live="auto"></span></button>
+    </div>
+    <div id="live-body"></div>
+  </section>
+
+  <section class="panel" aria-labelledby="s-title">
+    <!-- the run is fixed (Run sep2026, start of the control to now), so the model pickers stay hidden -->
+    <div class="panel-head" hidden><h2 id="s-title" data-i18n="setupTitle"></h2><span class="hint" id="s-hint"></span></div>
+    <div class="setup" hidden>
+      <div class="field"><label for="sel-run">Simulation Run</label><select id="sel-run"></select></div>
+      <div class="field"><label for="sel-basin">Basin Model</label><select id="sel-basin"></select></div>
+      <div class="field"><label for="sel-met">Meteorologic Model</label><select id="sel-met"></select></div>
+      <div class="field"><label for="sel-control">Control Specifications</label><select id="sel-control"></select></div>
+      <div class="field"><label for="c-start" data-i18n="start"></label><input type="datetime-local" id="c-start" step="60"></div>
+      <div class="field"><label for="c-end" data-i18n="end"></label><input type="datetime-local" id="c-end" step="60"></div>
+      <div class="field"><label for="c-dt">Time Interval</label><select id="c-dt"></select></div>
+      <div class="field"><span class="note" id="c-info"></span></div>
+      <div class="row-actions">
+        <button class="btn ghost" id="c-fit" data-i18n="fitRain"></button>
+        <button class="btn ghost" id="c-revert" data-i18n="revertCtl"></button>
+      </div>
+    </div>
+    <div class="rain" style="border-top:0;padding-top:0;margin-top:0">
+      <div class="panel-head"><h3 data-i18n="rainTitle"></h3><span class="hint" id="rain-hint"></span></div>
+      <div class="chips" id="rain-gages"></div>
+      <div class="row-actions">
+        <div class="field rain-scale"><label for="rain-scale" data-i18n="rainScale"></label><input id="rain-scale" inputmode="decimal" value="100"></div>
+        <button class="btn ghost" id="rain-import" hidden></button>
+        <input type="file" id="rain-file" accept=".csv,.txt,text/csv" hidden>
+        <button class="btn ghost" id="rain-export" data-i18n="rainExport" data-i18n-title="rainExportTip"></button>
+        <button class="btn ghost" id="rain-clear" hidden></button>
+      </div>
+    </div>
+    <div class="drop" id="drop" hidden><div class="filelist" id="filelist"></div></div>
+  </section>
+
+  <section class="kpis" id="kpis" aria-label="Outlet summary"></section>
+
+  <section class="main">
+    <div class="panel net-panel">
+      <div class="panel-head"><h2 data-i18n="netTitle"></h2><span class="hint" data-i18n="netHint"></span></div>
+      <div class="net-box" id="net-box">
+        <svg id="net" role="img" aria-label="Basin network"></svg>
+        <div class="zoom-ctl">
+          <button type="button" id="z-in" data-i18n-title="zIn" aria-label="Zoom in">+</button>
+          <button type="button" id="z-out" data-i18n-title="zOut" aria-label="Zoom out">−</button>
+          <button type="button" id="z-sel" data-i18n-title="zSel" aria-label="Zoom to element">◎</button>
+          <button type="button" id="z-fit" data-i18n-title="zFit" aria-pressed="false">⤢</button>
+        </div>
+        <span class="zoom-lvl" id="z-lvl"></span>
+      </div>
+      <div class="legend"><span><span class="swatch" style="background:var(--surface-2);border:1px solid var(--ink-2)"></span>Subbasin</span><span><span class="swatch" style="background:var(--surface-2);border:1px solid var(--ink-2);border-radius:99px"></span>Junction / Sink</span><span id="leg-res" hidden>▽ Reservoir</span><span id="leg-div" hidden>◇ Diversion</span><span id="net-unit"></span></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <div style="display:grid;gap:2px"><span class="eyebrow" id="el-kind"></span><h2 id="el-name"></h2></div>
+        <div class="chips" id="el-chips"></div>
+      </div>
+      <div class="legend" id="legend"></div>
+      <div class="chart-box" id="chart-box">
+        <svg id="hyeto" aria-label="Hyetograph"></svg>
+        <svg id="hydro" aria-label="Hydrograph"></svg>
+        <div class="empty" id="chart-empty" hidden></div>
+        <div class="tip" id="tip" hidden></div>
+      </div>
+      <div class="fit" id="fit" hidden></div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="p-title">
+    <div class="panel-head"><h2 id="p-title"></h2><span class="hint" id="p-hint"></span></div>
+    <div class="params" id="params"></div>
+    <input type="file" id="obs-file" accept=".csv,.txt,text/csv" hidden>
+  </section>
+
+  <section class="panel" aria-labelledby="t-title">
+    <div class="panel-head"><h2 id="t-title" data-i18n="tblTitle"></h2><span class="hint" id="t-hint"></span></div>
+    <div class="tbl-wrap"><table id="summary"></table></div>
+  </section>
+
+  <section class="panel" aria-labelledby="f-title">
+    <div class="panel-head"><h2 id="f-title" data-i18n="filesTitle"></h2><span class="hint" data-i18n="filesHint"></span></div>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="file-meta"><span class="hint" id="file-desc"></span><span style="display:flex;gap:8px"><button class="btn ghost" id="copy" data-i18n="copy"></button><button class="btn ghost" id="download" data-i18n="download"></button></span></div>
+    <pre class="file" id="file" tabindex="0"></pre>
+  </section>
+
+  <section class="panel" aria-labelledby="m-title">
+    <h2 id="m-title" data-live="methodsTitle"></h2>
+    <div class="methods" data-live-html="methods"></div>
+  </section>
+</div>
+
+<script src="engine.js"></script>
+<script src="live.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
