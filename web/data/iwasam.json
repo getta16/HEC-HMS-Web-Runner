@@ -15,9 +15,9 @@
     "RID-KU-WL008": { "kind": "flow", "station": "RID-KU-WL008", "csv": ["live/RID-KU-WL008.csv"] }
   },
   "api": {
-    "enabled": false,
-    "_help": "Set enabled to true and fill in each url. {station} = the gage's station (or apiStation), {from}/{to} = YYYY-MM-DD, {fromT}/{toT} = YYYY-MM-DDTHH:mm, local time. The reply may be CSV or JSON rows; columns are found as in the telemetry CSV files (datetime or date + time; 'rainfall from 7am' or Q). Optional per kind: jsonPath (e.g. data.items), column (regex for the value column), cumulative (true/false). The server must allow cross-origin requests (CORS) from the page's site, and keys placed here are public.",
-    "rain": { "url": "" },
-    "flow": { "url": "" }
+    "enabled": true,
+    "_help": "Set enabled to true and fill in each url. {station} = the gage's station (or apiStation), {from}/{to} = YYYY-MM-DD, {fromT}/{toT} = YYYY-MM-DDTHH:mm, local time. The reply may be CSV or JSON rows; columns are found as in the telemetry CSV files (datetime or date + time; 'rainfall from 7am' or Q). Optional per kind: jsonPath (e.g. data.items), column (regex for the value column), cumulative (true/false). The server must allow cross-origin requests (CORS) from the page's site, and keys placed here are public. KSM: iwasam.com/ksm/api/weather/{station} gives rain cumulative since 07:00, water/{station} gives Q inside flow_data; -999 is missing. Only the days after the DSS and CSV data are asked for at first, then only the latest day on each update.",
+    "rain": { "url": "https://iwasam.com/ksm/api/weather/{station}?begin_date={from}&end_date={to}", "column": "^rain$", "cumulative": true },
+    "flow": { "url": "https://iwasam.com/ksm/api/water/{station}?begin_date={from}&end_date={to}", "column": "^Q$" }
   }
 }

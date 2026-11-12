@@ -41,6 +41,30 @@ ok('rain since 07:00 → 5-minute depths, reset after 07:00, gaps spread', () =>
   assert.deepStrictEqual(v2.map(x => isNaN(x) ? 'x' : +x.toFixed(3)), ['x', 'x', 0.5, 0.5]);
 });
 
+ok('iwasam.com/ksm API: weather rain since 07:00, water Q inside flow_data, -999 missing', () => {
+  const w = JSON.stringify({ weather_station_code: 'RID-KU030', data: [
+    { datetime: '2026-10-02 07:10:00', temp: 27, rain: 1.5, date: '2026-10-02', time: '07:12', id: 3 },
+    { datetime: '2026-10-02 07:05:00', temp: 27, rain: 0.5, PM25: 4, date: '2026-10-02', time: '07:07', id: 2 },
+    { datetime: '2026-10-02 07:00:00', temp: -999, rain: -999, date: '2026-10-02', time: '07:02', id: 1 }] });
+  const r = L.readSeries(w, 'rain', { column: '^rain$', cumulative: true });
+  assert.ok(r.cumulative);
+  assert.deepStrictEqual(r.points, [[T(7), NaN], [T(7, 5), 0.5], [T(7, 10), 1.5]]);
+  const q = JSON.stringify({ water_station_code: 'RID-KU-WL008', data: [
+    { d2_US: 1, Go: { Go_1: 1 }, flow_data: { WL_US: 90.4, h: 0.88, Q: 182.2 }, date: '2026-10-02', time: '12:16', id: 9 },
+    { d2_US: -999, Go: { Go_1: 1 }, flow_data: { WL_US: -999, h: -999, Q: -999 }, date: '2026-10-02', time: '12:01', id: 8 }] });
+  const s = L.readSeries(q, 'flow', { column: '^Q$' });
+  assert.strictEqual(s.column, 'Q');
+  assert.deepStrictEqual(s.points, [[T(12, 1), NaN], [T(12, 16), 182.2]]);
+  assert.strictEqual(L.readSeries(q, 'flow').column, 'Q', 'Q is found without a column option too');
+});
+
+ok('API reads joined: the newer read replaces the overlap', () => {
+  const a = { points: [[1, 1], [2, 2], [3, 3]], rows: 3 }, b = { points: [[3, 30], [4, NaN]], first: 3, rows: 2 };
+  const j = L.joinSeries(a, b);
+  assert.deepStrictEqual(j.points, [[1, 1], [2, 2], [3, 30], [4, NaN]]);
+  assert.deepStrictEqual([j.first, j.last, j.rows], [1, 3, 5]);
+});
+
 ok('DSS record onto a coarser grid sums, missing stays missing', () => {
   const rec = { start: T(0), interval: 5, values: [1, 2, 3, 4, NaN, 6] };
   assert.deepStrictEqual(Array.from(L.recordToGrid(rec, { start: T(0), step: 15 * M, n: 2 }, 'rain')), [6, NaN]);

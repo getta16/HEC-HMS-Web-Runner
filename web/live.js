@@ -33,8 +33,12 @@
     if (!arr || !arr.length) return { head: [], rows: [] };
     const str = (x) => x == null ? '' : String(x);
     if (Array.isArray(arr[0])) return { head: arr[0].map(str), rows: arr.slice(1).map(r => r.map(str)) };
-    const head = Object.keys(arr[0]);
-    return { head, rows: arr.map(o => head.map(k => str(o[k]))) };
+    // nested objects are flattened ({flow_data: {Q: 1}} → "Q", or "flow_data.Q" when the name repeats);
+    // the columns are those of every row, as rows may lack fields
+    const flat = arr.map(o => { const out = {}; (function walk(x, p) { for (const [k, v] of Object.entries(x || {})) { if (v && typeof v === 'object' && !Array.isArray(v)) walk(v, p ? p + '.' + k : k); else out[p ? p + '.' + k : k] = v; } })(o, ''); return out; });
+    const paths = [...new Set(flat.flatMap(Object.keys))], leaf = (p) => p.split('.').pop();
+    const head = paths.map(p => paths.filter(q => leaf(q) === leaf(p)).length > 1 ? p : leaf(p));
+    return { head, rows: flat.map(o => paths.map(k => str(o[k]))) };
   }
   function parseTable(text, jsonPath) {
     text = String(text).replace(/^﻿/, '');
@@ -110,7 +114,8 @@
       const tm = timeOf(r);
       if (isNaN(tm)) { bad++; continue; }
       const sv = String(r[val] ?? '').replace(/^"|"$/g, '').trim();
-      const v = sv === '' || /^(-|—|na|n\/a|nan|null|none)$/i.test(sv) ? NaN : parseFloat(sv.replace(/,/g, '')) * k;
+      const x = sv === '' || /^(-|—|na|n\/a|nan|null|none)$/i.test(sv) ? NaN : parseFloat(sv.replace(/,/g, ''));
+      const v = x <= -900 ? NaN : x * k; // -999, -990: the telemetry's "no reading"
       if (!byT.has(tm) || (isNaN(byT.get(tm)) && !isNaN(v))) byT.set(tm, v); // repeated rows: keep a value
     }
     if (!byT.size) throw new Error('no dated rows');
@@ -118,6 +123,18 @@
     return { points, cumulative, column: head[vi], rows: tb.rows.length, bad, first: points[0][0], last: lastValid(points) };
   }
   function lastValid(points) { for (let i = points.length - 1; i >= 0; i--) if (!isNaN(points[i][1])) return points[i][0]; return NaN; }
+  // an earlier read followed by a newer one that starts later: the newer one wins where both have rows
+  function joinSeries(old, add) {
+    const points = old.points.filter(p => p[0] < add.first).concat(add.points);
+    return { ...add, points, rows: old.rows + add.rows, first: points[0][0], last: lastValid(points) };
+  }
+  // the end of the last value of a gage's DSS record (NaN if none)
+  function recLast(g) {
+    const r = g && g.rec;
+    if (!r || r.pattern || !r.values) return NaN;
+    for (let i = r.values.length - 1; i >= 0; i--) if (!isNaN(r.values[i])) return r.start + (i + 1) * r.interval * MIN;
+    return NaN;
+  }
 
   // ---------- onto a regular grid ----------
   // grid = { start, step (ms), n }; value i belongs to the period (start + i·step, start + (i+1)·step],
@@ -253,7 +270,7 @@
   }
   const normCode = (s) => String(s || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
 
-  const core = { SRC, isReal, parseTable, parseTime, timeReader, readSeries, rainToGrid, flowToGrid, recordToGrid, mergeLayers, fillRain, fillFlow, spans, distKm, normCode, gridTime };
+  const core = { SRC, isReal, parseTable, parseTime, timeReader, readSeries, joinSeries, rainToGrid, flowToGrid, recordToGrid, mergeLayers, fillRain, fillFlow, spans, distKm, normCode, gridTime };
   if (typeof module !== 'undefined' && module.exports) { module.exports = core; return; }
 
   // =====================================================================================
@@ -264,7 +281,7 @@
       lede: 'รันแบบจำลอง HEC-HMS ลุ่มน้ำ KSM (Run sep2026) ต่อเนื่องจนถึงเวลาปัจจุบันในเบราว์เซอร์ ทุก 15 นาทีหน้านี้จะดึงข้อมูลฝนและน้ำท่าล่าสุด เติมช่วงที่ข้อมูลขาดหาย แล้วรันใหม่ให้เอง',
       notice: '<b>ค่าที่เติมไม่ใช่ข้อมูลตรวจวัด</b> ช่วงที่แรเงาสีส้มบนกราฟคือช่วงที่เติมข้อมูล ช่วงสีแดงคือไม่มีข้อมูลฝนเลยจึงถือว่าฝน = 0 ค่าสถิติเทียบน้ำท่า (NSE, KGE) คำนวณจากข้อมูลจริงเท่านั้น',
       methodsTitle: 'ที่มาของข้อมูลและวิธีเติมข้อมูล',
-      methods: '<p><b>ลำดับแหล่งข้อมูล</b>ไฟล์ที่นำเข้าในหน้านี้ → KSM_004_Desktop_V2.dss (ถึง 30 ก.ย. 2026) → ไฟล์โทรมาตรใน web/data/ksm/live/ → API (ถ้าเปิดใน iwasam.json) ช่วงเวลาใดที่แหล่งก่อนหน้าไม่มีค่า จะใช้แหล่งถัดไป</p><p><b>สถานีฝน</b>RID-KU 001 ← RID-KU030 คลองน้ำไหล · 002 ← RID-KU033 หินชะโงก · 003 ← RID-KU040 เทพนคร · 004 ← RID-KU045 อบต.เนินสว่าง ฝน “rainfall from 7am” เป็นฝนสะสมตั้งแต่ 7 โมงเช้า หน้านี้แปลงเป็นฝนราย 5 นาที (ผลต่างของค่าสะสม เริ่มนับใหม่หลัง 07:00) ค่าที่เกิน 150 มม./ชม. ถือว่าเครื่องวัดผิดพลาด</p><p><b>เติมข้อมูลฝน</b>ช่วงที่สถานีไม่มีข้อมูล ใช้ค่าเฉลี่ยถ่วงน้ำหนักด้วยระยะทาง (IDW, กำลัง 2) จากสถานีอื่นที่มีข้อมูลในช่วงเวลาเดียวกัน ถ้าไม่มีสถานีใดมีข้อมูล ถือว่าฝน = 0</p><p><b>สถานีน้ำท่า</b>RID-KU-WL001 (Weir_KSM), RID-KU-WL008 (Weir_TKD) จากไฟล์โทรมาตร ค่า Q (m3/s) ราย 15 นาที · RID-KU-WL006 (Weir_NPK) ยกเลิกแล้ว ใช้ RID-KU-WL008 × 0.8</p><p><b>เติมข้อมูลน้ำท่า</b>ช่องว่างไม่เกิน 6 ชั่วโมงที่มีข้อมูลทั้งสองฝั่ง ลากเส้นตรง ช่องว่างที่ยาวกว่านั้นหรือหลังข้อมูลล่าสุด ใช้น้ำท่าจากแบบจำลอง ปุ่ม “ส่งออกน้ำท่าเป็น CSV” ที่ element จะมีคอลัมน์น้ำท่าเติมข้อมูลและวิธีที่ใช้</p><p><b>อัปเดตข้อมูล</b>ดาวน์โหลดไฟล์ CSV จากระบบโทรมาตร แล้วลากมาวางในหน้านี้ (ใช้เฉพาะเครื่องนี้) หรือให้ทุกคนเห็น: รัน <code>node tools/update_live.js ไฟล์.csv …</code> แล้ว commit โฟลเดอร์ web/data/ksm/live</p>',
+      methods: '<p><b>ลำดับแหล่งข้อมูล</b>ไฟล์ที่นำเข้าในหน้านี้ → KSM_004_Desktop_V2.dss (ถึง 30 ก.ย. 2026) → ไฟล์โทรมาตรใน web/data/ksm/live/ → API iwasam.com/ksm (ถ้าเปิดใน iwasam.json) ช่วงเวลาใดที่แหล่งก่อนหน้าไม่มีค่า จะใช้แหล่งถัดไป</p><p><b>สถานีฝน</b>RID-KU 001 ← RID-KU030 คลองน้ำไหล · 002 ← RID-KU033 หินชะโงก · 003 ← RID-KU040 เทพนคร · 004 ← RID-KU045 อบต.เนินสว่าง ฝน “rainfall from 7am” เป็นฝนสะสมตั้งแต่ 7 โมงเช้า หน้านี้แปลงเป็นฝนราย 5 นาที (ผลต่างของค่าสะสม เริ่มนับใหม่หลัง 07:00) ค่าที่เกิน 150 มม./ชม. ถือว่าเครื่องวัดผิดพลาด</p><p><b>เติมข้อมูลฝน</b>ช่วงที่สถานีไม่มีข้อมูล ใช้ค่าเฉลี่ยถ่วงน้ำหนักด้วยระยะทาง (IDW, กำลัง 2) จากสถานีอื่นที่มีข้อมูลในช่วงเวลาเดียวกัน ถ้าไม่มีสถานีใดมีข้อมูล ถือว่าฝน = 0</p><p><b>สถานีน้ำท่า</b>RID-KU-WL001 (Weir_KSM), RID-KU-WL008 (Weir_TKD) จากไฟล์โทรมาตร ค่า Q (m3/s) ราย 15 นาที · RID-KU-WL006 (Weir_NPK) ยกเลิกแล้ว ใช้ RID-KU-WL008 × 0.8</p><p><b>เติมข้อมูลน้ำท่า</b>ช่องว่างไม่เกิน 6 ชั่วโมงที่มีข้อมูลทั้งสองฝั่ง ลากเส้นตรง ช่องว่างที่ยาวกว่านั้นหรือหลังข้อมูลล่าสุด ใช้น้ำท่าจากแบบจำลอง ปุ่ม “ส่งออกน้ำท่าเป็น CSV” ที่ element จะมีคอลัมน์น้ำท่าเติมข้อมูลและวิธีที่ใช้</p><p><b>อัปเดตข้อมูล</b>หน้านี้ดึงข้อมูลจาก API iwasam.com/ksm เอง (ฝน: api/weather/สถานี, น้ำท่า: api/water/สถานี ค่า -999 ถือว่าไม่มีข้อมูล) ครั้งแรกขอเฉพาะช่วงหลังข้อมูล DSS/CSV จากนั้นขอเฉพาะวันล่าสุดทุกครั้งที่อัปเดต หรือดาวน์โหลดไฟล์ CSV จากระบบโทรมาตร แล้วลากมาวางในหน้านี้ (ใช้เฉพาะเครื่องนี้) หรือให้ทุกคนเห็น: รัน <code>node tools/update_live.js ไฟล์.csv …</code> แล้ว commit โฟลเดอร์ web/data/ksm/live</p>',
       liveTitle: 'ข้อมูลฝนและน้ำท่า · อัปเดตอัตโนมัติ',
       liveHint: (a, b) => `รันล่าสุด ${a} · อัปเดตครั้งต่อไป ${b}`,
       liveHintOff: (a) => `รันล่าสุด ${a} · ปิดการอัปเดตอัตโนมัติ`,
@@ -291,7 +308,7 @@
       lede: 'Runs the HEC-HMS model of the KSM basin (Run sep2026) continuously up to the current time in the browser. Every 15 minutes the page fetches the latest rainfall and flow, fills the missing periods and runs again.',
       notice: '<b>Filled values are not measurements.</b> Orange shading on the charts marks filled periods; red marks periods with no rainfall data at all, where rain is taken as 0. Fit statistics (NSE, KGE) use real observations only.',
       methodsTitle: 'Data sources and gap filling',
-      methods: '<p><b>Source order</b>Files imported on this page → KSM_004_Desktop_V2.dss (to 30 Sep 2026) → telemetry files in web/data/ksm/live/ → the API (when enabled in iwasam.json). Where a source has no value, the next one is used.</p><p><b>Rain gages</b>RID-KU 001 ← RID-KU030 Khlong Nam Lai · 002 ← RID-KU033 Hin Chanong · 003 ← RID-KU040 Thep Nakhon · 004 ← RID-KU045 Noen Sawang SAO. “Rainfall from 7am” is cumulative since 07:00; the page turns it into 5-minute rain (differences of the cumulative value, restarting after 07:00). Steps above 150 mm/h are treated as gauge errors.</p><p><b>Rain gap filling</b>A gage without data takes the inverse-distance weighted rain (IDW, power 2) of the gages that have data at that time; when none has, rain is 0.</p><p><b>Flow gages</b>RID-KU-WL001 (Weir_KSM) and RID-KU-WL008 (Weir_TKD) from the telemetry files, Q (m3/s) every 15 minutes · RID-KU-WL006 (Weir_NPK) is closed and uses RID-KU-WL008 × 0.8.</p><p><b>Flow gap filling</b>Gaps of up to 6 hours with data on both sides are interpolated linearly; longer gaps and the time after the latest reading take the simulated flow. “Export flow CSV” on an element adds the filled flow and the method used.</p><p><b>Updating data</b>Download CSV files from the telemetry system and drop them on this page (this computer only), or for everyone: run <code>node tools/update_live.js file.csv …</code> and commit web/data/ksm/live.</p>',
+      methods: '<p><b>Source order</b>Files imported on this page → KSM_004_Desktop_V2.dss (to 30 Sep 2026) → telemetry files in web/data/ksm/live/ → the iwasam.com/ksm API (when enabled in iwasam.json). Where a source has no value, the next one is used.</p><p><b>Rain gages</b>RID-KU 001 ← RID-KU030 Khlong Nam Lai · 002 ← RID-KU033 Hin Chanong · 003 ← RID-KU040 Thep Nakhon · 004 ← RID-KU045 Noen Sawang SAO. “Rainfall from 7am” is cumulative since 07:00; the page turns it into 5-minute rain (differences of the cumulative value, restarting after 07:00). Steps above 150 mm/h are treated as gauge errors.</p><p><b>Rain gap filling</b>A gage without data takes the inverse-distance weighted rain (IDW, power 2) of the gages that have data at that time; when none has, rain is 0.</p><p><b>Flow gages</b>RID-KU-WL001 (Weir_KSM) and RID-KU-WL008 (Weir_TKD) from the telemetry files, Q (m3/s) every 15 minutes · RID-KU-WL006 (Weir_NPK) is closed and uses RID-KU-WL008 × 0.8.</p><p><b>Flow gap filling</b>Gaps of up to 6 hours with data on both sides are interpolated linearly; longer gaps and the time after the latest reading take the simulated flow. “Export flow CSV” on an element adds the filled flow and the method used.</p><p><b>Updating data</b>The page reads the iwasam.com/ksm API itself (rain: api/weather/station, flow: api/water/station; -999 is missing): at first only the time after the DSS/CSV data, then only the latest day on each update. Otherwise, download CSV files from the telemetry system and drop them on this page (this computer only), or for everyone: run <code>node tools/update_live.js file.csv …</code> and commit web/data/ksm/live.</p>',
       liveTitle: 'Rainfall and flow · auto-update',
       liveHint: (a, b) => `Last run ${a} · next update ${b}`,
       liveHintOff: (a) => `Last run ${a} · auto-update off`,
@@ -320,7 +337,7 @@
     fill: { idwPower: 2, flowInterpHours: 6, rainMaxPerHour: 150, resetHour: 7, rainShiftMinutes: 0 }, gages: {}, api: { enabled: false },
   };
 
-  let A, CFG, BASE = null, DROP = {}, LAST = null, FILL = {}, MEMO = {}, timer = null, busy = false, lastRun = 0, auto = true;
+  let A, CFG, BASE = null, DROP = {}, APIC = {}, LAST = null, FILL = {}, MEMO = {}, timer = null, busy = false, lastRun = 0, auto = true;
   const s = (k, ...a) => { const v = (STR[A.LANG] || STR.th)[k]; return typeof v === 'function' ? v(...a) : v; };
 
   async function start(app) {
@@ -408,10 +425,24 @@
         }
         const api = CFG.api && CFG.api.enabled && CFG.api[kind];
         if (api && api.url && c.station) {
-          const url = api.url.replace(/\{station\}/g, encodeURIComponent(c.apiStation || c.station)).replace(/\{from\}/g, fmtIso(start - DAY)).replace(/\{to\}/g, fmtIso(end + DAY))
-            .replace(/\{fromT\}/g, fmtIsoT(start - DAY)).replace(/\{toT\}/g, fmtIsoT(end));
-          try { const sr = readSeries(await fetchText(url), kind, { ...c, ...api, tzMs: BASE.tzMs }); list.push({ code: SRC.API, series: sr, label: 'API' }); }
-          catch (e) { notes.push(s('apiErr', c.station, e.message)); }
+          // ask only for what is not at hand: from the day before the last API reading kept from an earlier
+          // update, or before the last reading of the DSS / CSV sources (the API comes after them)
+          const cache = APIC[name];
+          let from = start;
+          if (cache) from = Math.max(from, cache.points[cache.points.length - 1][0]);
+          else { const lasts = list.map(r => r.series.last).concat(recLast(BASE.gages[name])).filter(isFinite); if (lasts.length) from = Math.max(from, ...lasts); }
+          from = Math.floor((from - DAY) / DAY) * DAY; // whole days, so cumulative rain has its 07:00 reading
+          const url = api.url.replace(/\{station\}/g, encodeURIComponent(c.apiStation || c.station)).replace(/\{from\}/g, fmtIso(from)).replace(/\{to\}/g, fmtIso(end + DAY))
+            .replace(/\{fromT\}/g, fmtIsoT(from)).replace(/\{toT\}/g, fmtIsoT(end));
+          try {
+            let sr = readSeries(await fetchText(url), kind, { ...c, ...api, tzMs: BASE.tzMs });
+            if (cache) sr = joinSeries(cache, sr);
+            APIC[name] = sr;
+            list.push({ code: SRC.API, series: sr, label: 'API' });
+          } catch (e) {
+            notes.push(s('apiErr', c.station, e.message));
+            if (cache) list.push({ code: SRC.API, series: cache, label: 'API' });
+          }
         }
         if (DROP[name]) list.push({ code: SRC.DROP, series: DROP[name].series, label: DROP[name].file });
       }));
