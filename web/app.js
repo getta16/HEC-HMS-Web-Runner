@@ -25,7 +25,8 @@
       netTitle: 'โครงข่ายลุ่มน้ำ', netHint: 'คลิก element เพื่อดูกราฟ · ล้อเมาส์/ลากเพื่อซูมและเลื่อน · ดับเบิลคลิกเพื่อซูมเข้า element',
       listView: 'แสดงเป็นรายการ', listHint: 'พิมพ์ชื่อเพื่อค้นหา · กรองตามชนิด · เรียงลำดับ · คลิกหรือกด ↑ ↓ เพื่อดูกราฟ',
       listSearch: 'ค้นหาชื่อ element…', listKind: 'กรองตามชนิด', listSort: 'เรียงลำดับ', listAll: (n) => `ทุกชนิด (${n})`,
-      sortOrder: 'ลำดับการคำนวณ (ต้นน้ำ → ท้ายน้ำ)', sortName: 'ชื่อ A–Z', sortPeak: 'น้ำสูงสุด มาก → น้อย', sortArea: 'พื้นที่รับน้ำ มาก → น้อย',
+      sortOrder: 'ลำดับการคำนวณ', sortName: 'ชื่อ', sortPeak: 'น้ำสูงสุด', sortArea: 'พื้นที่รับน้ำ', listWeir: 'ฝาย · Weir',
+      sortAsc: 'น้อยไปมาก (A → Z · ต้นน้ำ → ท้ายน้ำ) — กดเพื่อกลับลำดับ', sortDesc: 'มากไปน้อย (Z → A · ท้ายน้ำ → ต้นน้ำ) — กดเพื่อกลับลำดับ',
       listCount: (n, all, u) => `แสดง ${n} จาก ${all} element${u ? ` · ตัวเลข = น้ำสูงสุด (${u})` : ''}`, listNone: 'ไม่พบ element ที่ตรงกับคำค้นหรือตัวกรอง',
       zIn: 'ซูมเข้า', zOut: 'ซูมออก', zSel: 'ซูมไปที่ element ที่เลือก', zFit: 'ขยายแผนผังโครงข่าย (ยังเห็นกราฟอยู่)', zShrink: 'ย่อแผนผังกลับขนาดเดิม',
       tblTitle: 'ผลสรุปทุก element', filesTitle: 'ไฟล์ของโปรเจกต์',
@@ -129,7 +130,8 @@
       netTitle: 'Basin network', netHint: 'Click an element to see its graph · wheel/drag to zoom and pan · double-click to zoom to an element',
       listView: 'List view', listHint: 'Type to search · filter by kind · sort · click or press ↑ ↓ to see the graph',
       listSearch: 'Search element name…', listKind: 'Filter by kind', listSort: 'Sort by', listAll: (n) => `All kinds (${n})`,
-      sortOrder: 'Compute order (upstream → downstream)', sortName: 'Name A–Z', sortPeak: 'Peak flow, high → low', sortArea: 'Drainage area, large → small',
+      sortOrder: 'Compute order', sortName: 'Name', sortPeak: 'Peak flow', sortArea: 'Drainage area', listWeir: 'Weir',
+      sortAsc: 'Ascending (A → Z · upstream → downstream). Press to reverse', sortDesc: 'Descending (Z → A · downstream → upstream). Press to reverse',
       listCount: (n, all, u) => `Showing ${n} of ${all} elements${u ? ` · numbers = peak flow (${u})` : ''}`, listNone: 'No element matches the search or filter',
       zIn: 'Zoom in', zOut: 'Zoom out', zSel: 'Zoom to selected element', zFit: 'Enlarge the network (charts stay visible)', zShrink: 'Restore the network to its normal size',
       tblTitle: 'Summary of all elements', filesTitle: 'Project files',
@@ -809,11 +811,15 @@
 
   // ---------- network · list view ----------
   // the switch in the panel head swaps the diagram for a searchable, filterable, sortable list; picking a row shows its graph
-  const NL = { list: store.get('hms-netview') === 'list', q: '', kind: '', sort: store.get('hms-nlsort') || 'order', optKey: '' };
+  const NL = { list: store.get('hms-netview') === 'list', q: '', kind: '', sort: store.get('hms-nlsort') || 'order', desc: store.get('hms-nldir') === 'desc', optKey: '' };
+  const WEIR = '@weir', isWeir = (e) => /weir|ฝาย/i.test(e.name); // weirs are usually Junctions named Weir_*
+  // the list sits over the diagram's place (which stays laid out but invisible), so the panel keeps the same size
   function syncNetMode() {
     $('net-mode').setAttribute('aria-checked', NL.list);
-    $('net-box').hidden = NL.list; $('net-legend').hidden = NL.list; $('net-list').hidden = !NL.list;
+    document.querySelector('.net-panel').classList.toggle('as-list', NL.list); $('net-list').hidden = !NL.list;
     $('net-hint').textContent = t(NL.list ? 'listHint' : 'netHint');
+    const d = $('nl-dir'); d.textContent = NL.desc ? '↑' : '↓'; d.setAttribute('aria-pressed', NL.desc);
+    d.title = t(NL.desc ? 'sortDesc' : 'sortAsc'); d.setAttribute('aria-label', d.title);
   }
   function listItems() {
     const b = curBasin(); if (!b) return { all: [], rows: [] };
@@ -821,15 +827,14 @@
     (OUT ? OUT.order : b.elements.map(e => e.name)).forEach((n, i) => { idx[n] = i; });
     const all = b.elements.map(e => ({ e, r: R && R[e.name], i: idx[e.name] ?? 1e9 }));
     const q = NL.q.trim().toLowerCase();
-    const rows = all.filter(x => (!NL.kind || x.e.kind === NL.kind) && (!q || x.e.name.toLowerCase().includes(q)));
-    const num = (x, k) => x.r ? (k === 'peak' ? x.r.stats.peak : x.r.area) : -Infinity;
-    const cmp = {
-      order: (a, b) => a.i - b.i,
-      name: (a, b) => a.e.name.localeCompare(b.e.name, undefined, { numeric: true, sensitivity: 'base' }),
-      peak: (a, b) => (num(b, 'peak') - num(a, 'peak')) || a.i - b.i,
-      area: (a, b) => (num(b, 'area') - num(a, 'area')) || a.i - b.i,
-    }[NL.sort] || ((a, b) => a.i - b.i);
-    rows.sort(cmp);
+    const kindOk = (e) => !NL.kind || (NL.kind === WEIR ? isWeir(e) : e.kind === NL.kind);
+    const rows = all.filter(x => kindOk(x.e) && (!q || x.e.name.toLowerCase().includes(q)));
+    // ascending = A → Z, small → large, upstream → downstream; elements without a result go last either way
+    const dir = NL.desc ? -1 : 1, val = (x) => !x.r ? null : NL.sort === 'peak' ? x.r.stats.peak : x.r.area;
+    const cmp = NL.sort === 'name' ? (a, b) => dir * a.e.name.localeCompare(b.e.name, undefined, { numeric: true, sensitivity: 'base' })
+      : NL.sort === 'peak' || NL.sort === 'area' ? (a, b) => { const va = val(a), vb = val(b); return va == null || vb == null ? (va == null) - (vb == null) : dir * (va - vb); }
+      : () => 0;
+    rows.sort((a, b) => cmp(a, b) || dir * (a.i - b.i));
     return { all, rows };
   }
   // small outflow sparkline, scaled to the element's own peak (the number beside it gives the size)
@@ -848,9 +853,11 @@
     const kinds = [...new Set(all.map(x => x.e.kind))], key = LANG + '|' + kinds.join(',') + '|' + all.length + '|' + !!OUT;
     if (key !== NL.optKey) {
       NL.optKey = key;
-      if (NL.kind && !kinds.includes(NL.kind)) NL.kind = '';
+      const weirs = all.filter(x => isWeir(x.e)).length;
+      if (NL.kind && !(NL.kind === WEIR ? weirs : kinds.includes(NL.kind))) NL.kind = '';
       const kl = t('kind');
-      $('nl-kind').innerHTML = `<option value="">${esc(t('listAll', all.length))}</option>` + kinds.map(k => `<option value="${esc(k)}"${k === NL.kind ? ' selected' : ''}>${esc(kl[k] || k)} (${all.filter(x => x.e.kind === k).length})</option>`).join('');
+      $('nl-kind').innerHTML = `<option value="">${esc(t('listAll', all.length))}</option>` + kinds.map(k => `<option value="${esc(k)}"${k === NL.kind ? ' selected' : ''}>${esc(kl[k] || k)} (${all.filter(x => x.e.kind === k).length})</option>`).join('')
+        + (weirs ? `<option value="${WEIR}"${NL.kind === WEIR ? ' selected' : ''}>${esc(t('listWeir'))} (${weirs})</option>` : '');
       $('nl-sort').innerHTML = [['order', 'sortOrder'], ['name', 'sortName'], ['peak', 'sortPeak'], ['area', 'sortArea']]
         .map(([v, l]) => `<option value="${v}"${v === NL.sort ? ' selected' : ''}>${esc(t(l))}</option>`).join('');
     }
@@ -884,7 +891,7 @@
   }
   $('net-mode').addEventListener('click', () => {
     NL.list = !NL.list; store.set('hms-netview', NL.list ? 'list' : 'net'); syncNetMode();
-    if (NL.list) renderList(); else requestAnimationFrame(renderNet);
+    if (NL.list) renderList();
   });
   $('nl-q').addEventListener('input', () => { NL.q = $('nl-q').value; renderList(); });
   $('nl-q').addEventListener('keydown', (ev) => {
@@ -894,6 +901,7 @@
   });
   $('nl-kind').addEventListener('change', () => { NL.kind = $('nl-kind').value; renderList(); });
   $('nl-sort').addEventListener('change', () => { NL.sort = $('nl-sort').value; store.set('hms-nlsort', NL.sort); renderList(); });
+  $('nl-dir').addEventListener('click', () => { NL.desc = !NL.desc; store.set('hms-nldir', NL.desc ? 'desc' : 'asc'); syncNetMode(); renderList(); });
   $('nl').addEventListener('click', (ev) => { const r = ev.target.closest('.nl-row'); if (r) { r.focus({ preventScroll: true }); select(r.dataset.name); } });
   $('nl').addEventListener('keydown', (ev) => {
     const step = { ArrowDown: 1, ArrowUp: -1, Home: 'first', End: 'last', PageDown: 10, PageUp: -10 }[ev.key];

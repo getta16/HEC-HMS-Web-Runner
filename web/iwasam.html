@@ -109,6 +109,7 @@ try { const t = localStorage.getItem('hms-theme'); if (t === 'dark' || t === 'li
           <input type="search" id="nl-q" data-i18n-ph="listSearch" data-i18n-aria="listSearch" autocomplete="off" spellcheck="false">
           <select id="nl-kind" data-i18n-aria="listKind"></select>
           <select id="nl-sort" data-i18n-aria="listSort"></select>
+          <button type="button" class="nl-dir" id="nl-dir" aria-pressed="false">↓</button>
         </div>
         <div class="list-box"><div class="nl" id="nl" role="listbox" tabindex="-1"></div></div>
         <span class="hint" id="nl-count"></span>
