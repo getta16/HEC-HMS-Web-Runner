@@ -25,7 +25,8 @@
       netTitle: 'โครงข่ายลุ่มน้ำ', netHint: 'คลิก element เพื่อดูกราฟ · ล้อเมาส์/ลากเพื่อซูมและเลื่อน · ดับเบิลคลิกเพื่อซูมเข้า element',
       listView: 'แสดงเป็นรายการ', listHint: 'พิมพ์ชื่อเพื่อค้นหา · กรองตามชนิด · เรียงลำดับ · คลิกหรือกด ↑ ↓ เพื่อดูกราฟ',
       listSearch: 'ค้นหาชื่อ element…', listKind: 'กรองตามชนิด', listSort: 'เรียงลำดับ', listAll: (n) => `ทุกชนิด (${n})`,
-      sortOrder: 'ลำดับการคำนวณ', sortName: 'ชื่อ', sortPeak: 'น้ำสูงสุด', sortArea: 'พื้นที่รับน้ำ', listWeir: 'ฝาย · Weir',
+      sortOrder: 'ลำดับการคำนวณ', sortName: 'ชื่อ', sortPeak: 'น้ำสูงสุด', sortArea: 'พื้นที่รับน้ำ', listWeir: 'ฝาย · Weir', listFiltered: (k) => `กรอง: ${k}`,
+      cReset: '⟲ ทั้งช่วง', cResetTip: 'แสดงกราฟทั้งช่วงเวลา (ดับเบิลคลิกที่กราฟก็ได้) · ล้อเมาส์ = ซูม · ลาก = เลื่อน',
       sortAsc: 'น้อยไปมาก (A → Z · ต้นน้ำ → ท้ายน้ำ) — กดเพื่อกลับลำดับ', sortDesc: 'มากไปน้อย (Z → A · ท้ายน้ำ → ต้นน้ำ) — กดเพื่อกลับลำดับ',
       listCount: (n, all, u) => `แสดง ${n} จาก ${all} element${u ? ` · ตัวเลข = น้ำสูงสุด (${u})` : ''}`, listNone: 'ไม่พบ element ที่ตรงกับคำค้นหรือตัวกรอง',
       zIn: 'ซูมเข้า', zOut: 'ซูมออก', zSel: 'ซูมไปที่ element ที่เลือก', zFit: 'ขยายแผนผังโครงข่าย (ยังเห็นกราฟอยู่)', zShrink: 'ย่อแผนผังกลับขนาดเดิม',
@@ -130,7 +131,8 @@
       netTitle: 'Basin network', netHint: 'Click an element to see its graph · wheel/drag to zoom and pan · double-click to zoom to an element',
       listView: 'List view', listHint: 'Type to search · filter by kind · sort · click or press ↑ ↓ to see the graph',
       listSearch: 'Search element name…', listKind: 'Filter by kind', listSort: 'Sort by', listAll: (n) => `All kinds (${n})`,
-      sortOrder: 'Compute order', sortName: 'Name', sortPeak: 'Peak flow', sortArea: 'Drainage area', listWeir: 'Weir',
+      sortOrder: 'Compute order', sortName: 'Name', sortPeak: 'Peak flow', sortArea: 'Drainage area', listWeir: 'Weir', listFiltered: (k) => `filter: ${k}`,
+      cReset: '⟲ Full range', cResetTip: 'Show the whole run (or double-click the chart) · wheel = zoom · drag = pan',
       sortAsc: 'Ascending (A → Z · upstream → downstream). Press to reverse', sortDesc: 'Descending (Z → A · downstream → upstream). Press to reverse',
       listCount: (n, all, u) => `Showing ${n} of ${all} elements${u ? ` · numbers = peak flow (${u})` : ''}`, listNone: 'No element matches the search or filter',
       zIn: 'Zoom in', zOut: 'Zoom out', zSel: 'Zoom to selected element', zFit: 'Enlarge the network (charts stay visible)', zShrink: 'Restore the network to its normal size',
@@ -627,7 +629,7 @@
   function openProject(files, derive) {
     const byName = new Map(); for (const f of files) byName.set(lc(f.name), f); // later files replace earlier ones
     const list = [...byName.values()];
-    P = buildProject(list);
+    P = buildProject(list); CZ = null;
     P.dssBufs = Object.fromEntries(list.filter(f => f.buf).map(f => [lc(f.name), f.buf]));
     P.deriveDefault = derive || {};
     P.derive = JSON.parse(JSON.stringify(P.deriveDefault));
@@ -874,7 +876,10 @@
         + `<span class="n" title="${esc(e.name)}">${hl(e.name)}</span><span class="k" title="${esc(sub)}">${esc(sub)}</span>`
         + `<span class="p">${r ? fAuto(r.stats.peak) + `<small>${esc(u.flow)}</small>` : ''}</span>${r ? spark(r.outflow) : '<span></span>'}</div>`;
     }).join('') : `<div class="nl-empty">${esc(t('listNone'))}</div>`;
-    $('nl-count').textContent = t('listCount', rows.length, all.length, u && u.flow);
+    const fsel = $('nl-kind'), fname = NL.kind && fsel.selectedOptions[0] ? fsel.selectedOptions[0].textContent.replace(/\s*\(\d+\)$/, '') : '';
+    $('nl-search').classList.toggle('on', !!NL.kind);
+    fsel.title = fname ? t('listFiltered', fname) : t('listKind');
+    $('nl-count').textContent = t('listCount', rows.length, all.length, u && u.flow) + (fname ? ' · ' + t('listFiltered', fname) : '');
     const cur = box.querySelector('.nl-row.sel');
     if (cur) { if (hadFocus) cur.focus({ preventScroll: true }); scrollRowIntoView(cur); }
   }
@@ -984,21 +989,37 @@
     ];
     box.innerHTML = `<div class="fit-head"><h3>${esc(t('fitTitle'))}</h3><span class="hint">${esc(t('fitHint', st.n.toLocaleString('en-US'), ob.gage))}</span></div><div class="fit-grid">${rows.map(r => cell(...r)).join('')}</div>`;
   }
-  function timeTicks(T) {
-    const span = (T[T.length - 1] - T[0]) / 3600000;
+  function timeTicks(a, b) {
+    const span = (b - a) / 3600000;
     const steps = [0.25, 0.5, 1, 2, 3, 6, 12, 24, 48, 72, 168, 336, 720];
     const hstep = steps.find(s => span / s <= 8) || 720;
     const ms = hstep * 3600000, out = [];
-    for (let x = Math.ceil(T[0] / ms) * ms; x <= T[T.length - 1]; x += ms) out.push(x);
+    for (let x = Math.ceil(a / ms) * ms; x <= b; x += ms) out.push(x);
     return { ticks: out, daily: hstep >= 24 };
+  }
+  // chart time zoom: CZ = [from, to] in ms, null = whole run; kept when switching element so periods compare easily
+  let CZ = null;
+  function chartView() {
+    const T = OUT.times, N = T.length, t0 = T[0], t1 = T[N - 1];
+    let [a, b] = CZ || [t0, t1];
+    const minSpan = Math.min(t1 - t0, 4 * ((t1 - t0) / ((N - 1) || 1))); // at least 4 time steps
+    if (!(b - a > 0) || b - a >= t1 - t0) { CZ = null; return { a: t0, b: t1, i0: 0, i1: N - 1 }; }
+    if (b - a < minSpan) { const m = (a + b) / 2; a = m - minSpan / 2; b = m + minSpan / 2; }
+    if (a < t0) { b += t0 - a; a = t0; } if (b > t1) { a -= b - t1; b = t1; }
+    CZ = [a, b];
+    const pos = (v) => (v - t0) / ((t1 - t0) || 1) * (N - 1);
+    return { a, b, i0: Math.max(0, Math.floor(pos(a))), i1: Math.min(N - 1, Math.ceil(pos(b))) };
   }
   function drawCharts() {
     if (!chart || !OUT) return;
-    const { series, isSub, r, rr } = chart, u = OUT.u, T = OUT.times, N = T.length, t0 = T[0], t1 = T[N - 1];
+    const { series, isSub, r, rr } = chart, u = OUT.u, T = OUT.times, N = T.length;
+    const { a: t0, b: t1, i0, i1 } = chartView(), n = i1 - i0;
+    $('c-reset').hidden = !CZ;
     const W = Math.max(320, $('chart-box').clientWidth), ml = 58, mr = 16, pw = W - ml - mr;
     const xt = (v) => ml + (v - t0) / ((t1 - t0) || 1) * pw;
     const x = (i) => xt(T[i]);
-    const { ticks, daily } = timeTicks(T);
+    const { ticks, daily } = timeTicks(t0, t1);
+    const clip = (id, h) => `<clipPath id="${id}"><rect x="${ml}" y="0" width="${pw}" height="${h}"/></clipPath>`;
     // shaded spans (e.g. periods where data were filled), drawn under everything else
     const bands = (HOOK.bands && HOOK.bands(selected)) || [];
     const bandSvg = (top, bottom) => bands.map(([a, b, color]) => {
@@ -1007,26 +1028,29 @@
     }).join('');
     const hy = $('hyeto');
     if (isSub) {
-      const k = Math.max(1, Math.ceil((N - 1) / 240)), bars = [];
-      for (let i = 1; i < N; i += k) { let p = 0, e = 0; for (let j = i; j < Math.min(N, i + k); j++) { p += r.precip[j]; e += r.excess[j]; } bars.push([i, Math.min(N - 1, i + k - 1), p, e]); }
+      const k = Math.max(1, Math.ceil(n / 240)), bars = [];
+      for (let i = Math.max(1, i0 + 1); i <= i1; i += k) { let p = 0, e = 0; for (let j = i; j < Math.min(i1 + 1, i + k); j++) { p += r.precip[j]; e += r.excess[j]; } bars.push([i, Math.min(i1, i + k - 1), p, e]); }
       const hh = 96, mt = 8, mb = 6;
-      const pmax = niceMax(Math.max(...bars.map(b => b[2])) * 1.05);
+      const pmax = niceMax(Math.max(0, ...bars.map(b => b[2])) * 1.05);
       const y = (v) => mt + (v / pmax) * (hh - mt - mb);
       let s = bandSvg(mt, hh - mb) + `<g class="axis"><line class="g" x1="${ml}" x2="${W - mr}" y1="${mt}" y2="${mt}"/><line class="g" x1="${ml}" x2="${W - mr}" y1="${y(pmax)}" y2="${y(pmax)}"/>`;
       s += `<text x="${ml - 6}" y="${y(pmax) + 4}" text-anchor="end">${fAuto(pmax)}</text><text x="${ml - 6}" y="${mt + 4}" text-anchor="end">0</text>`;
       s += `<text class="ttl" x="${ml}" y="${hh + 8}">${esc(t('rainPer', t('dt', OUT.control.dtMin * k), u.depth))}</text></g>`;
+      s += clip('hclip', hh) + '<g clip-path="url(#hclip)">';
       for (const [a, b, p, e] of bars) {
         if (p <= 0) continue;
-        const xa = xt(T[a - 1]), bw = Math.max(0.8, xt(T[b]) - xa - (k > 1 || N < 200 ? 0.6 : 0));
+        const xa = xt(T[a - 1]), bw = Math.max(0.8, xt(T[b]) - xa - (k > 1 || n < 200 ? 0.6 : 0));
         s += `<rect x="${xa.toFixed(1)}" y="${mt}" width="${bw.toFixed(1)}" height="${(y(p) - mt).toFixed(1)}" fill="var(--precip)"/>`;
         if (e > 0) s += `<rect x="${xa.toFixed(1)}" y="${mt}" width="${bw.toFixed(1)}" height="${(y(e) - mt).toFixed(1)}" fill="var(--excess)" opacity="0.85"/>`;
       }
+      s += '</g>';
       s += `<line id="hx" x1="0" x2="0" y1="${mt}" y2="${hh - mb}" stroke="var(--ink-2)" stroke-width="1" visibility="hidden"/>`;
       hy.setAttribute('viewBox', `0 0 ${W} ${hh + 12}`); hy.innerHTML = s; hy.hidden = false;
     } else { hy.hidden = true; hy.innerHTML = ''; }
     const hh = 300, mt = 12, mb = 40;
-    const smax = (a) => { let m = 0; for (const v of a) if (v > m) m = v; return m; }; // NaN-safe (observed gaps)
-    const ymax = niceMax(Math.max(...series.map(s => smax(s.data)), rr ? rr.peak : 0) * 1.08);
+    const smax = (a) => { let m = 0; for (let i = i0; i <= i1; i++) if (a[i] > m) m = a[i]; return m; }; // visible part only; NaN-safe (observed gaps)
+    const rrIn = rr && rr.peakTime >= t0 && rr.peakTime <= t1;
+    const ymax = niceMax(Math.max(...series.map(s => smax(s.data)), rrIn ? rr.peak : 0) * 1.08);
     const y = (v) => mt + (1 - v / ymax) * (hh - mt - mb);
     let s = bandSvg(mt, hh - mb) + '<g class="axis">';
     for (let k = 0; k <= 5; k++) {
@@ -1042,22 +1066,26 @@
       if (!daily && day !== lastDay) { s += `<text x="${xt(tk)}" y="${hh - mb + 29}" text-anchor="middle">${day}</text>`; lastDay = day; }
     });
     s += `<text class="ttl" x="${ml}" y="${hh - 1}">${u.flow}</text></g>`;
-    const stride = Math.max(1, Math.floor(N / 1600)); // keep peaks when thinning long series
+    const stride = Math.max(1, Math.floor(n / 1600)); // keep peaks when thinning long series
+    s += clip('yclip', hh) + '<g clip-path="url(#yclip)">';
     for (const se of series) {
       let d = '', pen = false;
-      for (let i = 0; i < N; i += stride) {
+      for (let i = i0; i <= i1; i += stride) {
         let v = se.data[i], vi = i;
-        if (stride > 1) for (let j = i; j < Math.min(N, i + stride); j++) if (se.data[j] > v || (isNaN(v) && !isNaN(se.data[j]))) { v = se.data[j]; vi = j; }
+        if (stride > 1) for (let j = i; j < Math.min(i1 + 1, i + stride); j++) if (se.data[j] > v || (isNaN(v) && !isNaN(se.data[j]))) { v = se.data[j]; vi = j; }
         if (isNaN(v)) { pen = false; continue; } // gap in observed data
         d += (pen ? 'L' : 'M') + x(vi).toFixed(1) + ',' + y(v).toFixed(1); pen = true;
       }
       s += `<path d="${d}" fill="none" stroke="${se.color}" stroke-width="${se.thin ? 1.5 : 2}" stroke-linejoin="round" ${se.dash ? 'stroke-dasharray="5 4"' : ''}/>`;
     }
+    s += '</g>';
     const o = series[0], pi = o.stats.peakIndex, px = x(pi), py = y(o.data[pi]);
     const anchor = px > W - 200 ? 'end' : 'start';
-    s += `<circle cx="${px}" cy="${py}" r="4.5" fill="${o.color}" stroke="var(--surface)" stroke-width="2"/>`;
-    s += `<text x="${px + (anchor === 'start' ? 8 : -8)}" y="${py - 8}" text-anchor="${anchor}" style="font:500 11.5px var(--font-mono);fill:var(--ink)">${fAuto(o.data[pi])} @ ${H.fmtDateTime(o.stats.peakTime)}</text>`;
-    if (rr && rr.peakTime >= t0 && rr.peakTime <= t1) {
+    if (T[pi] >= t0 && T[pi] <= t1) {
+      s += `<circle cx="${px}" cy="${py}" r="4.5" fill="${o.color}" stroke="var(--surface)" stroke-width="2"/>`;
+      s += `<text x="${px + (anchor === 'start' ? 8 : -8)}" y="${py - 8}" text-anchor="${anchor}" style="font:500 11.5px var(--font-mono);fill:var(--ink)">${fAuto(o.data[pi])} @ ${H.fmtDateTime(o.stats.peakTime)}</text>`;
+    }
+    if (rrIn) {
       const rx = xt(rr.peakTime), ry = y(rr.peak);
       s += `<path d="M${rx - 6},${ry} L${rx},${ry - 6} L${rx + 6},${ry} L${rx},${ry + 6} Z" fill="none" stroke="var(--s-ref)" stroke-width="2"/>`;
       s += `<text x="${rx + (anchor === 'start' ? 8 : -8)}" y="${ry + 16}" text-anchor="${anchor}" style="font:500 11.5px var(--font-mono);fill:var(--s-ref)">HEC-HMS ${fAuto(rr.peak)} @ ${H.fmtTime(rr.peakTime)}</text>`;
@@ -1065,14 +1093,18 @@
     s += `<line id="cx" x1="0" x2="0" y1="${mt}" y2="${hh - mb}" stroke="var(--ink-2)" stroke-width="1" visibility="hidden"/><g id="dots"></g>`;
     s += `<rect id="hit" x="${ml}" y="0" width="${pw}" height="${hh - mb}" fill="transparent"/>`;
     const hd = $('hydro'); hd.setAttribute('viewBox', `0 0 ${W} ${hh}`); hd.innerHTML = s;
-    chart.geom = { x, y, ml, pw, W, N };
+    chart.geom = { x, y, ml, pw, W, N, t0, t1 };
+  }
+  // time under the pointer, from the hydrograph's geometry (the hyetograph shares its x axis)
+  function chartTime(ev) {
+    const { ml, pw, W, t0, t1 } = chart.geom, rect = $('hydro').getBoundingClientRect();
+    const sx = (ev.clientX - rect.left) * (W / (rect.width || 1));
+    return t0 + Math.max(0, Math.min(1, (sx - ml) / pw)) * (t1 - t0);
   }
   function hover(ev) {
     if (!chart || !chart.geom) return;
-    const { x, y, ml, pw, W, N } = chart.geom, T = OUT.times, u = OUT.u;
-    const rect = $('hydro').getBoundingClientRect();
-    const sx = (ev.clientX - rect.left) * (W / rect.width);
-    const i = Math.max(0, Math.min(N - 1, Math.round((sx - ml) / pw * (N - 1))));
+    const { x, y, N } = chart.geom, T = OUT.times, u = OUT.u;
+    const i = Math.max(0, Math.min(N - 1, Math.round((chartTime(ev) - T[0]) / ((T[N - 1] - T[0]) || 1) * (N - 1))));
     const xx = x(i);
     for (const id of ['cx', 'hx']) { const l = $(id); if (l) { l.setAttribute('x1', xx); l.setAttribute('x2', xx); l.setAttribute('visibility', 'visible'); } }
     $('dots').innerHTML = chart.series.filter(se => !isNaN(se.data[i])).map(se => `<circle cx="${xx}" cy="${y(se.data[i])}" r="4" fill="${se.color}" stroke="var(--surface)" stroke-width="2"/>`).join('');
@@ -1091,6 +1123,35 @@
   }
   $('hydro').addEventListener('pointermove', hover);
   $('hydro').addEventListener('pointerleave', unhover);
+  // wheel zooms the time axis around the pointer, drag pans a zoomed chart, double-click or ⟲ shows the whole run
+  $('chart-box').addEventListener('wheel', (ev) => {
+    if (!chart || !chart.geom || !OUT) return;
+    ev.preventDefault();
+    const { t0, t1 } = chart.geom, at = chartTime(ev), f = Math.exp(ev.deltaY * (ev.deltaMode ? 0.05 : 0.0015));
+    const T = OUT.times, full = T[T.length - 1] - T[0], step = full / ((T.length - 1) || 1);
+    const span = Math.max(Math.min(full, 4 * step), Math.min(full, (t1 - t0) * f));
+    const a = at - (at - t0) * span / ((t1 - t0) || 1);
+    CZ = span >= full ? null : [a, a + span];
+    drawCharts(); hover(ev);
+  }, { passive: false });
+  let cdrag = null;
+  $('chart-box').addEventListener('pointerdown', (ev) => {
+    if (ev.button || !CZ || !chart || !chart.geom || ev.target.closest('button')) return;
+    cdrag = { x: ev.clientX, z: CZ.slice(), id: ev.pointerId, moved: false };
+  });
+  $('chart-box').addEventListener('pointermove', (ev) => {
+    if (!cdrag || ev.pointerId !== cdrag.id) return;
+    const dx = ev.clientX - cdrag.x; if (!cdrag.moved && Math.abs(dx) < 3) return;
+    if (!cdrag.moved) { cdrag.moved = true; $('chart-box').classList.add('drag'); try { $('chart-box').setPointerCapture(ev.pointerId); } catch (_) {} }
+    const rect = $('hydro').getBoundingClientRect(), { pw, W } = chart.geom, span = cdrag.z[1] - cdrag.z[0];
+    const dt = -dx * (W / (rect.width || 1)) / pw * span;
+    CZ = [cdrag.z[0] + dt, cdrag.z[1] + dt]; drawCharts();
+  });
+  const cdragEnd = () => { cdrag = null; $('chart-box').classList.remove('drag'); };
+  $('chart-box').addEventListener('pointerup', cdragEnd);
+  $('chart-box').addEventListener('pointercancel', cdragEnd);
+  $('chart-box').addEventListener('dblclick', () => { if (CZ) { CZ = null; drawCharts(); } });
+  $('c-reset').addEventListener('click', () => { CZ = null; drawCharts(); });
   let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(drawCharts, 120); });
 
   // ---------- parameter editor ----------

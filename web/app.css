@@ -145,13 +145,26 @@ header.top { padding-block: 20px 0; display: grid; gap: 10px; }
 .net-panel > #net-legend { grid-row: 3; grid-column: 1; }
 .net-panel > .net-list { grid-row: 2 / 4; grid-column: 1; }
 .net-panel.as-list > .net-box, .net-panel.as-list > #net-legend { visibility: hidden; }
+/* in list view the enlarge button stays in its place over the list, faint until pointed at */
+.net-panel.as-list > .net-box { z-index: 2; }
+.net-panel.as-list #z-fit { visibility: visible; opacity: .2; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; transition: opacity .15s; }
+.net-panel.as-list #z-fit:hover, .net-panel.as-list #z-fit:focus-visible { opacity: 1; color: var(--accent); }
 .net-list { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 8px; min-height: 0; overflow: hidden; }
 .list-tools { display: flex; flex-wrap: wrap; gap: 6px; }
 .nl-dir { font: 600 15px/1 var(--font-body); width: 34px; flex: none; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink-2); cursor: pointer; padding: 0; }
 .nl-dir:hover { color: var(--accent); border-color: var(--accent); }
 .nl-dir:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .list-tools input, .list-tools select { font: 13px var(--font-body); padding: 6px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--ink); min-width: 0; }
-.list-tools input { flex: 1 1 160px; }
+.nl-search { position: relative; flex: 1 1 180px; display: flex; min-width: 0; }
+.list-tools .nl-search input { flex: 1; width: 100%; padding-right: 36px; }
+/* the kind filter is a native select laid invisibly over the funnel icon, so it keeps the browser's dropdown and keyboard use */
+.nl-filter { position: absolute; right: 1px; top: 1px; bottom: 1px; width: 32px; display: grid; place-items: center; color: var(--muted); border-left: 1px solid var(--line); border-radius: 0 5px 5px 0; pointer-events: none; }
+.nl-filter svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; }
+.list-tools .nl-search select { position: absolute; right: 0; top: 0; bottom: 0; width: 34px; opacity: 0; cursor: pointer; padding: 0; }
+.nl-search:has(select:hover) .nl-filter { color: var(--accent); }
+.nl-search:has(select:focus-visible) .nl-filter { outline: 2px solid var(--accent); outline-offset: -1px; }
+.nl-search.on .nl-filter { color: var(--accent); background: var(--accent-soft); }
+.nl-search.on .nl-filter svg { fill: currentColor; }
 .list-tools select { flex: 0 1 auto; max-width: 100%; }
 .list-tools input:focus-visible, .list-tools select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .list-box { position: relative; min-height: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
@@ -171,6 +184,10 @@ header.top { padding-block: 20px 0; display: grid; gap: 10px; }
 .nl-empty { padding: 18px; text-align: center; color: var(--muted); font-size: 13px; }
 
 .chart-box { position: relative; }
+.chart-box.drag { cursor: grabbing; user-select: none; }
+.c-reset { position: absolute; bottom: 0; right: 16px; font: 600 12px var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--accent); padding: 3px 9px; border-radius: 6px; cursor: pointer; z-index: 2; }
+.c-reset:hover { border-color: var(--accent); }
+.c-reset:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .chart-box svg { display: block; width: 100%; height: auto; overflow: visible; }
 .axis text { font: 11px var(--font-mono); fill: var(--muted); }
 .axis line.g { stroke: var(--grid); stroke-width: 1; }

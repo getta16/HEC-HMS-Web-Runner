@@ -106,8 +106,11 @@ try { const t = localStorage.getItem('hms-theme'); if (t === 'dark' || t === 'li
       </div>
       <div class="net-list" id="net-list" hidden>
         <div class="list-tools">
-          <input type="search" id="nl-q" data-i18n-ph="listSearch" data-i18n-aria="listSearch" autocomplete="off" spellcheck="false">
-          <select id="nl-kind" data-i18n-aria="listKind"></select>
+          <div class="nl-search" id="nl-search">
+            <input type="search" id="nl-q" data-i18n-ph="listSearch" data-i18n-aria="listSearch" autocomplete="off" spellcheck="false">
+            <span class="nl-filter" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2 3h12l-4.6 5.4V13l-2.8 1.2V8.4z"/></svg></span>
+            <select id="nl-kind" data-i18n-aria="listKind"></select>
+          </div>
           <select id="nl-sort" data-i18n-aria="listSort"></select>
           <button type="button" class="nl-dir" id="nl-dir" aria-pressed="false">↓</button>
         </div>
@@ -127,6 +130,7 @@ try { const t = localStorage.getItem('hms-theme'); if (t === 'dark' || t === 'li
         <svg id="hydro" aria-label="Hydrograph"></svg>
         <div class="empty" id="chart-empty" hidden></div>
         <div class="tip" id="tip" hidden></div>
+        <button type="button" class="c-reset" id="c-reset" hidden data-i18n="cReset" data-i18n-title="cResetTip"></button>
       </div>
       <div class="fit" id="fit" hidden></div>
     </div>
