@@ -23,6 +23,10 @@
       ctlHint: 'ค่าที่แก้จะมีผลเมื่อกด “รันแบบจำลอง” ไฟล์ .control ด้านล่างจะเปลี่ยนตามค่าที่แก้',
       dropHere: 'ลากไฟล์หรือโฟลเดอร์โปรเจกต์ HEC-HMS มาวางที่นี่',
       netTitle: 'โครงข่ายลุ่มน้ำ', netHint: 'คลิก element เพื่อดูกราฟ · ล้อเมาส์/ลากเพื่อซูมและเลื่อน · ดับเบิลคลิกเพื่อซูมเข้า element',
+      listView: 'แสดงเป็นรายการ', listHint: 'พิมพ์ชื่อเพื่อค้นหา · กรองตามชนิด · เรียงลำดับ · คลิกหรือกด ↑ ↓ เพื่อดูกราฟ',
+      listSearch: 'ค้นหาชื่อ element…', listKind: 'กรองตามชนิด', listSort: 'เรียงลำดับ', listAll: (n) => `ทุกชนิด (${n})`,
+      sortOrder: 'ลำดับการคำนวณ (ต้นน้ำ → ท้ายน้ำ)', sortName: 'ชื่อ A–Z', sortPeak: 'น้ำสูงสุด มาก → น้อย', sortArea: 'พื้นที่รับน้ำ มาก → น้อย',
+      listCount: (n, all, u) => `แสดง ${n} จาก ${all} element${u ? ` · ตัวเลข = น้ำสูงสุด (${u})` : ''}`, listNone: 'ไม่พบ element ที่ตรงกับคำค้นหรือตัวกรอง',
       zIn: 'ซูมเข้า', zOut: 'ซูมออก', zSel: 'ซูมไปที่ element ที่เลือก', zFit: 'ขยายแผนผังโครงข่าย (ยังเห็นกราฟอยู่)', zShrink: 'ย่อแผนผังกลับขนาดเดิม',
       tblTitle: 'ผลสรุปทุก element', filesTitle: 'ไฟล์ของโปรเจกต์',
       filesHint: 'จุดสีบนแท็บ = มีค่าที่แก้ในหน้านี้ · ปุ่มดาวน์โหลดจะบันทึกไฟล์ที่แก้แล้ว',
@@ -123,6 +127,10 @@
       ctlHint: 'Changes take effect when you press “Run model”. The .control file below reflects your edits.',
       dropHere: 'Drag HEC-HMS project files or a folder here',
       netTitle: 'Basin network', netHint: 'Click an element to see its graph · wheel/drag to zoom and pan · double-click to zoom to an element',
+      listView: 'List view', listHint: 'Type to search · filter by kind · sort · click or press ↑ ↓ to see the graph',
+      listSearch: 'Search element name…', listKind: 'Filter by kind', listSort: 'Sort by', listAll: (n) => `All kinds (${n})`,
+      sortOrder: 'Compute order (upstream → downstream)', sortName: 'Name A–Z', sortPeak: 'Peak flow, high → low', sortArea: 'Drainage area, large → small',
+      listCount: (n, all, u) => `Showing ${n} of ${all} elements${u ? ` · numbers = peak flow (${u})` : ''}`, listNone: 'No element matches the search or filter',
       zIn: 'Zoom in', zOut: 'Zoom out', zSel: 'Zoom to selected element', zFit: 'Enlarge the network (charts stay visible)', zShrink: 'Restore the network to its normal size',
       tblTitle: 'Summary of all elements', filesTitle: 'Project files',
       filesHint: 'Dot on a tab = edited on this page · Download saves the edited file',
@@ -220,6 +228,9 @@
     document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
     document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = t(el.dataset.i18nHtml); });
     document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+    document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.dataset.i18nAria)); });
+    syncNetMode();
     $('lang-th').setAttribute('aria-pressed', LANG === 'th');
     $('lang-en').setAttribute('aria-pressed', LANG === 'en');
   }
@@ -692,6 +703,7 @@
   const NV = { k: 1, cx: 0.5, cy: 0.5, W: 400, H: 300, pos: {}, key: '' };
   function renderNet() {
     const svg = $('net'), b = curBasin();
+    renderList();
     if (!b) { svg.innerHTML = ''; NV.els = null; $('z-lvl').textContent = ''; return; }
     const els = b.elements, R = OUT ? OUT.results : null;
     const box = $('net-box'), W = box.clientWidth || 400, Hh = box.clientHeight || 300, pad = 60;
@@ -794,6 +806,102 @@
   $('net').addEventListener('click', (ev) => { if (dragMoved) { dragMoved = false; return; } const g = ev.target.closest('.node'); if (g) select(g.dataset.name); });
   $('net').addEventListener('keydown', (ev) => { const g = ev.target.closest('.node'); if (g && (ev.key === 'Enter' || ev.key === ' ')) { ev.preventDefault(); select(g.dataset.name); } });
   function select(name) { selected = name; renderNet(); renderSelected(); renderParams(); renderTable(); }
+
+  // ---------- network · list view ----------
+  // the switch in the panel head swaps the diagram for a searchable, filterable, sortable list; picking a row shows its graph
+  const NL = { list: store.get('hms-netview') === 'list', q: '', kind: '', sort: store.get('hms-nlsort') || 'order', optKey: '' };
+  function syncNetMode() {
+    $('net-mode').setAttribute('aria-checked', NL.list);
+    $('net-box').hidden = NL.list; $('net-legend').hidden = NL.list; $('net-list').hidden = !NL.list;
+    $('net-hint').textContent = t(NL.list ? 'listHint' : 'netHint');
+  }
+  function listItems() {
+    const b = curBasin(); if (!b) return { all: [], rows: [] };
+    const R = OUT ? OUT.results : null, idx = {};
+    (OUT ? OUT.order : b.elements.map(e => e.name)).forEach((n, i) => { idx[n] = i; });
+    const all = b.elements.map(e => ({ e, r: R && R[e.name], i: idx[e.name] ?? 1e9 }));
+    const q = NL.q.trim().toLowerCase();
+    const rows = all.filter(x => (!NL.kind || x.e.kind === NL.kind) && (!q || x.e.name.toLowerCase().includes(q)));
+    const num = (x, k) => x.r ? (k === 'peak' ? x.r.stats.peak : x.r.area) : -Infinity;
+    const cmp = {
+      order: (a, b) => a.i - b.i,
+      name: (a, b) => a.e.name.localeCompare(b.e.name, undefined, { numeric: true, sensitivity: 'base' }),
+      peak: (a, b) => (num(b, 'peak') - num(a, 'peak')) || a.i - b.i,
+      area: (a, b) => (num(b, 'area') - num(a, 'area')) || a.i - b.i,
+    }[NL.sort] || ((a, b) => a.i - b.i);
+    rows.sort(cmp);
+    return { all, rows };
+  }
+  // small outflow sparkline, scaled to the element's own peak (the number beside it gives the size)
+  function spark(data) {
+    const W = 92, Hh = 20, n = data ? data.length : 0; if (n < 2) return '<span></span>';
+    const k = Math.max(1, Math.ceil(n / 92)), pts = [];
+    for (let i = 0; i < n; i += k) { let m = 0; for (let j = i; j < Math.min(n, i + k); j++) m = Math.max(m, data[j]); pts.push(m); }
+    const mx = Math.max(...pts) || 1, dx = W / ((pts.length - 1) || 1);
+    const line = pts.map((v, i) => `${i ? 'L' : 'M'}${(i * dx).toFixed(1)},${(Hh - 1 - v / mx * (Hh - 2)).toFixed(1)}`).join('');
+    return `<svg viewBox="0 0 ${W} ${Hh}" aria-hidden="true"><path class="a" d="${line}L${W},${Hh}L0,${Hh}Z"/><path d="${line}"/></svg>`;
+  }
+  function renderList() {
+    if (!NL.list) return;
+    const { all, rows } = listItems(), box = $('nl'), hadFocus = box.contains(document.activeElement);
+    // selects are rebuilt only when their content changes, so an open dropdown is not closed by a redraw
+    const kinds = [...new Set(all.map(x => x.e.kind))], key = LANG + '|' + kinds.join(',') + '|' + all.length + '|' + !!OUT;
+    if (key !== NL.optKey) {
+      NL.optKey = key;
+      if (NL.kind && !kinds.includes(NL.kind)) NL.kind = '';
+      const kl = t('kind');
+      $('nl-kind').innerHTML = `<option value="">${esc(t('listAll', all.length))}</option>` + kinds.map(k => `<option value="${esc(k)}"${k === NL.kind ? ' selected' : ''}>${esc(kl[k] || k)} (${all.filter(x => x.e.kind === k).length})</option>`).join('');
+      $('nl-sort').innerHTML = [['order', 'sortOrder'], ['name', 'sortName'], ['peak', 'sortPeak'], ['area', 'sortArea']]
+        .map(([v, l]) => `<option value="${v}"${v === NL.sort ? ' selected' : ''}>${esc(t(l))}</option>`).join('');
+    }
+    const q = NL.q.trim(), kl = t('kind'), u = OUT ? OUT.u : null;
+    const hl = (name) => {
+      const i = q ? name.toLowerCase().indexOf(q.toLowerCase()) : -1;
+      return i < 0 ? esc(name) : esc(name.slice(0, i)) + '<mark>' + esc(name.slice(i, i + q.length)) + '</mark>' + esc(name.slice(i + q.length));
+    };
+    const focusName = rows.some(x => x.e.name === selected) ? selected : rows[0] && rows[0].e.name;
+    box.innerHTML = rows.length ? rows.map(({ e, r }) => {
+      const sel = e.name === selected;
+      const sub = (kl[e.kind] || e.kind) + (r && r.area ? ` · ${fAuto(r.area)} ${u.area}` : '') + (e.downstream ? ` · → ${e.downstream}` : '');
+      return `<div class="nl-row${sel ? ' sel' : ''}" role="option" aria-selected="${sel}" tabindex="${e.name === focusName ? 0 : -1}" data-name="${esc(e.name)}">`
+        + `<span class="n" title="${esc(e.name)}">${hl(e.name)}</span><span class="k" title="${esc(sub)}">${esc(sub)}</span>`
+        + `<span class="p">${r ? fAuto(r.stats.peak) + `<small>${esc(u.flow)}</small>` : ''}</span>${r ? spark(r.outflow) : '<span></span>'}</div>`;
+    }).join('') : `<div class="nl-empty">${esc(t('listNone'))}</div>`;
+    $('nl-count').textContent = t('listCount', rows.length, all.length, u && u.flow);
+    const cur = box.querySelector('.nl-row.sel');
+    if (cur) { if (hadFocus) cur.focus({ preventScroll: true }); scrollRowIntoView(cur); }
+  }
+  function scrollRowIntoView(row) {
+    const box = $('nl'), top = row.offsetTop, bot = top + row.offsetHeight;
+    if (top < box.scrollTop) box.scrollTop = top - 4; else if (bot > box.scrollTop + box.clientHeight) box.scrollTop = bot - box.clientHeight + 4;
+  }
+  // move the selection through the rows now shown (step ±n, or jump to first/last)
+  function listStep(step) {
+    const names = [...$('nl').querySelectorAll('.nl-row')].map(r => r.dataset.name); if (!names.length) return;
+    const i = names.indexOf(selected);
+    const j = step === 'first' ? 0 : step === 'last' ? names.length - 1 : i < 0 ? (step > 0 ? 0 : names.length - 1) : Math.min(names.length - 1, Math.max(0, i + step));
+    if (names[j] !== selected) select(names[j]);
+  }
+  $('net-mode').addEventListener('click', () => {
+    NL.list = !NL.list; store.set('hms-netview', NL.list ? 'list' : 'net'); syncNetMode();
+    if (NL.list) renderList(); else requestAnimationFrame(renderNet);
+  });
+  $('nl-q').addEventListener('input', () => { NL.q = $('nl-q').value; renderList(); });
+  $('nl-q').addEventListener('keydown', (ev) => {
+    if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') { ev.preventDefault(); listStep(ev.key === 'ArrowDown' ? 1 : -1); }
+    else if (ev.key === 'Enter') { ev.preventDefault(); const rows = [...$('nl').querySelectorAll('.nl-row')]; if (rows.length && !rows.some(r => r.dataset.name === selected)) select(rows[0].dataset.name); }
+    else if (ev.key === 'Escape' && NL.q) { ev.preventDefault(); $('nl-q').value = NL.q = ''; renderList(); }
+  });
+  $('nl-kind').addEventListener('change', () => { NL.kind = $('nl-kind').value; renderList(); });
+  $('nl-sort').addEventListener('change', () => { NL.sort = $('nl-sort').value; store.set('hms-nlsort', NL.sort); renderList(); });
+  $('nl').addEventListener('click', (ev) => { const r = ev.target.closest('.nl-row'); if (r) { r.focus({ preventScroll: true }); select(r.dataset.name); } });
+  $('nl').addEventListener('keydown', (ev) => {
+    const step = { ArrowDown: 1, ArrowUp: -1, Home: 'first', End: 'last', PageDown: 10, PageUp: -10 }[ev.key];
+    if (step !== undefined) { ev.preventDefault(); listStep(step); return; }
+    const r = ev.target.closest('.nl-row');
+    if (r && (ev.key === 'Enter' || ev.key === ' ')) { ev.preventDefault(); select(r.dataset.name); }
+    else if (ev.key.length === 1 && !ev.ctrlKey && !ev.metaKey && !ev.altKey) $('nl-q').focus(); // typing in the list goes to the search box
+  });
 
   // ---------- charts ----------
   function niceMax(v) {

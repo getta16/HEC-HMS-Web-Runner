@@ -85,7 +85,7 @@ try { const t = localStorage.getItem('hms-theme'); if (t === 'dark' || t === 'li
 
   <section class="main">
     <div class="panel net-panel">
-      <div class="panel-head"><h2 data-i18n="netTitle"></h2><span class="hint" data-i18n="netHint"></span></div>
+      <div class="panel-head net-head"><h2 data-i18n="netTitle"></h2><button type="button" class="switch" id="net-mode" role="switch" aria-checked="false"><span class="track"></span><span data-i18n="listView"></span></button><span class="hint" id="net-hint"></span></div>
       <div class="net-box" id="net-box">
         <svg id="net" role="img" aria-label="Basin network"></svg>
         <div class="zoom-ctl">
@@ -96,7 +96,16 @@ try { const t = localStorage.getItem('hms-theme'); if (t === 'dark' || t === 'li
         </div>
         <span class="zoom-lvl" id="z-lvl"></span>
       </div>
-      <div class="legend"><span><span class="swatch" style="background:var(--surface-2);border:1px solid var(--ink-2)"></span>Subbasin</span><span><span class="swatch" style="background:var(--surface-2);border:1px solid var(--ink-2);border-radius:99px"></span>Junction / Sink</span><span id="leg-res" hidden>▽ Reservoir</span><span id="leg-div" hidden>◇ Diversion</span><span id="net-unit"></span></div>
+      <div class="net-list" id="net-list" hidden>
+        <div class="list-tools">
+          <input type="search" id="nl-q" data-i18n-ph="listSearch" data-i18n-aria="listSearch" autocomplete="off" spellcheck="false">
+          <select id="nl-kind" data-i18n-aria="listKind"></select>
+          <select id="nl-sort" data-i18n-aria="listSort"></select>
+        </div>
+        <div class="list-box"><div class="nl" id="nl" role="listbox" tabindex="-1"></div></div>
+        <span class="hint" id="nl-count"></span>
+      </div>
+      <div class="legend" id="net-legend"><span><span class="swatch" style="background:var(--surface-2);border:1px solid var(--ink-2)"></span>Subbasin</span><span><span class="swatch" style="background:var(--surface-2);border:1px solid var(--ink-2);border-radius:99px"></span>Junction / Sink</span><span id="leg-res" hidden>▽ Reservoir</span><span id="leg-div" hidden>◇ Diversion</span><span id="net-unit"></span></div>
     </div>
     <div class="panel">
       <div class="panel-head">
