@@ -281,7 +281,7 @@
       lede: 'รันแบบจำลอง HEC-HMS ลุ่มน้ำ KSM (Run sep2026) ต่อเนื่องจนถึงเวลาปัจจุบันในเบราว์เซอร์ ทุก 15 นาทีหน้านี้จะดึงข้อมูลฝนและน้ำท่าล่าสุด เติมช่วงที่ข้อมูลขาดหาย แล้วรันใหม่ให้เอง',
       notice: '<b>ค่าที่เติมไม่ใช่ข้อมูลตรวจวัด</b> ช่วงที่แรเงาสีส้มบนกราฟคือช่วงที่เติมข้อมูล ช่วงสีแดงคือไม่มีข้อมูลฝนเลยจึงถือว่าฝน = 0 ค่าสถิติเทียบน้ำท่า (NSE, KGE) คำนวณจากข้อมูลจริงเท่านั้น',
       methodsTitle: 'ที่มาของข้อมูลและวิธีเติมข้อมูล',
-      methods: '<p><b>ลำดับแหล่งข้อมูล</b>ไฟล์ที่นำเข้าในหน้านี้ → KSM_004_Desktop_V2.dss (ถึง 30 ก.ย. 2026) → ไฟล์โทรมาตรใน web/data/ksm/live/ → API iwasam.com/ksm (ถ้าเปิดใน iwasam.json) ช่วงเวลาใดที่แหล่งก่อนหน้าไม่มีค่า จะใช้แหล่งถัดไป</p><p><b>สถานีฝน</b>RID-KU 001 ← RID-KU030 คลองน้ำไหล · 002 ← RID-KU033 หินชะโงก · 003 ← RID-KU040 เทพนคร · 004 ← RID-KU045 อบต.เนินสว่าง ฝน “rainfall from 7am” เป็นฝนสะสมตั้งแต่ 7 โมงเช้า หน้านี้แปลงเป็นฝนราย 5 นาที (ผลต่างของค่าสะสม เริ่มนับใหม่หลัง 07:00) ค่าที่เกิน 150 มม./ชม. ถือว่าเครื่องวัดผิดพลาด</p><p><b>เติมข้อมูลฝน</b>ช่วงที่สถานีไม่มีข้อมูล ใช้ค่าเฉลี่ยถ่วงน้ำหนักด้วยระยะทาง (IDW, กำลัง 2) จากสถานีอื่นที่มีข้อมูลในช่วงเวลาเดียวกัน ถ้าไม่มีสถานีใดมีข้อมูล ถือว่าฝน = 0</p><p><b>สถานีน้ำท่า</b>RID-KU-WL001 (Weir_KSM), RID-KU-WL008 (Weir_TKD) จากไฟล์โทรมาตร ค่า Q (m3/s) ราย 15 นาที · RID-KU-WL006 (Weir_NPK) ยกเลิกแล้ว ใช้ RID-KU-WL008 × 0.8</p><p><b>เติมข้อมูลน้ำท่า</b>ช่องว่างไม่เกิน 6 ชั่วโมงที่มีข้อมูลทั้งสองฝั่ง ลากเส้นตรง ช่องว่างที่ยาวกว่านั้นหรือหลังข้อมูลล่าสุด ใช้น้ำท่าจากแบบจำลอง ปุ่ม “ส่งออกน้ำท่าเป็น CSV” ที่ element จะมีคอลัมน์น้ำท่าเติมข้อมูลและวิธีที่ใช้</p><p><b>อัปเดตข้อมูล</b>หน้านี้ดึงข้อมูลจาก API iwasam.com/ksm เอง (ฝน: api/weather/สถานี, น้ำท่า: api/water/สถานี ค่า -999 ถือว่าไม่มีข้อมูล) ครั้งแรกขอเฉพาะช่วงหลังข้อมูล DSS/CSV จากนั้นขอเฉพาะวันล่าสุดทุกครั้งที่อัปเดต หรือดาวน์โหลดไฟล์ CSV จากระบบโทรมาตร แล้วลากมาวางในหน้านี้ (ใช้เฉพาะเครื่องนี้) หรือให้ทุกคนเห็น: รัน <code>node tools/update_live.js ไฟล์.csv …</code> แล้ว commit โฟลเดอร์ web/data/ksm/live</p>',
+      methods: '<p><b>ลำดับแหล่งข้อมูล</b>ไฟล์ที่นำเข้าในหน้านี้ → KSM_004_Desktop_V2.dss (ถึง 30 ก.ย. 2026) → ไฟล์โทรมาตรใน web/data/ksm/live/ → API iwasam.com/ksm (ถ้าเปิดใน iwasam.json) ช่วงเวลาใดที่แหล่งก่อนหน้าไม่มีค่า จะใช้แหล่งถัดไป</p><p><b>สถานีฝน</b>RID-KU 001 ← RID-KU030 คลองน้ำไหล · 002 ← RID-KU033 หินชะโงก · 003 ← RID-KU040 เทพนคร · 004 ← RID-KU045 อบต.เนินสว่าง ฝน “rainfall from 7am” เป็นฝนสะสมตั้งแต่ 7 โมงเช้า หน้านี้แปลงเป็นฝนราย 5 นาที (ผลต่างของค่าสะสม เริ่มนับใหม่หลัง 07:00) ค่าที่เกิน 150 มม./ชม. ถือว่าเครื่องวัดผิดพลาด</p><p><b>เปลี่ยนสถานี</b>ในตารางด้านบน ช่อง “ข้อมูลจาก” เลือกสถานีอื่นให้สถานีในแบบจำลองได้ สถานีที่เลือกอ่านจาก API ทั้งช่วงที่รัน (ไม่ใช้ DSS และไฟล์โทรมาตรของสถานีเดิม) ค่าที่เลือกจำไว้ในเบราว์เซอร์นี้</p><p><b>เติมข้อมูลฝน</b>ช่วงที่สถานีไม่มีข้อมูล ใช้ค่าเฉลี่ยถ่วงน้ำหนักด้วยระยะทาง (IDW, กำลัง 2) จากสถานีอื่นที่มีข้อมูลในช่วงเวลาเดียวกัน ถ้าไม่มีสถานีใดมีข้อมูล ถือว่าฝน = 0</p><p><b>สถานีน้ำท่า</b>RID-KU-WL001 (Weir_KSM), RID-KU-WL008 (Weir_TKD) จากไฟล์โทรมาตร ค่า Q (m3/s) ราย 15 นาที · RID-KU-WL006 (Weir_NPK) ยกเลิกแล้ว ใช้ RID-KU-WL008 × 0.8</p><p><b>เติมข้อมูลน้ำท่า</b>ช่องว่างไม่เกิน 6 ชั่วโมงที่มีข้อมูลทั้งสองฝั่ง ลากเส้นตรง ช่องว่างที่ยาวกว่านั้นหรือหลังข้อมูลล่าสุด ใช้น้ำท่าจากแบบจำลอง ปุ่ม “ส่งออกน้ำท่าเป็น CSV” ที่ element จะมีคอลัมน์น้ำท่าเติมข้อมูลและวิธีที่ใช้</p><p><b>อัปเดตข้อมูล</b>หน้านี้ดึงข้อมูลจาก API iwasam.com/ksm เอง (ฝน: api/weather/สถานี, น้ำท่า: api/water/สถานี ค่า -999 ถือว่าไม่มีข้อมูล) ครั้งแรกขอเฉพาะช่วงหลังข้อมูล DSS/CSV จากนั้นขอเฉพาะวันล่าสุดทุกครั้งที่อัปเดต หรือดาวน์โหลดไฟล์ CSV จากระบบโทรมาตร แล้วลากมาวางในหน้านี้ (ใช้เฉพาะเครื่องนี้) หรือให้ทุกคนเห็น: รัน <code>node tools/update_live.js ไฟล์.csv …</code> แล้ว commit โฟลเดอร์ web/data/ksm/live</p>',
       liveTitle: 'ข้อมูลฝนและน้ำท่า · อัปเดตอัตโนมัติ',
       liveHint: (a, b) => `รันล่าสุด ${a} · อัปเดตครั้งต่อไป ${b}`,
       liveHintOff: (a) => `รันล่าสุด ${a} · ปิดการอัปเดตอัตโนมัติ`,
@@ -302,13 +302,15 @@
       colFilled: (g, u) => `${g} filled (${u})`, colHow: 'fill method',
       steps: (n) => n.toLocaleString('en-US'),
       cfgErr: (e) => `อ่าน iwasam.json ไม่ได้ (${e}) ใช้ค่าตั้งต้น`,
+      stDefault: 'ตั้งต้น', stReset: 'คืนค่าสถานีตั้งต้น', stTip: 'เลือกสถานีที่ใช้ข้อมูล (จาก API) สำหรับสถานีนี้ในแบบจำลอง',
+      stChanged: (g, st) => `${g} ใช้ข้อมูลจาก ${st}`,
       nowNote: (t) => `หลัง ${t} ยังไม่มีข้อมูลจริงจากสถานีใดเลย ฝนช่วงนั้นจึงเป็น 0 และน้ำท่าตรวจวัดใช้ค่าจากแบบจำลอง`,
     },
     en: {
       lede: 'Runs the HEC-HMS model of the KSM basin (Run sep2026) continuously up to the current time in the browser. Every 15 minutes the page fetches the latest rainfall and flow, fills the missing periods and runs again.',
       notice: '<b>Filled values are not measurements.</b> Orange shading on the charts marks filled periods; red marks periods with no rainfall data at all, where rain is taken as 0. Fit statistics (NSE, KGE) use real observations only.',
       methodsTitle: 'Data sources and gap filling',
-      methods: '<p><b>Source order</b>Files imported on this page → KSM_004_Desktop_V2.dss (to 30 Sep 2026) → telemetry files in web/data/ksm/live/ → the iwasam.com/ksm API (when enabled in iwasam.json). Where a source has no value, the next one is used.</p><p><b>Rain gages</b>RID-KU 001 ← RID-KU030 Khlong Nam Lai · 002 ← RID-KU033 Hin Chanong · 003 ← RID-KU040 Thep Nakhon · 004 ← RID-KU045 Noen Sawang SAO. “Rainfall from 7am” is cumulative since 07:00; the page turns it into 5-minute rain (differences of the cumulative value, restarting after 07:00). Steps above 150 mm/h are treated as gauge errors.</p><p><b>Rain gap filling</b>A gage without data takes the inverse-distance weighted rain (IDW, power 2) of the gages that have data at that time; when none has, rain is 0.</p><p><b>Flow gages</b>RID-KU-WL001 (Weir_KSM) and RID-KU-WL008 (Weir_TKD) from the telemetry files, Q (m3/s) every 15 minutes · RID-KU-WL006 (Weir_NPK) is closed and uses RID-KU-WL008 × 0.8.</p><p><b>Flow gap filling</b>Gaps of up to 6 hours with data on both sides are interpolated linearly; longer gaps and the time after the latest reading take the simulated flow. “Export flow CSV” on an element adds the filled flow and the method used.</p><p><b>Updating data</b>The page reads the iwasam.com/ksm API itself (rain: api/weather/station, flow: api/water/station; -999 is missing): at first only the time after the DSS/CSV data, then only the latest day on each update. Otherwise, download CSV files from the telemetry system and drop them on this page (this computer only), or for everyone: run <code>node tools/update_live.js file.csv …</code> and commit web/data/ksm/live.</p>',
+      methods: '<p><b>Source order</b>Files imported on this page → KSM_004_Desktop_V2.dss (to 30 Sep 2026) → telemetry files in web/data/ksm/live/ → the iwasam.com/ksm API (when enabled in iwasam.json). Where a source has no value, the next one is used.</p><p><b>Rain gages</b>RID-KU 001 ← RID-KU030 Khlong Nam Lai · 002 ← RID-KU033 Hin Chanong · 003 ← RID-KU040 Thep Nakhon · 004 ← RID-KU045 Noen Sawang SAO. “Rainfall from 7am” is cumulative since 07:00; the page turns it into 5-minute rain (differences of the cumulative value, restarting after 07:00). Steps above 150 mm/h are treated as gauge errors.</p><p><b>Changing stations</b>In the “Data from” column of the table above, any model gage can take another station. A chosen station is read from the API over the whole run window (the DSS record and telemetry files of the original station are not used). The choice is kept in this browser.</p><p><b>Rain gap filling</b>A gage without data takes the inverse-distance weighted rain (IDW, power 2) of the gages that have data at that time; when none has, rain is 0.</p><p><b>Flow gages</b>RID-KU-WL001 (Weir_KSM) and RID-KU-WL008 (Weir_TKD) from the telemetry files, Q (m3/s) every 15 minutes · RID-KU-WL006 (Weir_NPK) is closed and uses RID-KU-WL008 × 0.8.</p><p><b>Flow gap filling</b>Gaps of up to 6 hours with data on both sides are interpolated linearly; longer gaps and the time after the latest reading take the simulated flow. “Export flow CSV” on an element adds the filled flow and the method used.</p><p><b>Updating data</b>The page reads the iwasam.com/ksm API itself (rain: api/weather/station, flow: api/water/station; -999 is missing): at first only the time after the DSS/CSV data, then only the latest day on each update. Otherwise, download CSV files from the telemetry system and drop them on this page (this computer only), or for everyone: run <code>node tools/update_live.js file.csv …</code> and commit web/data/ksm/live.</p>',
       liveTitle: 'Rainfall and flow · auto-update',
       liveHint: (a, b) => `Last run ${a} · next update ${b}`,
       liveHintOff: (a) => `Last run ${a} · auto-update off`,
@@ -329,6 +331,8 @@
       colFilled: (g, u) => `${g} filled (${u})`, colHow: 'fill method',
       steps: (n) => n.toLocaleString('en-US'),
       cfgErr: (e) => `Could not read iwasam.json (${e}); using defaults`,
+      stDefault: 'default', stReset: 'Reset stations', stTip: 'Choose the station whose data (from the API) this model gage uses',
+      stChanged: (g, st) => `${g} now uses ${st}`,
       nowNote: (t) => `After ${t} no station has real data yet, so rain there is 0 and observed flow takes the simulated flow`,
     },
   };
@@ -337,7 +341,19 @@
     fill: { idwPower: 2, flowInterpHours: 6, rainMaxPerHour: 150, resetHour: 7, rainShiftMinutes: 0 }, gages: {}, api: { enabled: false },
   };
 
-  let A, CFG, BASE = null, DROP = {}, APIC = {}, LAST = null, FILL = {}, MEMO = {}, timer = null, busy = false, lastRun = 0, auto = true;
+  let A, CFG, BASE = null, DROP = {}, APIC = {}, LAST = null, FILL = {}, MEMO = {}, timer = null, busy = false, again = false, lastRun = 0, auto = true;
+  // stations chosen on the page in place of the configured ones: gage -> station code (kept in localStorage)
+  const ST_KEY = 'iwasam-stations';
+  let OVR = {};
+  try { OVR = JSON.parse(localStorage.getItem(ST_KEY) || '{}') || {}; } catch (_) { OVR = {}; }
+  const saveOvr = () => { try { localStorage.setItem(ST_KEY, JSON.stringify(OVR)); } catch (_) {} };
+  // a gage's settings with the chosen station applied (the original station's CSV files and DSS record are not used)
+  function gageCfg(name) {
+    const c = (CFG.gages || {})[name] || {}, o = OVR[name];
+    return o && o !== (c.apiStation || c.station) ? { ...c, station: o, apiStation: o, csv: [], label: stationLabel(o), override: true } : c;
+  }
+  function stationList(kind) { return ((CFG.stations || {})[kind] || []).map(x => typeof x === 'string' ? { code: x } : x).filter(x => x && x.code); }
+  function stationLabel(code) { for (const k of ['rain', 'flow']) { const x = stationList(k).find(x => x.code === code); if (x && x.label) return x.label; } return ''; }
   const s = (k, ...a) => { const v = (STR[A.LANG] || STR.th)[k]; return typeof v === 'function' ? v(...a) : v; };
 
   async function start(app) {
@@ -350,6 +366,19 @@
     $('live-import').addEventListener('click', () => $('live-file').click());
     $('live-file').addEventListener('change', (e) => { importFiles([...e.target.files]); e.target.value = ''; });
     $('live-auto').addEventListener('click', () => { auto = !auto; schedule(); renderLive(); });
+    $('live-body').addEventListener('change', (e) => {
+      const sel = e.target.closest('select.live-st'); if (!sel) return;
+      const g = sel.dataset.g, c = (CFG.gages || {})[g] || {};
+      if (!sel.value || sel.value === (c.apiStation || c.station)) delete OVR[g]; else OVR[g] = sel.value;
+      delete APIC[g]; delete DROP[g]; saveOvr();
+      const st = sel.value || c.station || '—';
+      update().then(() => { $('runlog').innerHTML += ` · ${A.esc(s('stChanged', g, st))}`; });
+    });
+    $('live-body').addEventListener('click', (e) => {
+      if (!e.target.closest('#live-st-reset')) return;
+      for (const g of Object.keys(OVR)) { delete APIC[g]; delete DROP[g]; }
+      OVR = {}; saveOvr(); update();
+    });
     applyText();
     $('runlog').textContent = s('loadingCfg');
     CFG = JSON.parse(JSON.stringify(DEFAULTS));
@@ -403,7 +432,8 @@
   const fmtIso = (ms) => new Date(ms).toISOString().slice(0, 10);
   const fmtIsoT = (ms) => new Date(ms).toISOString().slice(0, 16);
   async function update() {
-    if (busy || !BASE) return;
+    if (!BASE) return;
+    if (busy) { again = true; return; } // a station changed during an update: update again when it ends
     busy = true;
     const $ = A.$, H = A.H;
     $('runlog').textContent = s('fetching');
@@ -416,8 +446,9 @@
       const fg = { start: start - dt, step: dt, n: Math.round((end - start) / dt) + 1 };
       // read every source of every configured gage
       const reads = {}; // gage -> [{code, series, label}]
-      await Promise.all(Object.entries(CFG.gages || {}).map(async ([name, c]) => {
-        const list = reads[name] = [];
+      const names = [...new Set([...Object.keys(CFG.gages || {}), ...Object.keys(OVR).filter(n => BASE.gages[n])])];
+      await Promise.all(names.map(async (name) => {
+        const c = gageCfg(name), list = reads[name] = [];
         const kind = c.kind || (BASE.gages[name] || {}).kind;
         for (const f of c.csv || []) {
           try { const sr = readSeries(await fetchText(`data/${CFG.project}/${f}`), kind, { ...c, tzMs: BASE.tzMs }); list.push({ code: SRC.CSV, series: sr, label: f }); }
@@ -430,7 +461,7 @@
           const cache = APIC[name];
           let from = start;
           if (cache) from = Math.max(from, cache.points[cache.points.length - 1][0]);
-          else { const lasts = list.map(r => r.series.last).concat(recLast(BASE.gages[name])).filter(isFinite); if (lasts.length) from = Math.max(from, ...lasts); }
+          else { const lasts = list.map(r => r.series.last).concat(c.override ? NaN : recLast(BASE.gages[name])).filter(isFinite); if (lasts.length) from = Math.max(from, ...lasts); }
           from = Math.floor((from - DAY) / DAY) * DAY; // whole days, so cumulative rain has its 07:00 reading
           const url = api.url.replace(/\{station\}/g, encodeURIComponent(c.apiStation || c.station)).replace(/\{from\}/g, fmtIso(from)).replace(/\{to\}/g, fmtIso(end + DAY))
             .replace(/\{fromT\}/g, fmtIsoT(from)).replace(/\{toT\}/g, fmtIsoT(end));
@@ -455,7 +486,7 @@
         const grid = kind === 'rain' ? rg : fg;
         for (const g of Object.values(BASE.gages).filter(g => g.kind === kind)) {
           const layers = [];
-          if (g.rec) layers.push({ code: SRC.DSS, values: recordToGrid(g.rec, grid, kind) });
+          if (g.rec && !gageCfg(g.name).override) layers.push({ code: SRC.DSS, values: recordToGrid(g.rec, grid, kind) });
           for (const r of reads[g.name] || []) layers.push({ code: r.code, values: kind === 'rain' ? rainToGrid(r.series, grid, { maxPerHour: CFG.fill.rainMaxPerHour, resetHour: CFG.fill.resetHour, shiftMinutes: CFG.fill.rainShiftMinutes }) : flowToGrid(r.series, grid) });
           layers.sort((a, b) => rank(a.code) - rank(b.code));
           merged[g.name] = { ...mergeLayers(layers, grid.n), kind, reads: reads[g.name] || [] };
@@ -480,6 +511,7 @@
       A.showError(e.message);
     } finally { busy = false; }
     renderLive();
+    if (again) { again = false; await update(); }
   }
 
   // ---------- after a run: fill observed flow per element ----------
@@ -550,7 +582,7 @@
       if (!/\.(csv|txt|json)$/i.test(file.name)) { bad.push(file.name); continue; }
       const key = normCode(file.name);
       // the longest station code found in the file name wins (RID-KU-WL001 before RID-KU 001)
-      const hit = Object.entries(CFG.gages || {}).map(([name, c]) => ({ name, c, code: normCode(c.station || name) })).filter(x => x.code && key.includes(x.code)).sort((a, b) => b.code.length - a.code.length)[0];
+      const hit = Object.keys(BASE.gages).map((name) => { const c = gageCfg(name); return { name, c, code: normCode(c.station || name) }; }).filter(x => x.code && key.includes(x.code)).sort((a, b) => b.code.length - a.code.length)[0];
       if (!hit) { bad.push(file.name); continue; }
       try {
         const kind = hit.c.kind || (BASE.gages[hit.name] || {}).kind;
@@ -598,7 +630,7 @@
     for (const g of Object.values(BASE.gages).sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'rain' ? -1 : 1) || a.name.localeCompare(b.name))) {
       const d = derive[g.name], dv = d && d.from && d.from !== g.name;
       const m = merged[dv ? d.from : g.name]; if (!m) continue;
-      const c = CFG.gages[g.name] || {}, kind = s(g.kind);
+      const c = gageCfg(g.name), kind = s(g.kind);
       let codes = m.src, last = NaN;
       for (let i = codes.length - 1; i >= 0; i--) if (isReal(codes[i])) { last = gridTime(g.kind === 'rain' ? rg : fg, i); break; }
       const by = {}; for (const x of codes) by[x] = (by[x] || 0) + 1;
@@ -610,14 +642,30 @@
         if (f) { codes = Uint8Array.from(f.how, (h, i) => h || (isNaN(f.values[i]) ? SRC.NONE : SRC.DSS)); const k = {}; for (const h of f.how) k[h] = (k[h] || 0) + 1; filled = s('filledFlow', s('steps', k[SRC.INTERP] || 0), s('steps', k[SRC.SIM] || 0)); }
         else filled = '—';
       }
-      const from = dv ? s('derived', d.from, d.factor) : [c.station ? `${c.station}${c.label ? ' ' + c.label : ''}` : '', ...new Set([g.rec ? 'DSS' : null, ...m.reads.map(r => s('srcNames')[r.code])].filter(Boolean))].filter(Boolean).join(' · ');
+      const srcs = [...new Set([g.rec && !c.override ? 'DSS' : null, ...m.reads.map(r => s('srcNames')[r.code])].filter(Boolean))].join(' · ');
+      const from = dv ? esc(s('derived', d.from, d.factor)) : stationMenu(g, c) + (srcs ? ` <span class="hint">${esc(srcs)}</span>` : '');
       const lastReads = m.reads.map(r => `${s('srcNames')[r.code]} ${isFinite(r.series.last) ? H.fmtDateTime(r.series.last) : '—'}`).join(' · ');
-      rows += `<tr><td class="mono">${esc(g.name)}</td><td>${esc(from)}</td><td>${esc(kind)}</td><td class="mono" title="${esc(lastReads)}">${isFinite(last) ? esc(H.fmtDateTime(last)) : '—'}</td><td class="num">${pct(real, codes.length)}</td><td class="mono">${esc(filled)}</td><td class="strip-cell">${strip(codes, kind)}</td></tr>`;
+      rows += `<tr${c.override ? ' class="st-changed"' : ''}><td class="mono">${esc(g.name)}</td><td>${from}</td><td>${esc(kind)}</td><td class="mono" title="${esc(lastReads)}">${isFinite(last) ? esc(H.fmtDateTime(last)) : '—'}</td><td class="num">${pct(real, codes.length)}</td><td class="mono">${esc(filled)}</td><td class="strip-cell">${strip(codes, kind)}</td></tr>`;
     }
     const lg = (c, k) => `<span><span class="swatch" style="background:${c}"></span>${esc(s(k))}</span>`;
     $('live-body').innerHTML = `<div class="tbl-wrap"><table class="live-tbl"><thead><tr><th>${s('thGage')}</th><th>${s('thStation')}</th><th>${s('thKind')}</th><th>${s('thLast')}</th><th>${s('thReal')}</th><th>${s('thFilled')}</th><th>${s('thStrip')}</th></tr></thead><tbody>${rows}</tbody></table></div>`
       + `<div class="legend">${lg('var(--accent)', 'lgReal')}${lg('var(--fill)', 'lgIdw')}${lg('var(--bad)', 'lgZero')}${lg('var(--fill)', 'lgInterp')}${lg('var(--s-out)', 'lgSim')}</div>`
+      + (Object.keys(OVR).length ? `<p><button class="btn ghost sm" id="live-st-reset" type="button">${esc(s('stReset'))}</button></p>` : '')
       + (notes.length ? `<ul class="live-notes">${notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>` : '');
+  }
+
+  // the "Data from" menu: the gage's configured station first, then the others of its kind
+  function stationMenu(g, c) {
+    const esc = A.esc, base = (CFG.gages || {})[g.name] || {}, def = base.apiStation || base.station || '';
+    const list = stationList(g.kind).filter(x => x.code !== def);
+    const cur = c.station || def;
+    if (cur && cur !== def && !list.some(x => x.code === cur)) list.unshift({ code: cur });
+    if (!def && !list.length) return '—';
+    const opt = (code, text) => `<option value="${esc(code)}"${code === cur ? ' selected' : ''}>${esc(text)}</option>`;
+    const name = (x) => x.code + (x.label ? ' ' + x.label : '');
+    return `<select class="live-st" data-g="${esc(g.name)}" title="${esc(s('stTip'))}" aria-label="${esc(s('thStation') + ' ' + g.name)}">`
+      + (def ? opt(def, `${name({ code: def, label: base.label })} (${s('stDefault')})`) : opt('', '—'))
+      + list.map(x => opt(x.code, name(x))).join('') + '</select>';
   }
 
   root.IWASAM = { start, core };
