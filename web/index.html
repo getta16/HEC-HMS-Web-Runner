@@ -20,6 +20,8 @@ try { const t = localStorage.getItem('hms-theme'); if (t === 'dark' || t === 'li
     <div class="toprow">
       <span class="eyebrow" id="eyebrow">HEC-HMS 4.x · web runner</span>
       <div class="prefs">
+        <a class="btn ghost sm" href="iwasam.html" title="iWASAM · KSM">iWASAM →</a>
+        <button class="btn ghost sm" id="acct" type="button"></button>
         <div class="seg" role="group" aria-label="Language / ภาษา">
           <button id="lang-th" aria-pressed="true" lang="th">ไทย</button>
           <button id="lang-en" aria-pressed="false" lang="en">EN</button>
@@ -40,6 +42,7 @@ try { const t = localStorage.getItem('hms-theme'); if (t === 'dark' || t === 'li
       <button class="btn ghost" id="up-folder" data-i18n="upFolder" data-i18n-title="upFolderTip"></button>
       <input type="file" id="in-files" multiple hidden>
       <input type="file" id="in-folder" webkitdirectory multiple hidden>
+      <button class="btn ghost" id="cloud-save" type="button" data-cl="save" hidden></button>
       <button class="btn" id="run" data-i18n="run"></button>
       <button class="btn ghost" id="reset" data-i18n="reset"></button>
       <span class="runlog" id="runlog" aria-live="polite"></span>
@@ -152,7 +155,47 @@ try { const t = localStorage.getItem('hms-theme'); if (t === 'dark' || t === 'li
   </section>
 </div>
 
+<dialog class="cl-dlg" id="acct-dlg" aria-labelledby="cl-title">
+  <div class="panel-head"><h2 id="cl-title" data-cl="acctTitle"></h2><button class="btn ghost sm" id="cl-close" type="button" data-cl="close"></button></div>
+  <p class="hint" data-cl="acctLede"></p>
+  <p class="notice" id="cl-off" hidden><span>⚠</span><span data-cl="notSet"></span></p>
+  <form id="cl-form" class="cl-form" hidden>
+    <div class="field"><label for="cl-email" data-cl="email"></label><input id="cl-email" type="email" autocomplete="email" required></div>
+    <div class="field"><label for="cl-pass" data-cl="password"></label><input id="cl-pass" type="password" autocomplete="current-password" minlength="6" required></div>
+    <div class="row-actions">
+      <button class="btn" id="cl-signin" type="submit" data-cl="signIn"></button>
+      <button class="btn ghost" id="cl-signup" type="button" data-cl="signUp"></button>
+      <button class="btn ghost" id="cl-forgot" type="button" data-cl="forgot"></button>
+    </div>
+  </form>
+  <form id="cl-reset" class="cl-form" hidden>
+    <div class="field"><label for="cl-newpass" data-cl="newPassword"></label><input id="cl-newpass" type="password" autocomplete="new-password" minlength="6" required></div>
+    <div class="row-actions"><button class="btn" id="cl-setpw" type="submit" data-cl="setPassword"></button></div>
+  </form>
+  <div id="cl-in" hidden>
+    <div class="row-actions"><span class="note" id="cl-who"></span><button class="btn ghost sm" id="cl-signout" type="button" data-cl="signOut"></button></div>
+    <h3 data-cl="myProjects"></h3>
+    <div class="cl-list" id="cl-list"></div>
+  </div>
+  <p class="cl-msg" id="cl-msg" aria-live="polite"></p>
+</dialog>
+
+<dialog class="cl-dlg" id="save-dlg" aria-labelledby="sv-title">
+  <form id="sv-form" class="cl-form">
+    <h2 id="sv-title" data-cl="saveTitle"></h2>
+    <div class="field"><label for="sv-name" data-cl="projName"></label><input id="sv-name" maxlength="120" required></div>
+    <p class="hint" id="sv-note" data-cl="overwriteNote" hidden></p>
+    <div class="row-actions">
+      <button class="btn" id="sv-go" type="submit"></button>
+      <button class="btn ghost" id="sv-cancel" type="button" data-cl="close"></button>
+    </div>
+    <p class="cl-msg" id="sv-msg" aria-live="polite"></p>
+  </form>
+</dialog>
+
 <script src="engine.js"></script>
 <script src="app.js"></script>
+<script src="cloud-config.js"></script>
+<script src="cloud.js"></script>
 </body>
 </html>

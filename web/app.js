@@ -13,7 +13,7 @@
   const I18N = {
     th: {
       darkMode: 'โหมดมืด',
-      lede: 'อ่านไฟล์โปรเจกต์ HEC-HMS (.hms, .basin, .met, .gage, .control, .run, .pdata และ .dss) แล้วคำนวณน้ำท่าในเบราว์เซอร์ ไฟล์ทั้งหมดอ่านในเครื่องของคุณ ไม่มีการส่งขึ้นเซิร์ฟเวอร์ เลือกโปรเจกต์ตัวอย่าง (Vara1–8, KSM, castro, river_bend, tenk, tifton) จากเมนูด้านล่าง หรืออัปโหลดโปรเจกต์ของคุณเองทั้งโฟลเดอร์ หรือลากไฟล์มาวางในหน้านี้',
+      lede: 'อ่านไฟล์โปรเจกต์ HEC-HMS (.hms, .basin, .met, .gage, .control, .run, .pdata และ .dss) แล้วคำนวณน้ำท่าในเบราว์เซอร์ ไฟล์ทั้งหมดอ่านในเครื่องของคุณ และจะส่งขึ้นเซิร์ฟเวอร์เฉพาะเมื่อคุณเข้าสู่ระบบแล้วกด “บันทึกออนไลน์” เลือกโปรเจกต์ตัวอย่าง (Vara1–8, KSM, castro, river_bend, tenk, tifton) จากเมนูด้านล่าง หรืออัปโหลดโปรเจกต์ของคุณเองทั้งโฟลเดอร์ หรือลากไฟล์มาวางในหน้านี้',
       notice: '<b>ผลเป็นค่าประมาณ ไม่ใช่ HEC-HMS ตัวจริง</b> ตัวคำนวณเขียนขึ้นใหม่ด้วย JavaScript ตามวิธีของ HEC-HMS 4.13 และตรวจแล้วว่าโปรเจกต์ตัวอย่างทุกอันได้ผลตรงกับ HEC-HMS ส่วนวิธีคำนวณที่ยังไม่รองรับจะแจ้งเป็นข้อผิดพลาด ถ้ามีไฟล์ RUN_*.results หน้านี้จะเทียบผลกับ HEC-HMS ให้ดู',
       upFiles: '⭱ อัปโหลดไฟล์', upFilesTip: 'เลือกไฟล์ .hms .basin .met .gage .control .run .pdata .dss .results',
       upFolder: '⭱ อัปโหลดโฟลเดอร์', upFolderTip: 'เลือกโฟลเดอร์โปรเจกต์ HEC-HMS ทั้งโฟลเดอร์',
@@ -119,7 +119,7 @@
     },
     en: {
       darkMode: 'Dark mode',
-      lede: 'Reads HEC-HMS project files (.hms, .basin, .met, .gage, .control, .run, .pdata and .dss) and computes runoff in the browser. Files are read on your computer and never uploaded to a server. Pick a sample project (Vara1–8, KSM, castro, river_bend, tenk, tifton) from the menu below, or upload your own project folder or drag its files onto this page.',
+      lede: 'Reads HEC-HMS project files (.hms, .basin, .met, .gage, .control, .run, .pdata and .dss) and computes runoff in the browser. Files are read on your computer and are only sent to a server when you sign in and press “Save online”. Pick a sample project (Vara1–8, KSM, castro, river_bend, tenk, tifton) from the menu below, or upload your own project folder or drag its files onto this page.',
       notice: '<b>Results are approximate, not HEC-HMS itself.</b> The engine is a JavaScript re-implementation of HEC-HMS 4.13 methods, checked to give the same results as HEC-HMS on every sample project. Methods it does not support are reported as errors. When RUN_*.results files are present, this page compares against HEC-HMS.',
       upFiles: '⭱ Upload files', upFilesTip: 'Choose .hms .basin .met .gage .control .run .pdata .dss .results files',
       upFolder: '⭱ Upload folder', upFolderTip: 'Choose a whole HEC-HMS project folder',
@@ -1391,9 +1391,12 @@
   function renderProjects() {
     const sel = $('sel-proj'), cur = P && P.sample;
     let h = SAMPLES.map(x => `<option value="${esc(x.id)}"${x.id === cur ? ' selected' : ''}>${esc(x.name)}</option>`).join('');
-    if (P && !cur) h = `<option value="" selected>${esc(t('uploaded', P.name || t('project')))}</option>` + h;
+    if (CLOUD.list.length) h += `<optgroup label="${esc(CLOUD.label || '☁')}">` + CLOUD.list.map(x => `<option value="cloud:${esc(x.id)}"${P && P.cloud === x.id ? ' selected' : ''}>☁ ${esc(x.name)}</option>`).join('') + '</optgroup>';
+    if (P && !cur && !P.cloud) h = `<option value="" selected>${esc(t('uploaded', P.name || t('project')))}</option>` + h;
     sel.innerHTML = h || `<option>${esc(P && P.name || '—')}</option>`;
   }
+  // projects saved online (cloud.js fills the list and loads them)
+  const CLOUD = { list: [], label: '', load: null };
   async function loadSample(id, remember = true) {
     const x = SAMPLES.find(s => s.id === id) || SAMPLES[0];
     if (!x) return;
@@ -1414,7 +1417,11 @@
       return false;
     }
   }
-  $('sel-proj').addEventListener('change', (e) => { if (e.target.value) loadSample(e.target.value); });
+  $('sel-proj').addEventListener('change', (e) => {
+    const v = e.target.value;
+    if (v.startsWith('cloud:')) { if (CLOUD.load) CLOUD.load(v.slice(6)); }
+    else if (v) loadSample(v);
+  });
   async function loadSampleList() {
     try {
       const r = await fetch('data/projects.json');
@@ -1439,6 +1446,24 @@
     });
     return;
   }
+  // cloud.js (sign-in and online projects) works through this
+  window.HMS_APP = {
+    t, esc, showError, renderProjects,
+    get LANG() { return LANG; }, get P() { return P; },
+    // files of the current project as they stand now, edited basin/control included
+    files() {
+      if (!P) return [];
+      return [...Object.keys(P.texts).map(name => ({ name, text: fileText(name) })), ...P.dssNames.map(name => ({ name, buf: P.dssBufs[lc(name)] }))];
+    },
+    open(files, derive, cloudId) {
+      openProject(files, derive);
+      if (P) { P.cloud = cloudId; renderProjects(); }
+      return !!P;
+    },
+    setCloud(list, label) { CLOUD.list = list; CLOUD.label = label; renderProjects(); },
+    onCloudLoad(fn) { CLOUD.load = fn; },
+    onLang(fn) { HOOK.lang = fn; },
+  };
   (async function boot() {
     $('runlog').textContent = t('loadingDefault', '…');
     if (!await loadSampleList()) return;

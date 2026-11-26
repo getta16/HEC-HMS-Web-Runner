@@ -254,3 +254,19 @@ pre.file .b { color: var(--ink); font-weight: 600; }
 svg.strip { display: block; width: 100%; height: 12px; border-radius: 3px; overflow: hidden; background: var(--surface-2); }
 .live-notes { margin: 10px 0 0; padding-left: 18px; font-size: 13px; color: var(--warn); }
 .live-notes li + li { margin-top: 2px; }
+
+/* ---------- sign-in and online projects (cloud.js) ---------- */
+.btn.sm { font-size: 12.5px; padding: 4px 10px; text-decoration: none; }
+.btn.danger { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 55%, transparent); }
+.cl-dlg { width: min(560px, calc(100vw - 32px)); max-height: calc(100vh - 48px); background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; box-shadow: 0 12px 40px rgba(0,0,0,.25); }
+.cl-dlg::backdrop { background: rgba(10,20,20,.45); }
+.cl-dlg h2 { margin: 0; font-size: 18px; }
+.cl-dlg h3 { margin: 16px 0 6px; font-size: 14px; }
+.cl-form { display: grid; gap: 10px; margin-top: 8px; }
+.cl-form .row-actions, #cl-in .row-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.cl-list { display: grid; gap: 6px; max-height: 50vh; overflow: auto; }
+.cl-row { display: flex; gap: 8px; align-items: center; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: var(--bg); }
+.cl-name { flex: 1; min-width: 0; display: grid; }
+.cl-name b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cl-msg { min-height: 1.2em; margin: 8px 0 0; font-size: 13px; color: var(--ink-2); }
+.cl-msg.bad { color: var(--bad); }
